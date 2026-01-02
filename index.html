@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我们的 2025 - 爱情大测验 (无干扰项·实事求是版)</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap");
+    body { font-family: "Noto Sans SC", sans-serif; background-color: #fff1f2; }
+
+    /* 聊天气泡样式 */
+    .chat-bubble {
+      position: relative;
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.5;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .chat-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border: 10px solid transparent;
+      border-bottom: 0;
+    }
+    .chat-left {
+      background-color: #ffffff;
+      border-bottom-left-radius: 4px;
+      color: #1f2937;
+    }
+    .chat-left::after {
+      left: -8px;
+      border-right-color: #ffffff;
+      border-bottom: 0;
+      margin-bottom: -1px;
+    }
+
+    /* 动画 */
+    .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* 滚动条 */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #fda4af; border-radius: 3px; }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // ==========================================
+    // 内置图标组件
+    // ==========================================
+    const IconBase = ({ children, ...props }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        {children}
+      </svg>
+    );
+
+    const Heart = (props) => <IconBase {...props}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></IconBase>;
+    const Upload = (props) => <IconBase {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></IconBase>;
+    const User = (props) => <IconBase {...props}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></IconBase>;
+    const Clock = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></IconBase>;
+    const ChevronLeft = (props) => <IconBase {...props}><path d="m15 18-6-6 6-6"/></IconBase>;
+    const Lock = (props) => <IconBase {...props}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></IconBase>;
+    const Unlock = (props) => <IconBase {...props}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></IconBase>;
+    const RefreshCw = (props) => <IconBase {...props}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></IconBase>;
+    const Trash2 = (props) => <IconBase {...props}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></IconBase>;
+    const PartyPopper = (props) => <IconBase {...props}><path d="M5.8 11.3 2 22l10.7-3.79"/><path d="M4 3h.01"/><path d="M22 8h.01"/><path d="M15 2h.01"/><path d="M22 20h.01"/><path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12v0c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10"/><path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11v0c-.11.7-.72 1.22-1.43 1.22h-.52c-.72 0-1.36.48-1.51 1.14L15 17"/><path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98v0C9.52 4.9 9 5.52 9 6.23v.52c0 .71-.48 1.36-1.14 1.51L7 9"/><path d="m13 22-.75-2.24a2.9 2.9 0 0 0-3.12-1.96v0c-.86.1-1.63-.57-1.63-1.45v-.38c0-.86-.6-1.6-1.44-1.76L4 14"/></IconBase>;
+
+    // ==========================================
+    // 文本解析：多格式 + 多行拼接 + ISO week-year 防撞
+    // ==========================================
+    const stripBiDi = (s) => (s || "").replace(/[\u200e\u200f]/g, "");
+    const norm = (s) => stripBiDi(String(s || "")).trim();
+
+    // 解析行：命中则返回 {date,dateStr,sender,content} 否则 null
+    const parseLine = (line) => {
+      const clean = norm(line);
+      if (!clean) return null;
+
+      // A: [YYYY/MM/DD HH:MM:SS] Sender: Content
+      let m = clean.match(/^\[(\d{4}\/\d{1,2}\/\d{1,2} \d{1,2}:\d{1,2}(?::\d{1,2})?)\]\s+(.*?):\s+(.*)$/);
+      if (m) {
+        const dt = parseDT_YYYYMMDD_HHMMSS(m[1]);
+        if (!dt) return null;
+        return { date: dt, dateStr: m[1], sender: norm(m[2]), content: norm(m[3]) };
+      }
+
+      // B: DD/MM/YYYY, HH:MM - Sender: Content
+      m = clean.match(/^(\d{1,2}\/\d{1,2}\/\d{2,4}),\s*(\d{1,2}:\d{2})(?::\d{2})?\s*-\s*(.*?):\s+(.*)$/);
+      if (m) {
+        const dt = parseDT_DDMMYYYY_HHMM(m[1], m[2]);
+        if (!dt) return null;
+        const dateStr = `${m[1]} ${m[2]}`;
+        return { date: dt, dateStr, sender: norm(m[3]), content: norm(m[4]) };
+      }
+
+      // C: YYYY-MM-DD HH:MM - Sender: Content
+      m = clean.match(/^(\d{4}-\d{1,2}-\d{1,2})\s+(\d{1,2}:\d{2})(?::\d{2})?\s*-\s*(.*?):\s+(.*)$/);
+      if (m) {
+        const dt = parseDT_YYYYMMDD_HHMM(m[1], m[2]);
+        if (!dt) return null;
+        const dateStr = `${m[1]} ${m[2]}`;
+        return { date: dt, dateStr, sender: norm(m[3]), content: norm(m[4]) };
+      }
+
+      return null;
+    };
+
+    const parseDT_YYYYMMDD_HHMMSS = (s) => {
+      const m = s.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})\s+(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+      if (!m) return null;
+      const y = +m[1], mo = +m[2]-1, d = +m[3], h = +m[4], mi = +m[5], se = m[6] ? +m[6] : 0;
+      const dt = new Date(y, mo, d, h, mi, se);
+      return isNaN(dt) ? null : dt;
+    };
+
+    const parseDT_DDMMYYYY_HHMM = (datePart, timePart) => {
+      const dm = datePart.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+      const tm = timePart.match(/^(\d{1,2}):(\d{2})$/);
+      if (!dm || !tm) return null;
+      const dd = +dm[1], mm = +dm[2]-1, yyRaw = dm[3];
+      const yy = yyRaw.length === 2 ? (2000 + +yyRaw) : +yyRaw;
+      const h = +tm[1], mi = +tm[2];
+      const dt = new Date(yy, mm, dd, h, mi, 0);
+      return isNaN(dt) ? null : dt;
+    };
+
+    const parseDT_YYYYMMDD_HHMM = (datePart, timePart) => {
+      const dm = datePart.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      const tm = timePart.match(/^(\d{1,2}):(\d{2})$/);
+      if (!dm || !tm) return null;
+      const yy = +dm[1], mm = +dm[2]-1, dd = +dm[3];
+      const h = +tm[1], mi = +tm[2];
+      const dt = new Date(yy, mm, dd, h, mi, 0);
+      return isNaN(dt) ? null : dt;
+    };
+
+    // 多行拼接：不符合新消息格式的行，拼到上一条 content
+    const parseChatToMessages = (text) => {
+      const lines = String(text || "").split("\n");
+      const messages = [];
+      let last = null;
+
+      for (const rawLine of lines) {
+        const line = stripBiDi(rawLine);
+        const parsed = parseLine(line);
+        if (parsed) {
+          messages.push(parsed);
+          last = parsed;
+        } else {
+          const cont = norm(line);
+          if (last && cont) last.content = (last.content ? last.content + "\n" : "") + cont;
+        }
+      }
+      return messages;
+    };
+
+    const uniqueSenders = (messages) => {
+      const set = new Set();
+      messages.forEach(m => { if (m.sender) set.add(norm(m.sender)); });
+      return Array.from(set).filter(Boolean).sort((a,b)=>a.localeCompare(b, "zh-Hans-CN"));
+    };
+
+    const guessSender = (senders, keys) => {
+      const low = (s)=>String(s||"").toLowerCase();
+      for (const s of senders) {
+        const sl = low(s);
+        if (keys.some(k => sl.includes(k))) return s;
+      }
+      return "";
+    };
+
+    // ISO week-year + week number
+    const getISOWeekInfo = (date) => {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const day = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - day); // Thursday
+      const isoYear = d.getUTCFullYear();
+      const yearStart = new Date(Date.UTC(isoYear, 0, 1));
+      const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return { isoYear, weekNo };
+    };
+
+    // 题目抽样
+    const sample = (arr, n) => {
+      if (!arr || arr.length === 0) return [];
+      const shuffled = [...arr].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, Math.min(n, arr.length)).sort((a, b) => a.date - b.date);
+    };
+
+    // 生成 quizData（无干扰项·实事求是：问“提到/安排了什么事情”）
+    const buildQuizData = (messages, senderMap) => {
+      const weeksMap = new Map();
+
+      const skipKeywords = [
+        "加密", "联系人", "图像", "贴图", "省略", "通话", "忽略", "位置", "文档", "等待此消息",
+        "Missed call", "Missed voice call", "Missed video call"
+      ];
+
+      const isMabel = (sender) => senderMap?.mabel && norm(sender) === norm(senderMap.mabel);
+      const isJiang = (sender) => senderMap?.jiang && norm(sender) === norm(senderMap.jiang);
+
+      // 分周
+      messages.forEach((msg) => {
+        if (!msg.content || msg.content.length < 2) return;
+        if (skipKeywords.some(k => msg.content.includes(k))) return;
+
+        const { isoYear, weekNo } = getISOWeekInfo(msg.date);
+        const key = `${isoYear}-W${String(weekNo).padStart(2, "0")}`;
+
+        if (!weeksMap.has(key)) weeksMap.set(key, { key, isoYear, week: weekNo, messages: [] });
+        weeksMap.get(key).messages.push(msg);
+      });
+
+      const quizData = [];
+
+      Array.from(weeksMap.values())
+        .sort((a, b) => (a.isoYear - b.isoYear) || (a.week - b.week))
+        .forEach((item) => {
+          item.messages.sort((a, b) => a.date - b.date);
+
+          const mabelMsgs = item.messages.filter(m => isMabel(m.sender));
+          const jiangMsgs = item.messages.filter(m => isJiang(m.sender));
+
+          const qMale = sample(mabelMsgs, 5).map(m => ({
+            time: m.dateStr,
+            question: `在 ${m.dateStr.split(' ')[0]}（${m.dateStr.split(' ')[1] || ''}），Mabel 提到/安排了什么事情？`,
+            answer: m.content
+          }));
+
+          const qFemale = sample(jiangMsgs, 5).map(m => ({
+            time: m.dateStr,
+            question: `在 ${m.dateStr.split(' ')[0]}（${m.dateStr.split(' ')[1] || ''}），江积宏 提到/安排了什么事情？`,
+            answer: m.content
+          }));
+
+          if (qMale.length || qFemale.length) {
+            const startDate = item.messages[0].date;
+            const endDate = item.messages[item.messages.length - 1].date;
+            const formatDate = (d) => `${d.getMonth() + 1}月${d.getDate()}日`;
+
+            quizData.push({
+              weekKey: item.key,
+              week: item.week,
+              isoYear: item.isoYear,
+              month: startDate.getMonth() + 1,
+              label: `${item.isoYear} 第 ${item.week} 周 (${formatDate(startDate)} - ${formatDate(endDate)})`,
+              male_quiz: qMale,
+              female_quiz: qFemale
+            });
+          }
+        });
+
+      return quizData;
+    };
+
+    // ==========================================
+    // App
+    // ==========================================
+    const App = () => {
+      const [view, setView] = useState("welcome"); // welcome, mapping, identity, dashboard, quiz
+      const [quizData, setQuizData] = useState([]);
+      const [identity, setIdentity] = useState(null);
+      const [selectedWeek, setSelectedWeek] = useState(null);
+      const [isLoading, setIsLoading] = useState(false);
+
+      const [rawMessages, setRawMessages] = useState([]);
+      const [senders, setSenders] = useState([]);
+      const [senderMap, setSenderMap] = useState({ mabel: "", jiang: "" });
+
+      // init cache
+      useEffect(() => {
+        const savedQuiz = localStorage.getItem("love_quiz_data_2025_no_mcq");
+        const savedMap = localStorage.getItem("love_sender_map_2025");
+        if (savedMap) {
+          try { setSenderMap(JSON.parse(savedMap)); } catch (e) {}
+        }
+        if (savedQuiz) {
+          try {
+            setQuizData(JSON.parse(savedQuiz));
+            setView("identity");
+          } catch (e) {}
+        }
+      }, []);
+
+      const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        setIsLoading(true);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setTimeout(() => {
+            const text = e.target.result;
+
+            const msgs = parseChatToMessages(text);
+            if (!msgs || msgs.length === 0) {
+              alert("无法解析文件，请确保选择的是 WhatsApp 导出的聊天 txt 文件。");
+              setIsLoading(false);
+              return;
+            }
+
+            const snd = uniqueSenders(msgs);
+            setRawMessages(msgs);
+            setSenders(snd);
+
+            // default guess + keep previous map if any
+            const defaultMabel = guessSender(snd, ["mabel", "佩雯", "peiwen"]);
+            const defaultJiang = guessSender(snd, ["ji hong", "jihong", "江", "积宏", "kong"]);
+            const merged = {
+              mabel: senderMap.mabel || defaultMabel,
+              jiang: senderMap.jiang || defaultJiang
+            };
+            setSenderMap(merged);
+
+            setIsLoading(false);
+            setView("mapping");
+          }, 400);
+        };
+        reader.readAsText(file);
+      };
+
+      const generateQuiz = (map) => {
+        const processed = buildQuizData(rawMessages, map);
+        if (!processed || processed.length === 0) {
+          alert("生成失败：可能 sender 映射不正确，或过滤后没有可用消息。");
+          return;
+        }
+        setQuizData(processed);
+        localStorage.setItem("love_quiz_data_2025_no_mcq", JSON.stringify(processed));
+        localStorage.setItem("love_sender_map_2025", JSON.stringify(map));
+        setView("identity");
+      };
+
+      const clearData = () => {
+        if (confirm("确定要清除所有数据并重新上传吗？")) {
+          localStorage.removeItem("love_quiz_data_2025_no_mcq");
+          setQuizData([]);
+          setRawMessages([]);
+          setSenders([]);
+          setIdentity(null);
+          setSelectedWeek(null);
+          setView("welcome");
+        }
+      };
+
+      // =========================
+      // welcome
+      // =========================
+      if (view === "welcome") {
+        return (
+          <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-gradient-to-br from-pink-50 to-rose-100">
+            <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full text-center border-4 border-white">
+              <Heart className="w-20 h-20 text-rose-500 mx-auto mb-6 animate-pulse fill-rose-500" />
+              <h1 className="text-3xl font-black text-gray-800 mb-3">我们的 2025<br/>爱情大测验</h1>
+              <p className="text-gray-500 mb-8 leading-relaxed">
+                上传聊天记录，自动生成<br/>属于你们的 52 周回忆考卷<br/>
+                <span className="text-rose-500 font-semibold">无干扰项·实事求是版</span>
+              </p>
+
+              {isLoading ? (
+                <div className="py-8 flex flex-col items-center animate-pulse">
+                  <RefreshCw className="w-8 h-8 text-rose-500 animate-spin mb-2" />
+                  <span className="text-rose-500 font-medium">正在编织回忆...</span>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <label className="block w-full cursor-pointer group">
+                    <input type="file" accept=".txt" onChange={handleFileUpload} className="hidden" />
+                    <div className="w-full py-4 px-6 bg-rose-500 group-hover:bg-rose-600 text-white rounded-2xl shadow-lg transition-all flex items-center justify-center gap-3 transform group-hover:-translate-y-1">
+                      <Upload className="w-6 h-6" />
+                      <span className="font-bold text-lg">导入聊天 txt</span>
+                    </div>
+                  </label>
+                  <p className="text-xs text-gray-400 mt-4">
+                    - 数据仅在浏览器本地处理，绝不上传服务器<br/>
+                    - 支持多种 WhatsApp 导出格式 + 多行消息
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      // =========================
+      // mapping
+      // =========================
+      if (view === "mapping") {
+        return (
+          <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-rose-50">
+            <div className="w-full max-w-md space-y-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-gray-800">确认聊天参与者</h2>
+                <p className="text-gray-500 text-sm mt-2">检测到 {senders.length} 个 sender</p>
+              </div>
+
+              <div className="bg-white rounded-3xl p-6 shadow-sm border border-rose-100 space-y-5">
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">Mabel 对应的 sender</div>
+                  <select
+                    value={senderMap.mabel}
+                    onChange={(e) => setSenderMap(v => ({ ...v, mabel: e.target.value }))}
+                    className="w-full p-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-rose-200"
+                  >
+                    <option value="">请选择</option>
+                    {senders.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <div className="text-sm font-semibold text-gray-700 mb-2">江积宏 对应的 sender</div>
+                  <select
+                    value={senderMap.jiang}
+                    onChange={(e) => setSenderMap(v => ({ ...v, jiang: e.target.value }))}
+                    className="w-full p-3 rounded-2xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-rose-200"
+                  >
+                    <option value="">请选择</option>
+                    {senders.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
+
+                <button
+                  onClick={() => {
+                    if (!senderMap.mabel || !senderMap.jiang) {
+                      alert("请先把 Mabel 和 江积宏 都选好");
+                      return;
+                    }
+                    if (senderMap.mabel === senderMap.jiang) {
+                      alert("两个 sender 不能选同一个");
+                      return;
+                    }
+                    generateQuiz(senderMap);
+                  }}
+                  className="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl font-bold shadow-md shadow-rose-200 transition-all"
+                >
+                  生成测验
+                </button>
+
+                <button onClick={clearData} className="w-full text-center text-gray-400 text-sm flex items-center justify-center gap-2 hover:text-red-500">
+                  <Trash2 className="w-4 h-4" /> 清除数据重新导入
+                </button>
+
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  - 这一步能解决昵称/备注/emoji 名称导致的识别失败<br/>
+                  - 生成后会自动缓存，下次打开可直接玩
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // =========================
+      // identity
+      // =========================
+      if (view === "identity") {
+        return (
+          <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-rose-50">
+            <div className="w-full max-w-md space-y-6">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-gray-800">请选择答题身份</h2>
+                <p className="text-gray-500 text-sm mt-2">已加载 {quizData.length} 周的回忆数据</p>
+              </div>
+
+              <button
+                onClick={() => { setIdentity("male"); setView("dashboard"); }}
+                className="w-full p-6 bg-white hover:bg-blue-50 border-2 border-transparent hover:border-blue-200 rounded-3xl shadow-sm transition-all flex items-center gap-6 group"
+              >
+                <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                  <User className="w-7 h-7" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold text-gray-800 text-lg">我是 江积宏</div>
+                  <div className="text-sm text-gray-400">我要回忆 Mabel 提到/安排的事情</div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => { setIdentity("female"); setView("dashboard"); }}
+                className="w-full p-6 bg-white hover:bg-pink-50 border-2 border-transparent hover:border-pink-200 rounded-3xl shadow-sm transition-all flex items-center gap-6 group"
+              >
+                <div className="w-14 h-14 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 group-hover:scale-110 transition-transform">
+                  <User className="w-7 h-7" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold text-gray-800 text-lg">我是 Mabel</div>
+                  <div className="text-sm text-gray-400">我要回忆 江积宏 提到/安排的事情</div>
+                </div>
+              </button>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setView("mapping")}
+                  className="flex-1 py-3 bg-white border border-rose-100 rounded-2xl text-rose-500 font-semibold hover:bg-rose-50"
+                >
+                  重新选择 sender
+                </button>
+                <button
+                  onClick={clearData}
+                  className="flex-1 py-3 bg-white border border-rose-100 rounded-2xl text-gray-400 font-semibold hover:text-red-500 hover:bg-red-50"
+                >
+                  清除数据
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // =========================
+      // dashboard
+      // =========================
+      if (view === "dashboard") {
+        const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+        return (
+          <div className="min-h-screen bg-rose-50/50 pb-12">
+            <header className="bg-white/80 backdrop-blur-md sticky top-0 z-20 border-b border-rose-100">
+              <div className="max-w-3xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div className="flex items-center gap-2" onClick={() => setView("identity")}>
+                  <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center text-white font-bold cursor-pointer">
+                    {identity === "male" ? "江" : "M"}
+                  </div>
+                  <span className="font-bold text-gray-700 hidden sm:block">2025 爱情回忆录</span>
+                </div>
+                <button onClick={() => setView("identity")} className="text-sm text-rose-500 font-medium px-4 py-2 bg-rose-50 rounded-full hover:bg-rose-100 transition-colors">
+                  切换身份
+                </button>
+              </div>
+            </header>
+
+            <main className="max-w-3xl mx-auto px-4 py-8 space-y-8">
+              {months.map((month) => {
+                const weeksInMonth = quizData.filter((d) => d.month === month);
+                if (weeksInMonth.length === 0) return null;
+
+                return (
+                  <div key={month} className="fade-in">
+                    <div className="flex items-center gap-3 mb-4 pl-2">
+                      <h3 className="text-2xl font-black text-gray-300">{month}月</h3>
+                      <div className="h-px bg-gray-200 flex-1"></div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {weeksInMonth.map((weekData) => {
+                        const hasQuestions = identity === "male"
+                          ? (weekData.male_quiz.length > 0)
+                          : (weekData.female_quiz.length > 0);
+
+                        return (
+                          <button
+                            key={weekData.weekKey || `${weekData.isoYear}-${weekData.week}`}
+                            onClick={() => {
+                              if (hasQuestions) {
+                                setSelectedWeek(weekData);
+                                setView("quiz");
+                              }
+                            }}
+                            disabled={!hasQuestions}
+                            className={`relative p-4 rounded-2xl border-2 text-left transition-all group ${
+                              hasQuestions
+                                ? "bg-white border-white hover:border-rose-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+                                : "bg-gray-50 border-transparent opacity-60 cursor-not-allowed"
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <span className="font-bold text-gray-700 text-lg">第 {weekData.week} 周</span>
+                              {hasQuestions ? <Unlock className="w-4 h-4 text-rose-400" /> : <Lock className="w-4 h-4 text-gray-300" />}
+                            </div>
+
+                            <div className="text-xs text-gray-400 font-medium">
+                              {weekData.label.match(/\((.*?)\)/)?.[1] || weekData.label}
+                            </div>
+
+                            <div className="mt-3 flex gap-1">
+                              {Array.from({ length: 5 }).map((_, i) => {
+                                const count = identity === "male" ? weekData.male_quiz.length : weekData.female_quiz.length;
+                                return (
+                                  <div
+                                    key={i}
+                                    className={`h-1.5 flex-1 rounded-full ${
+                                      i < count ? "bg-rose-100 group-hover:bg-rose-200" : "bg-gray-100"
+                                    }`}
+                                  ></div>
+                                );
+                              })}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {quizData.length === 0 && (
+                <div className="text-center py-20 text-gray-400">
+                  <p>暂无数据，请返回导入文件</p>
+                </div>
+              )}
+            </main>
+          </div>
+        );
+      }
+
+      // =========================
+      // quiz
+      // =========================
+      if (view === "quiz" && selectedWeek) {
+        const questions = identity === "male" ? selectedWeek.male_quiz : selectedWeek.female_quiz;
+        const partnerName = identity === "male" ? "Mabel" : "江积宏";
+
+        return (
+          <QuizInterface
+            weekData={selectedWeek}
+            questions={questions}
+            partnerName={partnerName}
+            onBack={() => {
+              setSelectedWeek(null);
+              setView("dashboard");
+            }}
+          />
+        );
+      }
+
+      return null;
+    };
+
+    // ==========================================
+    // Quiz UI：无干扰项版本
+    // ==========================================
+    const QuizInterface = ({ weekData, questions, partnerName, onBack }) => {
+      const [currentQIndex, setCurrentQIndex] = useState(0);
+
+      if (!questions || questions.length === 0) {
+        return (
+          <div className="min-h-screen flex items-center justify-center flex-col bg-white">
+            <p className="text-gray-500 mb-4">本周没有针对您的题目哦</p>
+            <button onClick={onBack} className="px-6 py-2 bg-gray-100 rounded-full text-gray-600">返回</button>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-rose-50 flex flex-col">
+          {/* Header */}
+          <div className="bg-white px-4 py-3 shadow-sm z-10 flex items-center justify-between">
+            <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <ChevronLeft className="w-6 h-6 text-gray-600" />
+            </button>
+            <div className="text-center">
+              <h2 className="font-bold text-gray-800 text-sm">{weekData.label.split("(")[0]}</h2>
+              <p className="text-xs text-rose-500 font-medium">{currentQIndex + 1} / {questions.length}</p>
+            </div>
+            <div className="w-10"></div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="h-1 bg-gray-100 w-full">
+            <div
+              className="h-full bg-rose-500 transition-all duration-300 ease-out"
+              style={{ width: `${((currentQIndex + 1) / questions.length) * 100}%` }}
+            ></div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-1 overflow-y-auto p-4 max-w-2xl mx-auto w-full">
+            {questions.map((q, idx) => (
+              <div key={idx} className={idx === currentQIndex ? "block fade-in" : "hidden"}>
+                <SingleQuestionCard
+                  question={q}
+                  partnerName={partnerName}
+                  onNext={() => idx < questions.length - 1 && setCurrentQIndex(idx + 1)}
+                  isLast={idx === questions.length - 1}
+                  onFinish={onBack}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    // 单题卡：先回忆 → 点击显示答案 → 下一题
+    const SingleQuestionCard = ({ question, partnerName, onNext, isLast, onFinish }) => {
+      const [revealed, setRevealed] = useState(false);
+
+      useEffect(() => { setRevealed(false); }, [question]);
+
+      return (
+        <div className="bg-white rounded-3xl shadow-sm border-2 border-white overflow-hidden">
+          <div className="p-6 pb-8 bg-gradient-to-b from-white to-rose-50/30">
+            <div className="flex items-center gap-2 text-rose-500 mb-4 font-medium text-xs uppercase tracking-wider">
+              <Clock className="w-3 h-3" />
+              {(question.time.split(" ")[1] || "").trim()}
+            </div>
+
+            <h3 className="text-xl font-bold text-gray-800 leading-normal">
+              {question.question}
+            </h3>
+
+            {!revealed && (
+              <p className="text-sm text-gray-400 mt-3">
+                先在脑里回忆一下答案，想好了再点下面按钮
+              </p>
+            )}
+          </div>
+
+          <div className="p-4">
+            {!revealed ? (
+              <button
+                onClick={() => setRevealed(true)}
+                className="w-full py-3 bg-white border-2 border-rose-200 hover:border-rose-300 text-rose-600 rounded-xl font-bold transition-all"
+              >
+                我想好了，显示答案
+              </button>
+            ) : (
+              <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 fade-in">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs font-bold shrink-0 mt-1">
+                    {partnerName[0]}
+                  </div>
+                  <div className="chat-bubble chat-left bg-white border border-gray-200 text-gray-800 text-sm">
+                    {question.answer}
+                  </div>
+                </div>
+
+                <button
+                  onClick={isLast ? onFinish : onNext}
+                  className="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl font-bold shadow-md shadow-rose-200 transition-all flex items-center justify-center gap-2"
+                >
+                  {isLast ? (
+                    <>完成本周测验 <PartyPopper className="w-5 h-5" /></>
+                  ) : (
+                    <>下一题 <ChevronLeft className="w-5 h-5 rotate-180" /></>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
