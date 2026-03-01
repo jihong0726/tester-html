@@ -9,8 +9,8 @@
     <meta http-equiv="Expires" content="0">
 
     <title>神算牛牛 - 极速算牌器 | 牛牛算分网页版</title>
-    <meta name="description" content="最快最好用的网页版神算牛牛算牌器，支持五公（满堂红）、大冬菇等特色规则。点点键盘，瞬间计算出牛几，全端支持，随开随用！">
-    <meta name="keywords" content="牛牛,斗牛,算牌器,牛牛算分,五公,大冬菇,神算牛牛,极速算牌,扑克工具,在线算牌">
+    <meta name="description" content="最快最好用的网页版神算牛牛算牌器，支持五公（满堂红）、牛对子、大冬菇等特色规则。">
+    <meta name="keywords" content="牛牛,斗牛,算牌器,牛牛算分,五公,牛对子,神算牛牛">
     <meta name="author" content="MagicNiu">
 
     <style>
@@ -69,20 +69,17 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 1.5rem; font-weight: 800; color: var(--text-primary);
             transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            /* ⚠️ 已经彻底移除了 overflow: hidden; */
         }
         
         .slot.filled { background: var(--surface); box-shadow: var(--shadow-pop); transform: translateY(-2px); cursor: pointer; }
         .slot.filled:active { transform: scale(0.9); box-shadow: var(--shadow-inset); }
-
         .slot.red { color: var(--accent-red); }
         .slot.blue { color: var(--accent-blue); }
 
         .badge {
             position: absolute; top: -6px; right: -6px; background: var(--accent-red); color: white;
             font-size: 0.65rem; padding: 2px 6px; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(255, 59, 48, 0.4); animation: fadeUp 0.3s ease 0.2s both;
-            z-index: 10; /* 提升层级，防止被遮挡 */
+            box-shadow: 0 2px 4px rgba(255, 59, 48, 0.4); animation: fadeUp 0.3s ease 0.2s both; z-index: 10;
         }
 
         .result-area { min-height: 85px; width: 100%; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -90,16 +87,9 @@
         .result-title { font-size: 1.8rem; font-weight: 900; margin: 0; opacity: 0; display: none; text-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .result-title.show { display: block; opacity: 1; margin-bottom: 10px; }
 
-        /* 新增：前三张点数的胶囊UI样式 */
         .first-stage-tag {
-            display: inline-block;
-            background: rgba(0,0,0,0.04);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            animation: fadeUp 0.3s ease;
+            display: inline-block; background: rgba(0,0,0,0.04); padding: 4px 12px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; animation: fadeUp 0.3s ease;
         }
         
         .color-gray { color: var(--text-gray); }
@@ -146,7 +136,10 @@
         .key-row-bottom { display: flex; justify-content: center; align-items: flex-start; gap: 12px; margin-top: 12px; }
         .key-row-bottom .key-btn { width: calc(20% - 10px); aspect-ratio: 1; }
 
-        .config-bar { position: absolute; top: calc(env(safe-area-inset-top, 20px) + 20px); right: 20px; z-index: 10; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; color: var(--text-gray); }
+        /* 新增：右上角设置区（垂直排列双开关） */
+        .config-bar { position: absolute; top: calc(env(safe-area-inset-top, 20px) + 20px); right: 20px; z-index: 10; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+        .config-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-gray); }
+        
         .toggle-switch { position: relative; width: 44px; height: 24px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d1d5db; transition: .3s; border-radius: 24px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
@@ -169,11 +162,20 @@
 <body>
 
     <div class="config-bar">
-        <span>🍄 大冬菇</span>
-        <label class="toggle-switch">
-            <input type="checkbox" id="dongGuToggle" checked>
-            <span class="toggle-slider"></span>
-        </label>
+        <div class="config-item">
+            <span>🍄 冬菇</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="dongGuToggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        <div class="config-item">
+            <span>👯‍♀️ 对子</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="pairToggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
     </div>
 
     <div class="modal-overlay" id="dongGuModal">
@@ -229,6 +231,7 @@
             keyboard: document.getElementById('keyboard'),
             keyboardBottom: document.getElementById('keyboardBottom'),
             dongGuToggle: document.getElementById('dongGuToggle'),
+            pairToggle: document.getElementById('pairToggle'), // 新增对子开关
             dongGuModal: document.getElementById('dongGuModal')
         };
 
@@ -258,9 +261,7 @@
                 checkFirstStage();
                 renderPickingState();
             } else if (state.cards.length === 5) {
-                // 核心修复：选满5张时，立刻隐藏“前三张”提示
                 DOM.firstStageResult.style.display = 'none';
-                
                 DOM.keyboard.classList.add('disabled');
                 DOM.keyboardBottom.style.opacity = '0.5';
                 DOM.keyboardBottom.style.pointerEvents = 'none';
@@ -422,6 +423,7 @@
                 return applyResultView("👑 满堂红！金牛 (五公) 👑", "color-gold", "anim-explode", true, state.cards.slice(3, 5), state.cards.slice(0, 3));
             }
 
+            const isPairEnabled = DOM.pairToggle.checked; // 获取是否开启对子玩法
             const allVars = getVariations(state.cards);
             let bestScore = -1, finalBase = [], finalPoints = [];
 
@@ -434,6 +436,12 @@
                                 let pts = v.filter((_, idx) => idx !== i && idx !== j && idx !== k);
                                 let sum2 = (pts[0].val + pts[1].val) % 10;
                                 let score = sum2 === 0 ? 10 : sum2;
+
+                                // 【核心规则插入】：判断原生牌名是否一致
+                                if (isPairEnabled && pts[0].name === pts[1].name) {
+                                    score = 11; // 11 分代表牛对子，大过所有普通牛和牛牛
+                                }
+
                                 if (score > bestScore) {
                                     bestScore = score; finalBase = [v[i], v[j], v[k]]; finalPoints = pts;
                                 }
@@ -443,8 +451,11 @@
                 }
             }
 
+            // UI 渲染判断
             if (bestScore === -1) {
                 applyResultView("💸 凉凉！没牛", "color-gray", "anim-shake", false, [], state.cards);
+            } else if (bestScore === 11) {
+                applyResultView("👯‍♀️ 绝杀！牛对子 👯‍♀️", "color-gold", "anim-explode", true, finalPoints, finalBase);
             } else if (bestScore === 10) {
                 applyResultView("🧨 霸气通杀！牛牛 🧨", "color-gold", "anim-explode", true, finalPoints, finalBase);
             } else {
@@ -453,7 +464,6 @@
                     4: "🛡️ 防守牌！牛 4", 5: "🤔 有得拼！牛 5", 6: "💪 坐和望赢！牛 6",
                     7: "🤩 漂亮起飞！牛 7", 8: "💰 准备收钱！牛 8", 9: "🚀 赢到笑！牛 9"
                 };
-                
                 let text = textMap[bestScore];
                 let colorCls = bestScore <= 6 ? "color-normal" : "color-red";
                 let animCls = bestScore <= 6 ? "anim-pop" : "anim-bounce";
@@ -496,8 +506,8 @@
         }, { passive: false });
 
         (function checkVersion() {
-            // 版本号升级至 1.0.3，触发自动刷新缓存
-            const currentVersion = "1.0.3"; 
+            // 版本升级至 1.0.4 刷新所有人的手机缓存
+            const currentVersion = "1.0.4"; 
             const localVersion = localStorage.getItem("magicniu_version");
             
             if (localVersion !== currentVersion) {
