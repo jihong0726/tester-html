@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OKX Crypto Farm V5.0 | RPG 养成版</title>
+    <title>OKX Crypto Farm V6.0 | 生存狂飙</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=ZCOOL+KuaiLe&display=swap');
@@ -20,13 +20,17 @@
         
         .asset-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; padding: 4px 16px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 10px rgba(241, 196, 15, 0.1); }
         
-        /* VIP 进度条样式 */
-        .vip-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 6px 12px; display: flex; flex-direction: column; min-width: 200px; }
+        /* VIP 进度条样式 (加入点击效果) */
+        .vip-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 6px 12px; display: flex; flex-direction: column; min-width: 200px; cursor: pointer; transition: all 0.2s; }
+        .vip-card:hover { background: rgba(255,255,255,0.1); border-color: #f1c40f; transform: translateY(-2px); }
         .vip-bar-bg { width: 100%; height: 6px; background: #000; border-radius: 3px; margin-top: 4px; overflow: hidden; }
-        .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #0ecb81, #f1c40f); width: 0%; transition: width 0.5s ease-out; }
+        .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #e74c3c, #f1c40f, #0ecb81); width: 0%; transition: width 0.5s ease-out; }
+
+        /* 天气与资金费模块 */
+        .weather-box { background: rgba(0,0,0,0.5); border: 1px solid #4a5568; border-radius: 12px; padding: 4px 12px; display: flex; align-items: center; gap: 12px; }
 
         .tv-container { height: 35vh; border-bottom: 4px solid #161b24; background: #0b0e14; flex-shrink: 0; }
-        .game-board { flex: 1; display: flex; padding: 16px; gap: 16px; background: radial-gradient(circle at center, #161b24 0%, #0b0e14 100%); overflow-y: auto; }
+        .game-board { flex: 1; display: flex; padding: 16px; gap: 16px; background: radial-gradient(circle at center, #161b24 0%, #0b0e14 100%); overflow-y: auto; position: relative; }
         
         .zone { flex: 1; background: rgba(20, 25, 35, 0.6); border: 1px solid #2b3139; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
         .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
@@ -60,9 +64,9 @@
         .prog-bar-container { position: absolute; bottom: 8px; width: 80%; height: 6px; background: #000; border-radius: 3px; border: 1px solid #333; overflow: hidden; }
         .prog-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f1c40f, #f39c12); transition: width 0.1s linear; }
 
-        /* 商店弹窗增强 */
+        /* 弹窗系统 */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; }
-        .shop-panel { background: #161b24; border: 2px solid #2b3139; border-radius: 20px; width: 420px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .panel-box { background: #161b24; border: 2px solid #2b3139; border-radius: 20px; width: 420px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         
         .shop-input { width: 100%; background: #0b0e14; border: 2px solid #4a5568; color: #f1c40f; font-size: 24px; text-align: center; border-radius: 12px; padding: 10px; font-family: monospace; font-weight: bold; outline: none; transition: 0.2s;}
         .shop-input:focus { border-color: #0ecb81; }
@@ -70,49 +74,62 @@
         .shop-item { background: #1e2430; border: 1px solid #2b3139; border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
         .shop-item:hover { background: #2a3241; border-color: #f1c40f; transform: scale(1.02); }
         
+        /* 无感 Toast 通知 */
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: rgba(22, 27, 36, 0.95); border: 2px solid #f1c40f; color: #fff; padding: 12px 24px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 8px;}
+        
+        @keyframes slideDown { from { transform: translateY(-40px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-60px) scale(1.5); } }
         @keyframes dangerShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
         @keyframes bounceIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        @keyframes levelUpFlash { 0%, 100% { box-shadow: 0 0 0 transparent; } 50% { box-shadow: 0 0 30px #f1c40f; transform: scale(1.05); } }
         
         .floating-text { position: absolute; font-size: 20px; font-weight: 900; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.2s ease-out forwards; pointer-events: none; font-family: 'Nunito'; white-space: nowrap; }
         .anim-pop { animation: bounceIn 0.4s ease-out; }
-        .anim-levelup { animation: levelUpFlash 1s ease-in-out; }
     </style>
 </head>
 <body>
 
+    <div class="toast-container" id="toastContainer"></div>
+
     <header class="game-header">
         <div class="flex items-center gap-4">
-            <div class="text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#0ecb81] to-[#3498db] font-['ZCOOL_KuaiLe']">
-                盘感大亨 V5.0
-            </div>
             <select id="instSelect" class="bg-[#1e2430] border border-[#2b3139] text-white px-3 py-1.5 rounded-lg font-bold outline-none cursor-pointer" onchange="changeSymbol()">
-                <option value="BTC-USDT-SWAP">BTC/USDT 行情</option>
-                <option value="ETH-USDT-SWAP">ETH/USDT 行情</option>
+                <option value="BTC-USDT-SWAP">BTC/USDT</option>
+                <option value="ETH-USDT-SWAP">ETH/USDT</option>
             </select>
+
+            <div class="weather-box" id="weatherBox">
+                <div class="flex flex-col">
+                    <span class="text-[10px] text-gray-400">游戏天气 (资金费)</span>
+                    <span class="text-sm font-bold" id="weatherStatus">🌤️ 晴朗 (费率 0%)</span>
+                </div>
+                <div class="border-l border-gray-600 pl-3 flex flex-col items-center">
+                    <span class="text-[10px] text-gray-400">结算倒计时</span>
+                    <span class="text-[#f1c40f] font-mono font-bold" id="fundingTimer">10:00</span>
+                </div>
+            </div>
         </div>
 
         <div class="flex items-center gap-4">
-            <div class="vip-card" id="vipCard">
+            <div class="vip-card" onclick="openVipModal()">
                 <div class="flex justify-between text-xs font-bold mb-1">
-                    <span id="vipName" class="text-[#f1c40f]">Lv0 见习农夫</span>
-                    <span class="text-gray-400">费率: <span id="vipFee">0.2%</span></span>
+                    <span id="vipName" class="text-[#e74c3c]">Lv0 见习农夫</span>
+                    <span class="text-gray-300">费率: <span id="vipFee" class="text-[#f6465d] text-sm">50%</span></span>
                 </div>
                 <div class="vip-bar-bg"><div class="vip-bar-fill" id="vipProgress"></div></div>
                 <div class="text-[10px] text-gray-400 text-right mt-1 font-mono">
-                    量: <span id="volCurrent">0</span> / <span id="volNext">1000</span>
+                    交易量: <span id="volCurrent">0</span> / <span id="volNext">2000</span>
                 </div>
             </div>
 
             <div class="text-sm font-mono flex items-center gap-2 border-l border-[#2b3139] pl-4">
-                <span class="text-gray-400" id="wsStatus">等待...</span>
-                <span id="realtimePrice" class="text-2xl font-bold text-[#0ecb81] w-[120px] text-right">--</span>
+                <span id="realtimePrice" class="text-[28px] font-bold text-[#0ecb81] w-[140px] text-right tracking-tighter">--</span>
             </div>
 
             <div class="asset-box ml-2">
-                <div class="text-xs text-gray-400 flex items-center gap-1">🏦 金库可用</div>
-                <div class="text-[#f1c40f] font-mono font-bold text-xl" id="balanceDisplay">1,000.00</div>
+                <div class="text-xs text-gray-400 flex items-center gap-1">🏦 金库可用 (USDT)</div>
+                <div class="text-[#f1c40f] font-mono font-bold text-[22px]" id="balanceDisplay">5,000.00</div>
             </div>
         </div>
     </header>
@@ -126,8 +143,8 @@
                 <div class="flex items-center gap-2">
                     <span class="text-2xl">🌾</span>
                     <div>
-                        <h2 class="font-bold text-lg text-[#0ecb81]">多头农场 (看涨)</h2>
-                        <p class="text-xs text-gray-400">交易产生手续费并积累经验值</p>
+                        <h2 class="font-bold text-lg text-[#0ecb81]">多头农场 (买涨)</h2>
+                        <p class="text-xs text-gray-400">天气炎热时(正费率)，多头将扣除水费</p>
                     </div>
                 </div>
             </div>
@@ -140,8 +157,8 @@
                 <div class="flex items-center gap-2">
                     <span class="text-2xl">🐟</span>
                     <div>
-                        <h2 class="font-bold text-lg text-[#f6465d]">空头水族箱 (看跌)</h2>
-                        <p class="text-xs text-gray-400">交易产生手续费并积累经验值</p>
+                        <h2 class="font-bold text-lg text-[#f6465d]">空头水族箱 (买跌)</h2>
+                        <p class="text-xs text-gray-400">暴雨来临时(负费率)，空头将被水淹扣费</p>
                     </div>
                 </div>
             </div>
@@ -149,24 +166,36 @@
         </div>
     </div>
 
-    <div class="modal-bg" id="shopModal" onclick="if(event.target===this) closeShop()">
-        <div class="shop-panel">
+    <div class="modal-bg" id="shopModal" onclick="if(event.target===this) closeModal('shopModal')">
+        <div class="panel-box">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-white" id="shopTitle">购买种子</h2>
-                <button onclick="closeShop()" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
+                <button onclick="closeModal('shopModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
             </div>
             
             <div class="bg-black/30 p-4 rounded-xl border border-[#2b3139] mb-4">
-                <div class="text-sm text-gray-400 mb-2 font-bold text-center">输入本次开仓资金 (USDT)</div>
+                <div class="text-sm text-gray-400 mb-2 font-bold text-center">输入本次开仓本金 (USDT)</div>
                 <input type="number" id="shopInvestInput" class="shop-input" value="100" oninput="updateShopPreviews()">
                 <div class="flex justify-between text-xs text-gray-500 mt-2 px-1">
-                    <span>手续费率: <span id="shopFeeRate" class="text-white font-mono">0.2%</span></span>
-                    <span>预计扣费: <span id="shopFeeCost" class="text-[#f6465d] font-mono">-0.20 U</span></span>
+                    <span>当前阶级费率: <span id="shopFeeRate" class="text-white font-mono font-bold">50%</span></span>
+                    <span>建仓强扣: <span id="shopFeeCost" class="text-[#f6465d] font-mono font-bold">-50.00 U</span></span>
                 </div>
+                <div class="text-[10px] text-center text-[#fcd535] mt-2">提示：单边收取高额手续费，请尽快升级 VIP！</div>
             </div>
 
-            <div class="text-xs text-gray-400 mb-2 px-1">点击下方选项立刻扣费并播种：</div>
-            <div id="shopItemsContainer" class="max-h-[250px] overflow-y-auto pr-2 space-y-3">
+            <div class="text-xs text-gray-400 mb-2 px-1">选择生长项目 (固定基础赔率)：</div>
+            <div id="shopItemsContainer" class="max-h-[250px] overflow-y-auto pr-2 space-y-3"></div>
+        </div>
+    </div>
+
+    <div class="modal-bg" id="vipModal" onclick="if(event.target===this) closeModal('vipModal')">
+        <div class="panel-box" style="width: 480px;">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-white">🏆 农场主图鉴与费率特权</h2>
+                <button onclick="closeModal('vipModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
+            <div class="text-xs text-gray-400 mb-4">累计交易量越高，你的开仓手续费就越低。这是在这片残酷农场活下去的唯一法则。</div>
+            <div id="vipListContainer" class="space-y-2">
                 </div>
         </div>
     </div>
@@ -191,54 +220,120 @@
     </script>
 
     <script>
-        // --- 核心状态与 RPG 体系 ---
+        // --- 核心设定：50% 起跳的生存模式 ---
         let state = {
-            balance: 1000.00,
+            balance: 5000.00, // 初始给多一点，因为 50% 费率极其吸血
             volume: 0,
             currentVip: 0,
             currentPrice: 0,
-            instId: "BTC-USDT-SWAP"
+            instId: "BTC-USDT-SWAP",
+            fundingRate: 0 // 真实资金费率
         };
 
-        // RPG VIP 阶梯系统
+        // 极其残酷的阶梯费率
         const VIP_TIERS = [
-            { level: 0, name: 'Lv0 见习农夫', reqVol: 0, feeRate: 0.0020 },       // 0.2%
-            { level: 1, name: 'Lv1 正式农场主', reqVol: 1000, feeRate: 0.0015 },   // 0.15%
-            { level: 2, name: 'Lv2 庄园大亨', reqVol: 5000, feeRate: 0.0010 },     // 0.1%
-            { level: 3, name: 'Lv3 金融巨鳄', reqVol: 20000, feeRate: 0.0005 },    // 0.05%
-            { level: 4, name: 'Lv4 赛博领主', reqVol: 100000, feeRate: 0.0001 }    // 0.01%
+            { level: 0, name: 'Lv0 见习农夫', reqVol: 0, feeRate: 0.50 },       // 50%
+            { level: 1, name: 'Lv1 新手地主', reqVol: 2000, feeRate: 0.40 },    // 40%
+            { level: 2, name: 'Lv2 农场富豪', reqVol: 10000, feeRate: 0.30 },   // 30%
+            { level: 3, name: 'Lv3 商业巨头', reqVol: 50000, feeRate: 0.20 },   // 20%
+            { level: 4, name: 'Lv4 垄断财阀', reqVol: 200000, feeRate: 0.10 },  // 10%
+            { level: 5, name: 'Lv5 赛博领主', reqVol: 1000000, feeRate: 0.05 }  // 5%
         ];
 
-        // 商品基础配置 (固定倍率和时间，金额由用户决定)
+        // 赔率系统稍微调高一点点，否则在 50% 费率下毫无生存可能
+        // 比如本金100，费率50。总扣150。赢了 100 * 2.0 = 200。净赚 50。
         const SHOP_CONFIG = {
             long: [
-                { id: 'l1', icon: '🌱', name: '速生草莓', durationSec: 15, mult: 1.5, desc: '极速 15 秒，1.5 倍赔率' },
-                { id: 'l2', icon: '🥕', name: '黄金萝卜', durationSec: 60, mult: 1.8, desc: '标准 1 分钟，1.8 倍赔率' },
-                { id: 'l3', icon: '🌳', name: '高能摇钱树', durationSec: 180, mult: 2.5, desc: '漫长 3 分钟，2.5 倍暴击' }
+                { id: 'l1', icon: '🌱', name: '速生草莓', durationSec: 15, mult: 1.8, desc: '极速 15 秒定生死' },
+                { id: 'l2', icon: '🥕', name: '黄金萝卜', durationSec: 60, mult: 2.2, desc: '标准 1 分钟，2.2 倍暴击' },
+                { id: 'l3', icon: '🌳', name: '高能摇钱树', durationSec: 180, mult: 3.0, desc: '熬过 3 分钟，3.0 倍神话' }
             ],
             short: [
-                { id: 's1', icon: '🥚', name: '食人鱼卵', durationSec: 15, mult: 1.5, desc: '极速 15 秒，1.5 倍赔率' },
-                { id: 's2', icon: '🐡', name: '河豚幼崽', durationSec: 60, mult: 1.8, desc: '标准 1 分钟，1.8 倍赔率' },
-                { id: 's3', icon: '🦈', name: '深海巨鲨', durationSec: 180, mult: 2.5, desc: '漫长 3 分钟，2.5 倍暴击' }
+                { id: 's1', icon: '🥚', name: '食人鱼卵', durationSec: 15, mult: 1.8, desc: '极速 15 秒定生死' },
+                { id: 's2', icon: '🐡', name: '河豚幼崽', durationSec: 60, mult: 2.2, desc: '标准 1 分钟，2.2 倍暴击' },
+                { id: 's3', icon: '🦈', name: '深海巨鲨', durationSec: 180, mult: 3.0, desc: '熬过 3 分钟，3.0 倍神话' }
             ]
         };
 
         const TOTAL_SLOTS = 6;
         let grids = {
-            long: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `l_${i}`, unlocked: i < 2, unlockPrice: (i*i*150)+50, item: null })),
-            short: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `s_${i}`, unlocked: i < 2, unlockPrice: (i*i*150)+50, item: null }))
+            long: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `l_${i}`, unlocked: i < 2, unlockPrice: (i*i*200)+100, item: null })),
+            short: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `s_${i}`, unlocked: i < 2, unlockPrice: (i*i*200)+100, item: null }))
         };
 
-        // --- UI 更新模块 ---
+        // --- 全局无感 Toast 通知系统 ---
+        function showToast(icon, message, color = '#f1c40f') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderColor = color;
+            toast.innerHTML = `<span class="text-xl">${icon}</span> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 3500);
+        }
+
+        // --- 10分钟天气与资金费循环系统 ---
+        let fundingSeconds = 600; // 10分钟 = 600秒
+        setInterval(() => {
+            fundingSeconds--;
+            if(fundingSeconds <= 0) {
+                triggerFundingSettlement();
+                fundingSeconds = 600;
+            }
+            
+            // 更新 UI 倒计时
+            const m = Math.floor(fundingSeconds / 60).toString().padStart(2, '0');
+            const s = (fundingSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('fundingTimer').innerText = `${m}:${s}`;
+        }, 1000);
+
+        function triggerFundingSettlement() {
+            // 只有当有真实费率且有存活作物时才扣款
+            if (state.fundingRate === 0) return;
+            
+            const isPositive = state.fundingRate > 0;
+            showToast("🌩️", "天气剧变！全区进行资金费率清算！", "#3498db");
+
+            ['long', 'short'].forEach(side => {
+                grids[side].forEach(slot => {
+                    if (slot.item && !slot.item.resolved) {
+                        let penalty = 0;
+                        const it = slot.item;
+                        // 简化游戏逻辑：逆势方直接扣除本金的 15% 作为惩罚
+                        if (isPositive && side === 'long') penalty = it.amount * 0.15;
+                        if (!isPositive && side === 'short') penalty = it.amount * 0.15;
+
+                        if (penalty > 0) {
+                            state.balance -= penalty;
+                            updateGlobalUI();
+                            
+                            const dom = document.getElementById(`dom_${slot.id}`);
+                            if(dom) {
+                                dom.classList.add('aura-danger');
+                                const ft = document.createElement('div');
+                                ft.className = 'floating-text text-[#f6465d]';
+                                ft.innerText = `交费 -${penalty.toFixed(1)}`;
+                                dom.appendChild(ft);
+                                setTimeout(()=> dom.classList.remove('aura-danger'), 1000);
+                            }
+                        }
+                    }
+                });
+            });
+        }
+
         function updateGlobalUI() {
             document.getElementById('balanceDisplay').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits:2});
             
-            // 更新 VIP 系统
             const tier = VIP_TIERS[state.currentVip];
             const nextTier = VIP_TIERS[state.currentVip + 1];
             
-            document.getElementById('vipName').innerText = tier.name;
-            document.getElementById('vipFee').innerText = (tier.feeRate * 100).toFixed(2) + '%';
+            const nameEl = document.getElementById('vipName');
+            nameEl.innerText = tier.name;
+            // 等级越高，颜色越尊贵
+            if(state.currentVip > 3) nameEl.style.color = '#0ecb81';
+            
+            document.getElementById('vipFee').innerText = (tier.feeRate * 100).toFixed(0) + '%';
             document.getElementById('volCurrent').innerText = state.volume.toFixed(0);
             
             if(nextTier) {
@@ -251,23 +346,45 @@
             }
         }
 
-        // 检查升级逻辑
         function checkVipUpgrade() {
             let nextTier = VIP_TIERS[state.currentVip + 1];
             if (nextTier && state.volume >= nextTier.reqVol) {
                 state.currentVip++;
-                // 升级特效
-                const card = document.getElementById('vipCard');
-                card.classList.remove('anim-levelup');
-                void card.offsetWidth; // trigger reflow
-                card.classList.add('anim-levelup');
+                showToast("🎖️", `狂飙升级！晋升为【${nextTier.name}】，费率降至 ${(nextTier.feeRate*100).toFixed(0)}%！`, "#f1c40f");
                 
-                alert(`🎉 恭喜！你的交易量突破 ${nextTier.reqVol}，升级为【${nextTier.name}】！\n新费率已降至 ${(nextTier.feeRate*100).toFixed(2)}%。`);
+                // 如果连续越级，递归检查
+                checkVipUpgrade(); 
             }
             updateGlobalUI();
         }
 
-        // --- 渲染场地 ---
+        function openVipModal() {
+            const container = document.getElementById('vipListContainer');
+            container.innerHTML = '';
+            
+            VIP_TIERS.forEach(tier => {
+                const isActive = state.currentVip === tier.level;
+                const isPassed = state.currentVip > tier.level;
+                
+                let statusHtml = '';
+                if(isActive) statusHtml = `<span class="bg-[#f1c40f] text-black px-2 py-0.5 rounded text-xs font-bold">当前</span>`;
+                else if(isPassed) statusHtml = `<span class="text-[#0ecb81] text-xs font-bold">✔ 已解锁</span>`;
+                else statusHtml = `<span class="text-gray-600 text-xs">需量: ${tier.reqVol}</span>`;
+
+                const div = document.createElement('div');
+                div.className = `flex justify-between items-center p-3 rounded-lg border ${isActive ? 'border-[#f1c40f] bg-[#f1c40f]/10' : 'border-[#2b3139] bg-[#1e2430]'}`;
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="font-bold ${isActive ? 'text-[#f1c40f]' : (isPassed ? 'text-gray-300' : 'text-gray-500')}">${tier.name}</div>
+                        ${statusHtml}
+                    </div>
+                    <div class="font-mono font-bold text-lg ${isActive ? 'text-[#f6465d]' : 'text-gray-500'}">${(tier.feeRate * 100).toFixed(0)}% 手续费</div>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById('vipModal').style.display = 'flex';
+        }
+
         function renderGrids() {
             const farm = document.getElementById('farmGrid');
             const pond = document.getElementById('pondGrid');
@@ -298,7 +415,7 @@
             } else {
                 const it = slot.item;
                 div.innerHTML = `
-                    <div class="absolute top-2 left-2 text-[10px] text-gray-400 font-mono">均价: ${it.entryPrice.toFixed(1)}</div>
+                    <div class="absolute top-2 left-2 text-[10px] text-gray-400 font-mono">建仓: ${it.entryPrice.toFixed(1)}</div>
                     <div class="absolute top-2 right-2 text-[11px] font-mono font-bold" id="diff_${slot.id}">--</div>
                     <div class="emoji-art anim-pop" id="emoji_${slot.id}">${it.config.icon}</div>
                     <button class="btn-early-close" id="btn_close_${slot.id}" onclick="earlyHarvest('${side}', ${index}, event)">计算中</button>
@@ -313,28 +430,26 @@
             if(state.balance >= slot.unlockPrice) {
                 state.balance -= slot.unlockPrice; 
                 slot.unlocked = true;
+                showToast("⛏️", "成功开垦新土地！", "#0ecb81");
                 updateGlobalUI(); renderGrids();
             } else {
-                alert("资金不足以扩建农场！");
+                showToast("❌", "金库余额不足，快去赚钱！", "#f6465d");
             }
         }
 
-        // --- 动态商店系统 ---
         let currentActionTarget = null;
         
         function openShop(side, index) {
             if(state.currentPrice <= 0) return alert("📡 等待行情...");
             currentActionTarget = { side, index };
             
-            document.getElementById('shopTitle').innerText = side === 'long' ? '🌱 购入种子 (买涨)' : '🐟 购入鱼苗 (买跌)';
+            document.getElementById('shopTitle').innerText = side === 'long' ? '🌱 购买多头种子' : '🐟 购买空头鱼苗';
             document.getElementById('shopModal').style.display = 'flex';
-            
-            updateShopPreviews(); // 初始化渲染商品列表
+            updateShopPreviews(); 
         }
 
-        function closeShop() { document.getElementById('shopModal').style.display = 'none'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
-        // 根据输入的金额实时更新预估数据
         function updateShopPreviews() {
             const inputVal = parseFloat(document.getElementById('shopInvestInput').value);
             const amount = isNaN(inputVal) || inputVal <= 0 ? 0 : inputVal;
@@ -342,7 +457,7 @@
             const currentFeeRate = VIP_TIERS[state.currentVip].feeRate;
             const feeCost = amount * currentFeeRate;
             
-            document.getElementById('shopFeeRate').innerText = (currentFeeRate * 100).toFixed(2) + '%';
+            document.getElementById('shopFeeRate').innerText = (currentFeeRate * 100).toFixed(0) + '%';
             document.getElementById('shopFeeCost').innerText = `-${feeCost.toFixed(2)} U`;
 
             const { side } = currentActionTarget;
@@ -351,7 +466,7 @@
 
             SHOP_CONFIG[side].forEach(config => {
                 const totalCost = amount + feeCost;
-                const expectedReward = amount * config.mult;
+                const expectedReward = amount * config.mult; // 赔率只乘本金
                 
                 const div = document.createElement('div');
                 div.className = 'shop-item';
@@ -359,13 +474,13 @@
                     <div class="flex items-center gap-3">
                         <div class="text-3xl">${config.icon}</div>
                         <div>
-                            <div class="font-bold text-white text-sm">${config.name}</div>
+                            <div class="font-bold text-white text-sm">${config.name} <span class="text-[#f1c40f] ml-1">${config.mult}x</span></div>
                             <div class="text-[10px] text-gray-400">${config.desc}</div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-xs text-gray-400">总成本: ${totalCost.toFixed(2)}</div>
-                        <div class="text-[#0ecb81] font-bold text-sm">赢回: ${expectedReward.toFixed(2)}</div>
+                        <div class="text-xs text-gray-400">总成本: <span class="text-white">${totalCost.toFixed(1)}</span></div>
+                        <div class="text-[#0ecb81] font-bold text-sm">赢回: ${expectedReward.toFixed(1)}</div>
                     </div>
                 `;
                 div.onclick = () => buyItem(config, amount, feeCost);
@@ -374,31 +489,25 @@
         }
 
         function buyItem(config, amount, fee) {
-            if(amount <= 0) return alert("请输入有效金额！");
+            if(amount <= 0) return;
             const totalCost = amount + fee;
-            if(state.balance < totalCost) return alert("可用资金不足以支付本金+手续费！");
+            if(state.balance < totalCost) return showToast("❌", "可用资金不足以支付本金和高昂的手续费！", "#f6465d");
             
-            // 扣除本金和手续费
             state.balance -= totalCost;
-            // 增加交易量 (仅本金部分计入交易量)
-            state.volume += amount;
-            
+            state.volume += amount; 
             checkVipUpgrade();
 
             const { side, index } = currentActionTarget;
             grids[side][index].item = {
-                config: config, 
-                amount: amount, // 记录实际投入的有效本金用于赔率计算
+                config: config, amount: amount, 
                 entryPrice: state.currentPrice,
-                startTime: Date.now(), 
-                durationMs: config.durationSec * 1000,
+                startTime: Date.now(), durationMs: config.durationSec * 1000,
                 resolved: false
             };
             
-            closeShop(); renderGrids();
+            closeModal('shopModal'); renderGrids();
         }
 
-        // --- 提前平仓 (止盈/止损) ---
         function earlyHarvest(side, index, event) {
             if(event) event.stopPropagation();
             const slot = grids[side][index];
@@ -420,67 +529,75 @@
             const isWinningNow = side === 'long' ? (state.currentPrice > it.entryPrice) : (state.currentPrice < it.entryPrice);
             
             let payout = 0;
-            // 平仓依然需要扣除一次手续费
-            const closeFee = it.amount * VIP_TIERS[state.currentVip].feeRate;
-
+            // V6 版本平仓不再额外扣手续费，给玩家留活路
             if(isWinningNow) {
                 const maxProfit = (it.amount * it.config.mult) - it.amount;
-                payout = it.amount + (maxProfit * progress) - closeFee;
+                payout = it.amount + (maxProfit * progress);
                 
                 emojiEl.innerText = side === 'long' ? '🧺' : '🎣';
                 emojiEl.style.transform = 'scale(1.2)';
                 
                 const ft = document.createElement('div');
                 ft.className = 'floating-text text-[#0ecb81]';
-                ft.innerText = `止盈 +${(payout - it.amount).toFixed(1)}U`;
+                ft.innerText = `极速止盈 +${(payout).toFixed(1)}U`;
                 dom.appendChild(ft);
             } else {
-                payout = it.amount * (1 - progress) - closeFee;
-                if(payout < 0) payout = 0; // 最多亏完
+                payout = it.amount * (1 - progress);
                 
                 emojiEl.innerText = '✂️';
                 emojiEl.style.filter = 'grayscale(0.5)';
                 
                 const ft = document.createElement('div');
                 ft.className = 'floating-text text-gray-400 text-sm';
-                ft.innerText = `止损退回 ${payout.toFixed(1)}U`;
+                ft.innerText = `割肉保命 退${payout.toFixed(1)}U`;
                 dom.appendChild(ft);
             }
 
             state.balance += payout;
-            state.volume += it.amount; // 平仓也算一笔交易量
+            state.volume += it.amount; // 计入交易量
             checkVipUpgrade();
 
             setTimeout(() => { slot.item = null; renderGrids(); }, 1500);
         }
 
-        // --- WebSocket 连线 ---
         let ws = null;
         function connectWS() {
             if(ws) ws.close();
-            document.getElementById('wsStatus').innerText = '正在连接...';
             ws = new WebSocket('wss://ws.okx.com:8443/ws/v5/public');
             ws.onopen = () => { 
-                document.getElementById('wsStatus').innerText = '行情正常';
-                document.getElementById('wsStatus').style.color = '#0ecb81';
-                ws.send(JSON.stringify({ op: "subscribe", args: [{ channel: "tickers", instId: state.instId }] })); 
+                ws.send(JSON.stringify({ op: "subscribe", args: [
+                    { channel: "tickers", instId: state.instId },
+                    { channel: "funding-rate", instId: state.instId }
+                ]})); 
             };
             ws.onmessage = (event) => {
                 if(event.data === 'pong') return;
                 const res = JSON.parse(event.data);
                 if (res.data && res.data[0]) {
-                    const newPrice = parseFloat(res.data[0].last);
-                    const pEl = document.getElementById('realtimePrice');
-                    pEl.innerText = newPrice.toFixed(2);
-                    pEl.style.color = newPrice >= state.currentPrice ? '#0ecb81' : '#f6465d';
-                    state.currentPrice = newPrice;
+                    const ch = res.arg.channel;
+                    if(ch === 'tickers') {
+                        const newPrice = parseFloat(res.data[0].last);
+                        const pEl = document.getElementById('realtimePrice');
+                        pEl.innerText = newPrice.toFixed(2);
+                        pEl.style.color = newPrice >= state.currentPrice ? '#0ecb81' : '#f6465d';
+                        state.currentPrice = newPrice;
+                    }
+                    if(ch === 'funding-rate') {
+                        state.fundingRate = parseFloat(res.data[0].fundingRate);
+                        const wEl = document.getElementById('weatherStatus');
+                        const wBox = document.getElementById('weatherBox');
+                        
+                        if(state.fundingRate > 0) {
+                            wEl.innerText = `☀️ 酷热 (正费率 ${(state.fundingRate*100).toFixed(4)}%)`;
+                            wEl.style.color = '#fcd535'; wBox.style.borderColor = '#fcd535';
+                        } else if (state.fundingRate < 0) {
+                            wEl.innerText = `🌧️ 暴雨 (负费率 ${(state.fundingRate*100).toFixed(4)}%)`;
+                            wEl.style.color = '#3498db'; wBox.style.borderColor = '#3498db';
+                        }
+                    }
                 }
             };
-            ws.onclose = () => { 
-                document.getElementById('wsStatus').innerText = '重连中...';
-                document.getElementById('wsStatus').style.color = '#f6465d';
-                setTimeout(connectWS, 3000); 
-            };
+            ws.onclose = () => { setTimeout(connectWS, 3000); };
         }
 
         function changeSymbol() {
@@ -489,7 +606,6 @@
             loadTradingView(state.instId); connectWS();
         }
 
-        // --- 主游戏循环 ---
         function gameLoop() {
             const now = Date.now();
             ['long', 'short'].forEach(side => {
@@ -525,30 +641,26 @@
                         }
                     }
 
-                    // 满期自动结算
+                    // 满期结算
                     if (progress >= 100) {
                         it.resolved = true;
                         if(dom) dom.classList.remove('aura-danger', 'aura-safe');
                         if(btnEl) btnEl.style.display = 'none';
 
-                        const closeFee = it.amount * VIP_TIERS[state.currentVip].feeRate;
-
                         if(isWinningNow) {
                             emojiEl.innerText = side === 'long' ? '🍎' : '💰';
                             emojiEl.style.transform = 'scale(1.4)';
                             
-                            const finalPayout = (it.amount * it.config.mult) - closeFee;
+                            const finalPayout = (it.amount * it.config.mult);
                             state.balance += finalPayout;
                             
                             const ft = document.createElement('div');
                             ft.className = 'floating-text text-[#f1c40f]';
-                            ft.innerText = `+${finalPayout.toFixed(1)} U`;
+                            ft.innerText = `满期 +${finalPayout.toFixed(1)} U`;
                             dom.appendChild(ft);
                         } else {
                             emojiEl.innerText = side === 'long' ? '🥀' : '☠️';
                             emojiEl.style.filter = 'grayscale(1) brightness(0.5)';
-                            
-                            state.balance -= closeFee; // 输光了还要被扣平仓手续费，极其真实残酷
                             
                             const ft = document.createElement('div');
                             ft.className = 'floating-text text-gray-500 text-sm';
@@ -556,7 +668,7 @@
                             dom.appendChild(ft);
                         }
 
-                        state.volume += it.amount; // 计入平仓交易量
+                        state.volume += it.amount; 
                         checkVipUpgrade();
 
                         setTimeout(() => { slot.item = null; renderGrids(); }, 2500);
@@ -566,7 +678,7 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // 初始化执行
+        // 初始化
         updateGlobalUI();
         renderGrids(); 
         loadTradingView(state.instId); 
