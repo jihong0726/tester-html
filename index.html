@@ -2,521 +2,310 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-    <title>神算牛牛 - 极速算牌器 | 牛牛算分网页版</title>
-    <meta name="description" content="最快最好用的网页版神算牛牛算牌器，支持五公（满堂红）、牛对子、大冬菇等特色规则。">
-    <meta name="keywords" content="牛牛,斗牛,算牌器,牛牛算分,五公,牛对子,神算牛牛">
-    <meta name="author" content="MagicNiu">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKX Crypto Farm 🚜 | 行情养成游戏</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #f2f4f8;
-            --desktop-bg: #cbd5e1;
-            --surface: #ffffff;
-            --text-primary: #1c1e21;
-            --text-gray: #8a8d91;
-            --accent-red: #ff3b30;
-            --accent-blue: #007aff;
-            --accent-gold: linear-gradient(135deg, #ffd700, #ff8c00);
-            --shadow-pop: 6px 6px 12px #e3e5e8, -6px -6px 12px #ffffff;
-            --shadow-inset: inset 4px 4px 8px #e3e5e8, inset -4px -4px 8px #ffffff;
+        @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+
+        body { 
+            background-color: #2c3e50; 
+            color: #ecf0f1; 
+            font-family: 'ZCOOL KuaiLe', cursive, sans-serif; /* 使用趣味字体 */
+            margin: 0; overflow: hidden; user-select: none;
         }
 
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-
-        html { background-color: var(--desktop-bg); display: flex; justify-content: center; align-items: center; height: 100%; touch-action: none; }
-
-        body {
-            margin: 0; width: 100%; max-width: 430px; height: 100dvh; max-height: 900px;
-            background-color: var(--bg-color); display: flex; flex-direction: column;
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom);
-            position: relative; overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 20px;
-            touch-action: none; overscroll-behavior: none;
-        }
-
-        @media (max-width: 480px) {
-            html { background-color: var(--bg-color); display: block; }
-            body { max-width: 100%; max-height: none; box-shadow: none; border-radius: 0; }
-        }
-
-        .display-board { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 10px; }
-        .brand { font-size: 1.5rem; font-weight: 900; color: var(--text-primary); margin-bottom: 8px; letter-spacing: 1px; }
-        .brand span { color: var(--accent-red); }
+        /* 游戏场景划分 */
+        .game-container { display: flex; height: calc(100vh - 140px); }
         
-        .instruction-text {
-            font-size: 0.8rem; color: var(--text-gray); background: rgba(0, 0, 0, 0.05);
-            padding: 4px 14px; border-radius: 12px; margin-bottom: 20px; font-weight: 500;
+        .farm-zone { flex: 1; background: linear-gradient(180deg, #87CEEB 0%, #27ae60 50%, #2ecc71 100%); position: relative; border-right: 4px dashed rgba(255,255,255,0.2); overflow: hidden; }
+        .pond-zone { flex: 1; background: linear-gradient(180deg, #87CEEB 0%, #2980b9 50%, #3498db 100%); position: relative; overflow: hidden; }
+
+        /* 场景背景装饰 */
+        .cloud { position: absolute; font-size: 40px; opacity: 0.8; animation: floatCloud 20s linear infinite; }
+        .wave { position: absolute; font-size: 30px; opacity: 0.3; animation: waveMove 4s ease-in-out infinite alternate; }
+
+        @keyframes floatCloud { 0% { transform: translateX(-100px); } 100% { transform: translateX(50vw); } }
+        @keyframes waveMove { 0% { transform: translateX(-10px) translateY(0); } 100% { transform: translateX(10px) translateY(10px); } }
+
+        /* 实体 (种子/鱼) 样式 */
+        .entity-card {
+            position: absolute;
+            width: 80px; height: 100px;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            transition: all 0.3s;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
         }
-
-        .slots-container { 
-            display: flex; gap: 10px; width: 100%; max-width: 380px; 
-            justify-content: center; align-items: center; margin-bottom: 20px;
-            min-height: 190px; transition: all 0.3s ease;
+        .entity-emoji { font-size: 48px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); transition: transform 0.2s; }
+        
+        /* 状态浮窗 (价格与进度) */
+        .entity-status {
+            background: rgba(0,0,0,0.6); border-radius: 8px; padding: 4px 6px; text-align: center;
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(4px);
+            margin-bottom: 4px; width: 100px;
         }
-        .slots-container.result-mode { flex-direction: column; gap: 15px; }
-        
-        .card-row { display: flex; gap: 10px; justify-content: center; animation: fadeUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .progress-bar-bg { width: 100%; height: 6px; background: #555; border-radius: 3px; overflow: hidden; margin-top: 4px; }
+        .progress-bar-fill { height: 100%; background: #f1c40f; width: 0%; transition: width 0.1s linear; }
 
-        .slot {
-            width: 55px; height: 77px; border-radius: 8px; position: relative;
-            background: var(--bg-color); box-shadow: var(--shadow-inset);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; font-weight: 800; color: var(--text-primary);
-            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        /* 动画效果 */
+        @keyframes popIn { 0% { transform: scale(0) translateY(50px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes successBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3) translateY(-20px); } }
+        @keyframes failShake { 0%, 100% { transform: translateX(0); filter: grayscale(1); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100px) scale(1.5); } }
+
+        .anim-success { animation: successBounce 0.5s ease-out; }
+        .anim-fail { animation: failShake 0.5s ease-out forwards; opacity: 0.7; }
+        .reward-text { position: absolute; color: #f1c40f; font-weight: bold; font-size: 24px; text-shadow: 0 2px 4px #000; animation: floatUp 1.5s ease-out forwards; pointer-events: none; z-index: 20; }
+
+        /* 底部控制台 */
+        .dashboard {
+            height: 140px; background: #1a252f; border-top: 4px solid #34495e;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 40px;
         }
-        
-        .slot.filled { background: var(--surface); box-shadow: var(--shadow-pop); transform: translateY(-2px); cursor: pointer; }
-        .slot.filled:active { transform: scale(0.9); box-shadow: var(--shadow-inset); }
-        .slot.red { color: var(--accent-red); }
-        .slot.blue { color: var(--accent-blue); }
-
-        .badge {
-            position: absolute; top: -6px; right: -6px; background: var(--accent-red); color: white;
-            font-size: 0.65rem; padding: 2px 6px; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(255, 59, 48, 0.4); animation: fadeUp 0.3s ease 0.2s both; z-index: 10;
+        .btn-game {
+            border: none; outline: none; border-radius: 12px; font-family: 'ZCOOL KuaiLe', cursive;
+            font-size: 20px; padding: 12px 24px; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 0 rgba(0,0,0,0.4);
+            display: flex; align-items: center; gap: 8px; color: white;
         }
+        .btn-game:active { transform: translateY(6px); box-shadow: 0 0 0 rgba(0,0,0,0.4); }
+        .btn-long { background: #27ae60; } .btn-long:hover { background: #2ecc71; }
+        .btn-short { background: #2980b9; } .btn-short:hover { background: #3498db; }
 
-        .result-area { min-height: 85px; width: 100%; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        
-        .result-title { font-size: 1.8rem; font-weight: 900; margin: 0; opacity: 0; display: none; text-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .result-title.show { display: block; opacity: 1; margin-bottom: 10px; }
-
-        .first-stage-tag {
-            display: inline-block; background: rgba(0,0,0,0.04); padding: 4px 12px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; animation: fadeUp 0.3s ease;
-        }
-        
-        .color-gray { color: var(--text-gray); }
-        .color-normal { color: var(--text-primary); }
-        .color-red { color: var(--accent-red); }
-        .color-gold { background: var(--accent-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 12px rgba(255,140,0,0.3); font-size: 2.2rem; }
-
-        .anim-shake { animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both; }
-        .anim-pop { animation: popNormal 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-        .anim-bounce { animation: bounceStrong 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-        .anim-explode { animation: explode 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both; }
-
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popNormal { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
-        @keyframes bounceStrong { 0% { opacity: 0; transform: scale(0.3); } 50% { opacity: 1; transform: scale(1.1); } 70% { transform: scale(0.9); } 100% { transform: scale(1); } }
-        @keyframes explode { 0% { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; transform: scale(1.2); text-shadow: 0 10px 20px rgba(255,140,0,0.5); } 100% { transform: scale(1); } }
-
-        .reset-btn {
-            margin-top: 5px; padding: 10px 28px; border-radius: 20px; background: var(--text-primary); color: white;
-            font-weight: bold; font-size: 1rem; opacity: 0; pointer-events: none; transform: translateY(10px);
-            transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: none; outline: none; cursor: pointer;
-        }
-        .reset-btn.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .reset-btn:active { transform: scale(0.95); }
-
-        .keyboard {
-            background: var(--surface); border-radius: 24px 24px 0 0; padding: 25px 15px calc(20px + env(safe-area-inset-bottom));
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.03); margin: 0 -20px; flex-shrink: 0;
-        }
-        
-        .key-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; max-width: 420px; margin: 0 auto; }
-        
-        .key-btn {
-            aspect-ratio: 1; border-radius: 12px; background: var(--surface); box-shadow: var(--shadow-pop);
-            display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 700; color: var(--text-primary);
-            transition: all 0.1s ease; cursor: pointer; border: none; outline: none;
-        }
-        .key-btn:active { box-shadow: var(--shadow-inset); transform: scale(0.96); }
-        .key-btn.special-red { color: var(--accent-red); font-size: 1.6rem; font-weight: 900; }
-        .key-btn.special-blue { color: var(--accent-blue); }
-        .key-grid.disabled { opacity: 0.5; pointer-events: none; filter: grayscale(100%); transition: all 0.3s ease; }
-        
-        .key-row-bottom { display: flex; justify-content: center; align-items: flex-start; gap: 12px; margin-top: 12px; }
-        .key-row-bottom .key-btn { width: calc(20% - 10px); aspect-ratio: 1; }
-
-        /* 新增：右上角设置区（垂直排列双开关） */
-        .config-bar { position: absolute; top: calc(env(safe-area-inset-top, 20px) + 20px); right: 20px; z-index: 10; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
-        .config-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: var(--text-gray); }
-        
-        .toggle-switch { position: relative; width: 44px; height: 24px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #d1d5db; transition: .3s; border-radius: 24px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
-        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .toggle-switch input:checked + .toggle-slider { background-color: var(--accent-red); }
-        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
-
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-        .modal-overlay.show { opacity: 1; pointer-events: auto; }
-        .modal-box { background: var(--surface); padding: 25px 20px; border-radius: 24px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: translateY(20px) scale(0.95); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .modal-overlay.show .modal-box { transform: translateY(0) scale(1); }
-        .modal-title { font-size: 1.3rem; font-weight: 800; margin: 0 0 10px 0; color: var(--text-primary); }
-        .modal-desc { font-size: 0.95rem; color: var(--text-gray); margin: 0 0 20px 0; line-height: 1.5; }
-        .modal-btn { display: block; width: 100%; padding: 14px; border-radius: 12px; font-size: 1.05rem; font-weight: bold; border: none; cursor: pointer; transition: transform 0.1s; margin-bottom: 10px; }
-        .modal-btn:active { transform: scale(0.96); }
-        .btn-primary { background: linear-gradient(135deg, #1c1e21, #3a3d42); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-        .btn-secondary { background: #f2f4f8; color: var(--text-gray); margin-bottom: 0; }
+        .okx-input { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2); color: white; border-radius: 8px; padding: 8px 12px; font-size: 18px; outline: none; font-family: monospace; text-align: center;}
     </style>
 </head>
 <body>
 
-    <div class="config-bar">
-        <div class="config-item">
-            <span>🍄 冬菇</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="dongGuToggle" checked>
-                <span class="toggle-slider"></span>
-            </label>
+    <div class="absolute top-0 left-0 w-full p-4 flex justify-between items-start z-50 pointer-events-none">
+        <div class="bg-black/50 backdrop-blur rounded-xl p-3 border border-white/20">
+            <div class="text-sm text-gray-300 mb-1">💰 我的金库</div>
+            <div class="text-3xl text-[#f1c40f] tracking-wider" id="balanceDisplay">1000.00 USDT</div>
         </div>
-        <div class="config-item">
-            <span>👯‍♀️ 对子</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="pairToggle" checked>
-                <span class="toggle-slider"></span>
-            </label>
+        <div class="bg-black/50 backdrop-blur rounded-xl p-3 border border-white/20 text-center">
+            <div class="text-sm text-gray-300 mb-1 flex items-center gap-2 justify-center">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                BTC 实时行情 (OKX)
+            </div>
+            <div class="text-3xl text-white font-mono" id="tickerPrice">Loading...</div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="dongGuModal">
-        <div class="modal-box">
-            <h3 class="modal-title">发现可能的冬菇</h3>
-            <p class="modal-desc">这副牌中A和公仔构成了点数牌。请问这张<strong style="color:var(--text-primary);">A</strong>是<strong style="color:var(--text-primary);">♠️ 黑桃A (冬菇)</strong>吗？</p>
-            <button class="modal-btn btn-primary" onclick="confirmDongGu(true)">🍄 是的，它是大冬菇</button>
-            <button class="modal-btn btn-secondary" onclick="confirmDongGu(false)">并不是</button>
+    <div class="game-container">
+        <div class="farm-zone" id="farmZone">
+            <div class="absolute top-4 left-4 text-white/50 text-2xl font-bold">↑ 农场 (猜涨)</div>
+            <div class="cloud" style="top: 10%; animation-delay: 0s;">☁️</div>
+            <div class="cloud" style="top: 25%; animation-delay: -10s; font-size: 60px;">☁️</div>
         </div>
-    </div>
-
-    <div class="display-board">
-        <div class="brand">神算<span>牛牛</span></div>
-        <div class="instruction-text">点击键盘选牌 · 点击卡牌退回</div>
         
-        <div class="slots-container" id="slots"></div>
-        <div class="result-area">
-            <div id="firstStageResult" style="display: none;"></div>
-            <h2 class="result-title" id="resultTitle">--</h2>
-            <div id="usageCounter" style="color: var(--text-gray); font-size: 0.8rem; margin: 5px 0;">今日已算: 0 局</div>
-            <button class="reset-btn" id="resetBtn" onclick="resetGame()">下一局</button>
+        <div class="pond-zone" id="pondZone">
+            <div class="absolute top-4 right-4 text-white/50 text-2xl font-bold">↓ 池塘 (猜跌)</div>
+            <div class="wave" style="top: 40%; left: 20%;">〰️</div>
+            <div class="wave" style="top: 60%; left: 60%; animation-delay: -2s;">〰️</div>
+            <div class="wave" style="top: 80%; left: 30%; animation-delay: -1s;">〰️</div>
         </div>
     </div>
 
-    <div class="keyboard">
-        <div class="key-grid" id="keyboard">
-            <button class="key-btn" onclick="addCard('A', 1)">A</button>
-            <button class="key-btn" onclick="addCard('2', 2)">2</button>
-            <button class="key-btn special-red" onclick="addCard('3', 3)">3</button>
-            <button class="key-btn" onclick="addCard('4', 4)">4</button>
-            <button class="key-btn" onclick="addCard('5', 5)">5</button>
-            <button class="key-btn special-red" onclick="addCard('6', 6)">6</button>
-            <button class="key-btn" onclick="addCard('7', 7)">7</button>
-            <button class="key-btn" onclick="addCard('8', 8)">8</button>
-            <button class="key-btn" onclick="addCard('9', 9)">9</button>
-            <button class="key-btn" onclick="addCard('10', 10)">10</button>
+    <div class="dashboard z-50 relative">
+        <div class="flex flex-col items-center gap-2">
+            <button class="btn-game btn-long" onclick="plantSeed()">
+                <span>🌱 种下种子 (看涨)</span>
+            </button>
+            <div class="text-xs text-green-400 font-mono">若到期上涨，树结苹果🍎赢 1.8x</div>
         </div>
-        <div class="key-row-bottom" id="keyboardBottom">
-            <button class="key-btn special-blue" onclick="addCard('J', 10)">J</button>
-            <button class="key-btn special-blue" onclick="addCard('Q', 10)">Q</button>
-            <button class="key-btn special-blue" onclick="addCard('K', 10)">K</button>
+
+        <div class="flex gap-4 bg-black/30 p-4 rounded-2xl border border-white/10 shadow-inner">
+            <div class="flex flex-col">
+                <label class="text-xs text-gray-400 mb-1">投入金额 (USDT)</label>
+                <input type="number" id="investAmount" class="okx-input w-[120px]" value="100">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-xs text-gray-400 mb-1">生长时间 (预测周期)</label>
+                <select id="timeDuration" class="okx-input w-[120px] cursor-pointer">
+                    <option value="10">10 秒 (速测)</option>
+                    <option value="30">30 秒</option>
+                    <option value="60">1 分钟</option>
+                    <option value="300">5 分钟</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center gap-2">
+            <button class="btn-game btn-short" onclick="hatchEgg()">
+                <span>🥚 孵化鱼卵 (看跌)</span>
+            </button>
+            <div class="text-xs text-blue-400 font-mono">若到期下跌，鱼吐金币💰赢 1.8x</div>
         </div>
     </div>
 
     <script>
-        let state = { cards: [], tempDongGu: null, usageCount: 0 };
-        const DOM = {
-            slots: document.getElementById('slots'),
-            resultTitle: document.getElementById('resultTitle'),
-            firstStageResult: document.getElementById('firstStageResult'),
-            usageCounter: document.getElementById('usageCounter'),
-            resetBtn: document.getElementById('resetBtn'),
-            keyboard: document.getElementById('keyboard'),
-            keyboardBottom: document.getElementById('keyboardBottom'),
-            dongGuToggle: document.getElementById('dongGuToggle'),
-            pairToggle: document.getElementById('pairToggle'), // 新增对子开关
-            dongGuModal: document.getElementById('dongGuModal')
-        };
-
-        const vibrate = (ms) => { if (navigator.vibrate) navigator.vibrate(ms); };
-
-        function addCard(name, value) {
-            if (state.cards.length >= 5) return;
-            
-            let count = state.cards.filter(c => c.name === name).length;
-            if (count >= 4) {
-                vibrate([20, 20]);
-                let buttons = [...document.querySelectorAll('.key-btn')];
-                let btn = buttons.find(b => b.innerText.trim() === name);
-                if (btn) {
-                    btn.classList.add('anim-shake');
-                    setTimeout(() => btn.classList.remove('anim-shake'), 400);
-                }
-                return;
-            }
-
-            vibrate(30);
-            
-            let uniqueId = Date.now().toString() + Math.floor(Math.random() * 10000);
-            state.cards.push({ name, value, id: uniqueId });
-            
-            if (state.cards.length === 3 || state.cards.length === 4) {
-                checkFirstStage();
-                renderPickingState();
-            } else if (state.cards.length === 5) {
-                DOM.firstStageResult.style.display = 'none';
-                DOM.keyboard.classList.add('disabled');
-                DOM.keyboardBottom.style.opacity = '0.5';
-                DOM.keyboardBottom.style.pointerEvents = 'none';
-                
-                state.usageCount++;
-                DOM.usageCounter.innerText = `今日已算: ${state.usageCount} 局`;
-                
-                checkDongGuAndCalculate();
-            } else {
-                renderPickingState();
-            }
-        }
-
-        function checkFirstStage() {
-            let sum = (state.cards[0].value + state.cards[1].value + state.cards[2].value) % 10;
-            let displaySum = sum === 0 ? 10 : sum;
-            
-            const isThreeGong = state.cards.every((c, index) => index < 3 && ['J', 'Q', 'K'].includes(c.name));
-            const isTriple = state.cards[0].name === state.cards[1].name && state.cards[1].name === state.cards[2].name;
-            
-            DOM.firstStageResult.style.display = 'inline-block';
-            DOM.firstStageResult.className = 'first-stage-tag';
-            
-            if (isTriple) {
-                DOM.firstStageResult.innerText = `前三张：豹子 ${state.cards[0].name} 🎰`;
-                DOM.firstStageResult.style.color = "var(--accent-red)";
-            } else if (isThreeGong) {
-                DOM.firstStageResult.innerText = "前三张：三公 🔥";
-                DOM.firstStageResult.style.color = "var(--accent-red)";
-            } else {
-                DOM.firstStageResult.innerText = `前三张点数：${displaySum}`;
-                DOM.firstStageResult.style.color = "var(--text-gray)";
-            }
-        }
-
-        function checkDongGuAndCalculate() {
-            const isDongGuEnabled = DOM.dongGuToggle.checked;
-            
-            if (isDongGuEnabled) {
-                state.tempDongGu = null;
-                const allVars = getVariations(state.cards);
-                for (let v of allVars) {
-                    for (let i = 0; i < 3; i++) {
-                        for (let j = i + 1; j < 4; j++) {
-                            for (let k = j + 1; k < 5; k++) {
-                                let sum3 = v[i].val + v[j].val + v[k].val;
-                                if (sum3 % 10 === 0) {
-                                    let pts = v.filter((_, idx) => idx !== i && idx !== j && idx !== k);
-                                    let hasA = pts.some(c => c.name === 'A');
-                                    let hasPic = pts.some(c => ['J', 'Q', 'K'].includes(c.name));
-                                    if (hasA && hasPic) {
-                                        state.tempDongGu = { base: [v[i], v[j], v[k]], points: pts };
-                                        break;
-                                    }
-                                }
-                            }
-                            if (state.tempDongGu) break;
-                        }
-                        if (state.tempDongGu) break;
-                    }
-                    if (state.tempDongGu) break;
-                }
-                
-                if (state.tempDongGu) {
-                    DOM.dongGuModal.classList.add('show');
-                    return;
-                }
-            }
-            
-            calculateAndShow();
-        }
-
-        function confirmDongGu(isDongGu) {
-            DOM.dongGuModal.classList.remove('show');
-            if (isDongGu && state.tempDongGu) {
-                applyResultView("🍄 遇神杀神！大冬菇 🍄", "color-gold", "anim-explode", true, state.tempDongGu.points, state.tempDongGu.base);
-            } else {
-                calculateAndShow();
-            }
-        }
-
-        function removeCard(id) {
-            vibrate(20);
-            state.cards = state.cards.filter(c => c.id !== id);
-            state.tempDongGu = null;
-            
-            DOM.slots.classList.remove('result-mode');
-            DOM.keyboard.classList.remove('disabled');
-            DOM.keyboardBottom.style.opacity = '1';
-            DOM.keyboardBottom.style.pointerEvents = 'auto';
-            DOM.resultTitle.className = 'result-title';
-            DOM.resetBtn.classList.remove('show');
-            
-            if (state.cards.length < 3) {
-                DOM.firstStageResult.style.display = 'none';
-            } else if (state.cards.length >= 3) {
-                checkFirstStage();
-            }
-            
-            renderPickingState();
-        }
-
-        function resetGame() {
-            vibrate([30, 50]);
-            state.cards = [];
-            state.tempDongGu = null;
-            DOM.slots.classList.remove('result-mode');
-            DOM.keyboard.classList.remove('disabled');
-            DOM.keyboardBottom.style.opacity = '1';
-            DOM.keyboardBottom.style.pointerEvents = 'auto';
-            DOM.resultTitle.className = 'result-title';
-            DOM.firstStageResult.style.display = 'none';
-            DOM.resetBtn.classList.remove('show');
-            renderPickingState();
-        }
-
-        function getCardHTML(c, isClickable = false) {
-            let colorClass = '';
-            if (c.name === '3' || c.name === '6') colorClass = 'red';
-            if (['J', 'Q', 'K'].includes(c.name)) colorClass = 'blue';
-            let badge = c.mutated ? `<div class="badge">${c.mutated}</div>` : '';
-            let clickClass = isClickable ? 'clickable' : '';
-            let clickAttr = isClickable ? `onclick="removeCard('${c.id}')"` : '';
-            return `<div class="slot filled ${colorClass} ${clickClass}" ${clickAttr}>${c.name}${badge}</div>`;
-        }
-
-        function renderPickingState() {
-            DOM.slots.classList.remove('result-mode');
-            let html = '';
-            for (let i = 0; i < 5; i++) {
-                if (state.cards[i]) {
-                    html += getCardHTML(state.cards[i], true);
-                } else {
-                    html += `<div class="slot"></div>`;
-                }
-            }
-            DOM.slots.innerHTML = html;
-        }
-
-        function getVariations(cards) {
-            let variations = [[]];
-            for (let card of cards) {
-                let opts = [{ ...card, val: card.value }];
-                if (card.name === '3') opts.push({ ...card, val: 6, mutated: '当6' });
-                if (card.name === '6') opts.push({ ...card, val: 3, mutated: '当3' });
-                
-                let next = [];
-                for (let v of variations) {
-                    for (let o of opts) next.push([...v, o]);
-                }
-                variations = next;
-            }
-            return variations;
-        }
-
-        function calculateAndShow() {
-            const isFiveGong = state.cards.every(c => ['J', 'Q', 'K'].includes(c.name));
-            if (isFiveGong) {
-                return applyResultView("👑 满堂红！金牛 (五公) 👑", "color-gold", "anim-explode", true, state.cards.slice(3, 5), state.cards.slice(0, 3));
-            }
-
-            const isPairEnabled = DOM.pairToggle.checked; // 获取是否开启对子玩法
-            const allVars = getVariations(state.cards);
-            let bestScore = -1, finalBase = [], finalPoints = [];
-
-            for (let v of allVars) {
-                for (let i = 0; i < 3; i++) {
-                    for (let j = i + 1; j < 4; j++) {
-                        for (let k = j + 1; k < 5; k++) {
-                            let sum3 = v[i].val + v[j].val + v[k].val;
-                            if (sum3 % 10 === 0) {
-                                let pts = v.filter((_, idx) => idx !== i && idx !== j && idx !== k);
-                                let sum2 = (pts[0].val + pts[1].val) % 10;
-                                let score = sum2 === 0 ? 10 : sum2;
-
-                                // 【核心规则插入】：判断原生牌名是否一致
-                                if (isPairEnabled && pts[0].name === pts[1].name) {
-                                    score = 11; // 11 分代表牛对子，大过所有普通牛和牛牛
-                                }
-
-                                if (score > bestScore) {
-                                    bestScore = score; finalBase = [v[i], v[j], v[k]]; finalPoints = pts;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // UI 渲染判断
-            if (bestScore === -1) {
-                applyResultView("💸 凉凉！没牛", "color-gray", "anim-shake", false, [], state.cards);
-            } else if (bestScore === 11) {
-                applyResultView("👯‍♀️ 绝杀！牛对子 👯‍♀️", "color-gold", "anim-explode", true, finalPoints, finalBase);
-            } else if (bestScore === 10) {
-                applyResultView("🧨 霸气通杀！牛牛 🧨", "color-gold", "anim-explode", true, finalPoints, finalBase);
-            } else {
-                const textMap = {
-                    1: "🤏 险过剃头！牛 1", 2: "🐢 顶住啊！牛 2", 3: "🥺 勉强及格！牛 3",
-                    4: "🛡️ 防守牌！牛 4", 5: "🤔 有得拼！牛 5", 6: "💪 坐和望赢！牛 6",
-                    7: "🤩 漂亮起飞！牛 7", 8: "💰 准备收钱！牛 8", 9: "🚀 赢到笑！牛 9"
-                };
-                let text = textMap[bestScore];
-                let colorCls = bestScore <= 6 ? "color-normal" : "color-red";
-                let animCls = bestScore <= 6 ? "anim-pop" : "anim-bounce";
-                
-                applyResultView(text, colorCls, animCls, false, finalPoints, finalBase);
-            }
-        }
-
-        function applyResultView(text, colorClass, animClass, isPremium, topCards, bottomCards) {
-            vibrate(isPremium ? [50, 50, 100] : (topCards.length > 0 ? 100 : [30, 30])); 
-            
-            if (topCards.length > 0 && bottomCards.length === 3) {
-                DOM.slots.classList.add('result-mode'); 
-                DOM.slots.innerHTML = `
-                    <div class="card-row">
-                        ${topCards.map(c => getCardHTML(c, true)).join('')}
-                    </div>
-                    <div class="card-row">
-                        ${bottomCards.map(c => getCardHTML(c, true)).join('')}
-                    </div>
-                `;
-            } else {
-                DOM.slots.classList.remove('result-mode');
-                DOM.slots.innerHTML = bottomCards.map(c => getCardHTML(c, true)).join('');
-            }
-
-            DOM.resultTitle.className = `result-title`; 
-            void DOM.resultTitle.offsetWidth; 
-            
-            DOM.resultTitle.innerText = text;
-            DOM.resultTitle.className = `result-title show ${colorClass} ${animClass}`;
-            
-            setTimeout(() => { DOM.resetBtn.classList.add('show'); }, 300);
-        }
-
-        renderPickingState();
+        // --- 核心逻辑 ---
+        let balance = 1000.00;
+        let currentPrice = 0;
+        let activeEntities = []; // 存放场上的植物/鱼
         
-        document.addEventListener('dblclick', function(event) {
-            event.preventDefault();
-        }, { passive: false });
+        const PAYOUT_MULTIPLIER = 1.8; // 赢了拿回 1.8 倍
 
-        (function checkVersion() {
-            // 版本升级至 1.0.4 刷新所有人的手机缓存
-            const currentVersion = "1.0.4"; 
-            const localVersion = localStorage.getItem("magicniu_version");
-            
-            if (localVersion !== currentVersion) {
-                localStorage.setItem("magicniu_version", currentVersion);
-                if (localVersion !== null) {
-                    window.location.reload(true);
-                }
+        // 1. 接入 OKX 行情
+        const ws = new WebSocket('wss://ws.okx.com:8443/ws/v5/public');
+        ws.onopen = () => { ws.send(JSON.stringify({ op: "subscribe", args: [{ channel: "tickers", instId: "BTC-USDT-SWAP" }] })); };
+        ws.onmessage = (event) => {
+            if(event.data === 'pong') return;
+            const res = JSON.parse(event.data);
+            if (res.data && res.data[0]) {
+                const newPrice = parseFloat(res.data[0].last);
+                const priceEl = document.getElementById('tickerPrice');
+                priceEl.innerText = newPrice.toFixed(2);
+                priceEl.style.color = newPrice >= currentPrice ? '#2ecc71' : '#e74c3c';
+                currentPrice = newPrice;
             }
-        })();
+        };
+        setInterval(() => { if (ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
+
+        function updateBalanceUI() {
+            document.getElementById('balanceDisplay').innerText = balance.toFixed(2) + " USDT";
+        }
+
+        // 2. 玩家动作：种树 (买涨)
+        function plantSeed() {
+            createEntity('long');
+        }
+
+        // 2. 玩家动作：养鱼 (买跌)
+        function hatchEgg() {
+            createEntity('short');
+        }
+
+        function createEntity(type) {
+            if(currentPrice <= 0) return alert("等待行情数据加载...");
+            
+            const amount = parseFloat(document.getElementById('investAmount').value);
+            if(isNaN(amount) || amount <= 0 || amount > balance) return alert("金额输入有误或余额不足！");
+            
+            const durationSec = parseInt(document.getElementById('timeDuration').value);
+            
+            // 扣除余额
+            balance -= amount;
+            updateBalanceUI();
+
+            const entityId = 'ent_' + Date.now();
+            const zoneId = type === 'long' ? 'farmZone' : 'pondZone';
+            const zone = document.getElementById(zoneId);
+            
+            // 随机生成坐标 (避免重叠可以加复杂逻辑，这里用简单随机)
+            const randomX = Math.random() * (zone.clientWidth - 100) + 10;
+            const randomY = Math.random() * (zone.clientHeight - 200) + 80;
+
+            // 创建 DOM
+            const el = document.createElement('div');
+            el.className = 'entity-card';
+            el.id = entityId;
+            el.style.left = randomX + 'px';
+            el.style.top = randomY + 'px';
+            
+            // UI 内部结构
+            el.innerHTML = `
+                <div class="entity-status">
+                    <div class="text-[10px] text-gray-300 font-mono">入场价</div>
+                    <div class="text-[11px] font-bold text-white">${currentPrice.toFixed(1)}</div>
+                    <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog_${entityId}"></div></div>
+                </div>
+                <div class="entity-emoji" id="emoji_${entityId}">${type === 'long' ? '🌱' : '🥚'}</div>
+            `;
+            zone.appendChild(el);
+
+            // 注册到游戏循环
+            activeEntities.push({
+                id: entityId,
+                type: type, // 'long' 或 'short'
+                amount: amount,
+                entryPrice: currentPrice,
+                startTime: Date.now(),
+                durationMs: durationSec * 1000,
+                domEl: el,
+                emojiEl: document.getElementById(`emoji_${entityId}`),
+                progEl: document.getElementById(`prog_${entityId}`),
+                resolved: false
+            });
+        }
+
+        // 3. 游戏主循环 (每帧更新画面与判定)
+        function gameLoop() {
+            const now = Date.now();
+            
+            activeEntities.forEach(ent => {
+                if (ent.resolved) return;
+
+                const elapsed = now - ent.startTime;
+                const progress = Math.min((elapsed / ent.durationMs) * 100, 100);
+                
+                // 更新进度条
+                ent.progEl.style.width = progress + '%';
+
+                // 动态变换表情 (成长过程)
+                if (progress > 30 && progress < 70) {
+                    ent.emojiEl.innerText = ent.type === 'long' ? '🌿' : '🐡';
+                } else if (progress >= 70 && progress < 100) {
+                    ent.emojiEl.innerText = ent.type === 'long' ? '🌳' : '🦈';
+                }
+
+                // 时间到，触发结算
+                if (elapsed >= ent.durationMs) {
+                    ent.resolved = true;
+                    resolveEntity(ent);
+                }
+            });
+
+            // 清理已完成并删除的实体
+            activeEntities = activeEntities.filter(e => e.domEl.parentElement);
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 4. 结算判定
+        function resolveEntity(ent) {
+            let isWin = false;
+            
+            // 判断输赢
+            if (ent.type === 'long') {
+                isWin = currentPrice > ent.entryPrice;
+            } else {
+                isWin = currentPrice < ent.entryPrice;
+            }
+
+            if (isWin) {
+                // 赢了：动画变丰收，增加余额
+                ent.emojiEl.innerText = ent.type === 'long' ? '🍎' : '💰';
+                ent.emojiEl.classList.add('anim-success');
+                
+                const winAmount = ent.amount * PAYOUT_MULTIPLIER;
+                balance += winAmount;
+                updateBalanceUI();
+
+                // 飘字动画
+                const rewardText = document.createElement('div');
+                rewardText.className = 'reward-text';
+                rewardText.innerText = '+' + winAmount.toFixed(2);
+                ent.domEl.appendChild(rewardText);
+
+            } else {
+                // 输了：枯萎/死亡
+                ent.emojiEl.innerText = ent.type === 'long' ? '🥀' : '☠️';
+                ent.emojiEl.classList.add('anim-fail');
+            }
+
+            // 3秒后销毁实体
+            setTimeout(() => {
+                ent.domEl.style.opacity = '0';
+                ent.domEl.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    if(ent.domEl.parentElement) ent.domEl.parentElement.removeChild(ent.domEl);
+                }, 300);
+            }, 3000);
+        }
+
+        // 启动循环
+        requestAnimationFrame(gameLoop);
     </script>
 </body>
 </html>
