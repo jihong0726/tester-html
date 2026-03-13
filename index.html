@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OKX Crypto Farm V6.0 | 生存狂飙</title>
+    <title>OKX Crypto Farm V7.0 | 财富天梯版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=ZCOOL+KuaiLe&display=swap');
@@ -15,18 +15,14 @@
             user-select: none; -webkit-user-select: none; touch-action: manipulation;
         }
 
-        /* 顶部栏增强 */
         .game-header { background: linear-gradient(90deg, #161b24, #1e2430); border-bottom: 2px solid #2b3139; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 50; flex-shrink: 0; }
-        
         .asset-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; padding: 4px 16px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 10px rgba(241, 196, 15, 0.1); }
         
-        /* VIP 进度条样式 (加入点击效果) */
         .vip-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 6px 12px; display: flex; flex-direction: column; min-width: 200px; cursor: pointer; transition: all 0.2s; }
         .vip-card:hover { background: rgba(255,255,255,0.1); border-color: #f1c40f; transform: translateY(-2px); }
         .vip-bar-bg { width: 100%; height: 6px; background: #000; border-radius: 3px; margin-top: 4px; overflow: hidden; }
         .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #e74c3c, #f1c40f, #0ecb81); width: 0%; transition: width 0.5s ease-out; }
 
-        /* 天气与资金费模块 */
         .weather-box { background: rgba(0,0,0,0.5); border: 1px solid #4a5568; border-radius: 12px; padding: 4px 12px; display: flex; align-items: center; gap: 12px; }
 
         .tv-container { height: 35vh; border-bottom: 4px solid #161b24; background: #0b0e14; flex-shrink: 0; }
@@ -37,24 +33,14 @@
         
         .grid-sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex: 1; min-height: 200px; }
         
-        .slot {
-            background: #1e2430; border: 2px solid #2b3139; border-radius: 12px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            position: relative; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
-            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 4px 0 #12161f; min-height: 100px;
-        }
+        .slot { background: #1e2430; border: 2px solid #2b3139; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 4px 0 #12161f; min-height: 100px; }
         .slot:hover:not(.locked) { border-color: #4a5568; transform: translateY(-2px); box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 6px 0 #12161f; }
         .slot:active:not(.locked) { transform: translateY(4px); box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 0 0 #12161f; }
         .slot.locked { background: #12161f; border-color: #1a1f29; opacity: 0.8; cursor: not-allowed; }
         
         .emoji-art { font-size: 36px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); transition: transform 0.3s; z-index: 10; margin-bottom: 24px; }
         
-        .btn-early-close {
-            position: absolute; bottom: 18px; 
-            background: #12161f; border: 1px solid #4a5568; color: #fff;
-            font-size: 11px; font-weight: bold; padding: 4px 12px; border-radius: 12px;
-            cursor: pointer; z-index: 30; transition: all 0.1s;
-        }
+        .btn-early-close { position: absolute; bottom: 18px; background: #12161f; border: 1px solid #4a5568; color: #fff; font-size: 11px; font-weight: bold; padding: 4px 12px; border-radius: 12px; cursor: pointer; z-index: 30; transition: all 0.1s; }
         .btn-early-close:hover { transform: scale(1.05); filter: brightness(1.2); }
         .btn-early-close:active { transform: scale(0.95); }
 
@@ -66,15 +52,35 @@
 
         /* 弹窗系统 */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; }
-        .panel-box { background: #161b24; border: 2px solid #2b3139; border-radius: 20px; width: 420px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .panel-box { background: #161b24; border: 2px solid #2b3139; border-radius: 20px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         
         .shop-input { width: 100%; background: #0b0e14; border: 2px solid #4a5568; color: #f1c40f; font-size: 24px; text-align: center; border-radius: 12px; padding: 10px; font-family: monospace; font-weight: bold; outline: none; transition: 0.2s;}
         .shop-input:focus { border-color: #0ecb81; }
-
         .shop-item { background: #1e2430; border: 1px solid #2b3139; border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
         .shop-item:hover { background: #2a3241; border-color: #f1c40f; transform: scale(1.02); }
+
+        /* --- 新增：排行榜系统 UI --- */
+        .btn-leaderboard {
+            position: fixed; right: 20px; bottom: 20px; 
+            background: linear-gradient(135deg, #f1c40f, #f39c12); color: #000;
+            width: 60px; height: 60px; border-radius: 30px;
+            display: flex; justify-content: center; align-items: center; font-size: 28px;
+            box-shadow: 0 10px 20px rgba(241, 196, 15, 0.4); cursor: pointer; z-index: 80;
+            transition: all 0.3s; border: 3px solid #fff;
+        }
+        .btn-leaderboard:hover { transform: scale(1.1) rotate(10deg); }
         
-        /* 无感 Toast 通知 */
+        .rank-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #2b3139; transition: 0.2s; }
+        .rank-item:hover { background: #1e2430; }
+        .rank-num { width: 30px; font-weight: 900; font-size: 18px; text-align: center; font-family: 'Nunito'; }
+        .rank-1 .rank-num { color: #f1c40f; text-shadow: 0 0 10px rgba(241,196,15,0.5); }
+        .rank-2 .rank-num { color: #bdc3c7; }
+        .rank-3 .rank-num { color: #cd7f32; }
+        
+        .is-me { background: rgba(14,203,129,0.15) !important; border: 1px solid #0ecb81; border-radius: 8px; border-bottom: none; }
+        .is-me .rank-name { color: #0ecb81; font-weight: bold; }
+        
+        /* 提示系统 */
         .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
         .toast { background: rgba(22, 27, 36, 0.95); border: 2px solid #f1c40f; color: #fff; padding: 12px 24px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 8px;}
         
@@ -83,7 +89,6 @@
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-60px) scale(1.5); } }
         @keyframes dangerShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
         @keyframes bounceIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        
         .floating-text { position: absolute; font-size: 20px; font-weight: 900; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.2s ease-out forwards; pointer-events: none; font-family: 'Nunito'; white-space: nowrap; }
         .anim-pop { animation: bounceIn 0.4s ease-out; }
     </style>
@@ -144,7 +149,6 @@
                     <span class="text-2xl">🌾</span>
                     <div>
                         <h2 class="font-bold text-lg text-[#0ecb81]">多头农场 (买涨)</h2>
-                        <p class="text-xs text-gray-400">天气炎热时(正费率)，多头将扣除水费</p>
                     </div>
                 </div>
             </div>
@@ -158,7 +162,6 @@
                     <span class="text-2xl">🐟</span>
                     <div>
                         <h2 class="font-bold text-lg text-[#f6465d]">空头水族箱 (买跌)</h2>
-                        <p class="text-xs text-gray-400">暴雨来临时(负费率)，空头将被水淹扣费</p>
                     </div>
                 </div>
             </div>
@@ -166,8 +169,27 @@
         </div>
     </div>
 
+    <div class="btn-leaderboard" onclick="openLeaderboard()" title="查看财富榜">🏆</div>
+
+    <div class="modal-bg" id="boardModal" onclick="if(event.target===this) closeModal('boardModal')">
+        <div class="panel-box" style="width: 450px; padding: 0; overflow: hidden;">
+            <div class="bg-gradient-to-r from-[#d35400] to-[#f39c12] p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-white tracking-widest font-['ZCOOL_KuaiLe']">🏆 农场福布斯排行榜</h2>
+                <button onclick="closeModal('boardModal')" class="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
+            </div>
+            <div class="flex text-xs text-gray-400 p-2 border-b border-[#2b3139] bg-[#12161f]">
+                <div class="w-[50px] text-center">排名</div>
+                <div class="flex-1">玩家代号</div>
+                <div class="w-[100px] text-right">金库资产(USDT)</div>
+                <div class="w-[80px] text-right">刷单量</div>
+            </div>
+            <div id="boardListContainer" class="max-h-[400px] overflow-y-auto bg-[#161b24] pb-2">
+                </div>
+        </div>
+    </div>
+
     <div class="modal-bg" id="shopModal" onclick="if(event.target===this) closeModal('shopModal')">
-        <div class="panel-box">
+        <div class="panel-box" style="width: 420px;">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-bold text-white" id="shopTitle">购买种子</h2>
                 <button onclick="closeModal('shopModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
@@ -180,10 +202,7 @@
                     <span>当前阶级费率: <span id="shopFeeRate" class="text-white font-mono font-bold">50%</span></span>
                     <span>建仓强扣: <span id="shopFeeCost" class="text-[#f6465d] font-mono font-bold">-50.00 U</span></span>
                 </div>
-                <div class="text-[10px] text-center text-[#fcd535] mt-2">提示：单边收取高额手续费，请尽快升级 VIP！</div>
             </div>
-
-            <div class="text-xs text-gray-400 mb-2 px-1">选择生长项目 (固定基础赔率)：</div>
             <div id="shopItemsContainer" class="max-h-[250px] overflow-y-auto pr-2 space-y-3"></div>
         </div>
     </div>
@@ -194,9 +213,8 @@
                 <h2 class="text-xl font-bold text-white">🏆 农场主图鉴与费率特权</h2>
                 <button onclick="closeModal('vipModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
             </div>
-            <div class="text-xs text-gray-400 mb-4">累计交易量越高，你的开仓手续费就越低。这是在这片残酷农场活下去的唯一法则。</div>
-            <div id="vipListContainer" class="space-y-2">
-                </div>
+            <div class="text-xs text-gray-400 mb-4">累计交易量越高，开仓手续费越低。</div>
+            <div id="vipListContainer" class="space-y-2"></div>
         </div>
     </div>
 
@@ -220,28 +238,25 @@
     </script>
 
     <script>
-        // --- 核心设定：50% 起跳的生存模式 ---
+        // --- 核心设定 ---
         let state = {
-            balance: 5000.00, // 初始给多一点，因为 50% 费率极其吸血
+            balance: 5000.00,
             volume: 0,
             currentVip: 0,
             currentPrice: 0,
             instId: "BTC-USDT-SWAP",
-            fundingRate: 0 // 真实资金费率
+            fundingRate: 0
         };
 
-        // 极其残酷的阶梯费率
         const VIP_TIERS = [
-            { level: 0, name: 'Lv0 见习农夫', reqVol: 0, feeRate: 0.50 },       // 50%
-            { level: 1, name: 'Lv1 新手地主', reqVol: 2000, feeRate: 0.40 },    // 40%
-            { level: 2, name: 'Lv2 农场富豪', reqVol: 10000, feeRate: 0.30 },   // 30%
-            { level: 3, name: 'Lv3 商业巨头', reqVol: 50000, feeRate: 0.20 },   // 20%
-            { level: 4, name: 'Lv4 垄断财阀', reqVol: 200000, feeRate: 0.10 },  // 10%
-            { level: 5, name: 'Lv5 赛博领主', reqVol: 1000000, feeRate: 0.05 }  // 5%
+            { level: 0, name: 'Lv0 见习农夫', reqVol: 0, feeRate: 0.50 },
+            { level: 1, name: 'Lv1 新手地主', reqVol: 2000, feeRate: 0.40 },
+            { level: 2, name: 'Lv2 农场富豪', reqVol: 10000, feeRate: 0.30 },
+            { level: 3, name: 'Lv3 商业巨头', reqVol: 50000, feeRate: 0.20 },
+            { level: 4, name: 'Lv4 垄断财阀', reqVol: 200000, feeRate: 0.10 },
+            { level: 5, name: 'Lv5 赛博领主', reqVol: 1000000, feeRate: 0.05 }
         ];
 
-        // 赔率系统稍微调高一点点，否则在 50% 费率下毫无生存可能
-        // 比如本金100，费率50。总扣150。赢了 100 * 2.0 = 200。净赚 50。
         const SHOP_CONFIG = {
             long: [
                 { id: 'l1', icon: '🌱', name: '速生草莓', durationSec: 15, mult: 1.8, desc: '极速 15 秒定生死' },
@@ -261,36 +276,84 @@
             short: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `s_${i}`, unlocked: i < 2, unlockPrice: (i*i*200)+100, item: null }))
         };
 
-        // --- 全局无感 Toast 通知系统 ---
+        // --- 排行榜系统 (Mock Data) ---
+        const FAKE_USERS = [
+            { name: "0x_Degen_Shark", baseBal: 85400, baseVol: 500000 },
+            { name: "韭菜保护协会会长", baseBal: 3200, baseVol: 15000 },
+            { name: "Elon_Musk_DOGE", baseBal: 125000, baseVol: 2000000 },
+            { name: "100x_Or_Rekt", baseBal: 800, baseVol: 8500 },
+            { name: "Carrie_Fan_Club", baseBal: 45000, baseVol: 120000 },
+            { name: "Satoshi_N", baseBal: 999999, baseVol: 9999999 },
+            { name: "合约只玩高倍", baseBal: 15, baseVol: 45000 },
+            { name: "V神的小迷弟", baseBal: 12450, baseVol: 34000 },
+            { name: "Web3_Farmer", baseBal: 6780, baseVol: 21000 },
+            { name: "爆仓提车", baseBal: 540, baseVol: 1200 }
+        ];
+
+        function openLeaderboard() {
+            const container = document.getElementById('boardListContainer');
+            container.innerHTML = '';
+            
+            // 动态加入当前玩家的数据
+            let currentBoard = FAKE_USERS.map(u => ({
+                name: u.name, 
+                // 给 fake user 加上一点随机波动，显得真实
+                bal: u.baseBal + (Math.random() * 1000 - 500), 
+                vol: u.baseVol + Math.floor(Math.random() * 5000),
+                isMe: false
+            }));
+            
+            // 混入自己
+            currentBoard.push({
+                name: "我 (当前玩家)",
+                bal: state.balance,
+                vol: state.volume,
+                isMe: true
+            });
+
+            // 按照金库资产排序
+            currentBoard.sort((a, b) => b.bal - a.bal);
+
+            currentBoard.forEach((user, index) => {
+                const rankClass = index < 3 ? `rank-${index + 1}` : '';
+                const meClass = user.isMe ? 'is-me' : '';
+                const rankIcon = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : index + 1));
+                
+                const div = document.createElement('div');
+                div.className = `rank-item ${rankClass} ${meClass}`;
+                div.innerHTML = `
+                    <div class="rank-num">${rankIcon}</div>
+                    <div class="flex-1 rank-name pl-2">${user.name} ${user.isMe ? '<span class="bg-[#0ecb81] text-white text-[10px] px-1 rounded ml-1">You</span>' : ''}</div>
+                    <div class="w-[100px] text-right font-mono font-bold ${user.isMe ? 'text-[#0ecb81]' : 'text-white'}">${user.bal.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+                    <div class="w-[80px] text-right font-mono text-gray-500 text-xs">${user.vol.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('boardModal').style.display = 'flex';
+        }
+
+        // --- 基础系统 ---
         function showToast(icon, message, color = '#f1c40f') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.style.borderColor = color;
+            toast.className = 'toast'; toast.style.borderColor = color;
             toast.innerHTML = `<span class="text-xl">${icon}</span> <span>${message}</span>`;
             container.appendChild(toast);
             setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 3500);
         }
 
-        // --- 10分钟天气与资金费循环系统 ---
-        let fundingSeconds = 600; // 10分钟 = 600秒
+        let fundingSeconds = 600;
         setInterval(() => {
             fundingSeconds--;
-            if(fundingSeconds <= 0) {
-                triggerFundingSettlement();
-                fundingSeconds = 600;
-            }
-            
-            // 更新 UI 倒计时
+            if(fundingSeconds <= 0) { triggerFundingSettlement(); fundingSeconds = 600; }
             const m = Math.floor(fundingSeconds / 60).toString().padStart(2, '0');
             const s = (fundingSeconds % 60).toString().padStart(2, '0');
             document.getElementById('fundingTimer').innerText = `${m}:${s}`;
         }, 1000);
 
         function triggerFundingSettlement() {
-            // 只有当有真实费率且有存活作物时才扣款
             if (state.fundingRate === 0) return;
-            
             const isPositive = state.fundingRate > 0;
             showToast("🌩️", "天气剧变！全区进行资金费率清算！", "#3498db");
 
@@ -299,14 +362,11 @@
                     if (slot.item && !slot.item.resolved) {
                         let penalty = 0;
                         const it = slot.item;
-                        // 简化游戏逻辑：逆势方直接扣除本金的 15% 作为惩罚
                         if (isPositive && side === 'long') penalty = it.amount * 0.15;
                         if (!isPositive && side === 'short') penalty = it.amount * 0.15;
 
                         if (penalty > 0) {
-                            state.balance -= penalty;
-                            updateGlobalUI();
-                            
+                            state.balance -= penalty; updateGlobalUI();
                             const dom = document.getElementById(`dom_${slot.id}`);
                             if(dom) {
                                 dom.classList.add('aura-danger');
@@ -324,13 +384,11 @@
 
         function updateGlobalUI() {
             document.getElementById('balanceDisplay').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits:2});
-            
             const tier = VIP_TIERS[state.currentVip];
             const nextTier = VIP_TIERS[state.currentVip + 1];
             
             const nameEl = document.getElementById('vipName');
             nameEl.innerText = tier.name;
-            // 等级越高，颜色越尊贵
             if(state.currentVip > 3) nameEl.style.color = '#0ecb81';
             
             document.getElementById('vipFee').innerText = (tier.feeRate * 100).toFixed(0) + '%';
@@ -351,8 +409,6 @@
             if (nextTier && state.volume >= nextTier.reqVol) {
                 state.currentVip++;
                 showToast("🎖️", `狂飙升级！晋升为【${nextTier.name}】，费率降至 ${(nextTier.feeRate*100).toFixed(0)}%！`, "#f1c40f");
-                
-                // 如果连续越级，递归检查
                 checkVipUpgrade(); 
             }
             updateGlobalUI();
@@ -361,7 +417,6 @@
         function openVipModal() {
             const container = document.getElementById('vipListContainer');
             container.innerHTML = '';
-            
             VIP_TIERS.forEach(tier => {
                 const isActive = state.currentVip === tier.level;
                 const isPassed = state.currentVip > tier.level;
@@ -428,8 +483,7 @@
         function handleUnlock(side, index) {
             const slot = grids[side][index];
             if(state.balance >= slot.unlockPrice) {
-                state.balance -= slot.unlockPrice; 
-                slot.unlocked = true;
+                state.balance -= slot.unlockPrice; slot.unlocked = true;
                 showToast("⛏️", "成功开垦新土地！", "#0ecb81");
                 updateGlobalUI(); renderGrids();
             } else {
@@ -438,11 +492,9 @@
         }
 
         let currentActionTarget = null;
-        
         function openShop(side, index) {
             if(state.currentPrice <= 0) return alert("📡 等待行情...");
             currentActionTarget = { side, index };
-            
             document.getElementById('shopTitle').innerText = side === 'long' ? '🌱 购买多头种子' : '🐟 购买空头鱼苗';
             document.getElementById('shopModal').style.display = 'flex';
             updateShopPreviews(); 
@@ -453,7 +505,6 @@
         function updateShopPreviews() {
             const inputVal = parseFloat(document.getElementById('shopInvestInput').value);
             const amount = isNaN(inputVal) || inputVal <= 0 ? 0 : inputVal;
-            
             const currentFeeRate = VIP_TIERS[state.currentVip].feeRate;
             const feeCost = amount * currentFeeRate;
             
@@ -466,7 +517,7 @@
 
             SHOP_CONFIG[side].forEach(config => {
                 const totalCost = amount + feeCost;
-                const expectedReward = amount * config.mult; // 赔率只乘本金
+                const expectedReward = amount * config.mult;
                 
                 const div = document.createElement('div');
                 div.className = 'shop-item';
@@ -491,201 +542,4 @@
         function buyItem(config, amount, fee) {
             if(amount <= 0) return;
             const totalCost = amount + fee;
-            if(state.balance < totalCost) return showToast("❌", "可用资金不足以支付本金和高昂的手续费！", "#f6465d");
-            
-            state.balance -= totalCost;
-            state.volume += amount; 
-            checkVipUpgrade();
-
-            const { side, index } = currentActionTarget;
-            grids[side][index].item = {
-                config: config, amount: amount, 
-                entryPrice: state.currentPrice,
-                startTime: Date.now(), durationMs: config.durationSec * 1000,
-                resolved: false
-            };
-            
-            closeModal('shopModal'); renderGrids();
-        }
-
-        function earlyHarvest(side, index, event) {
-            if(event) event.stopPropagation();
-            const slot = grids[side][index];
-            const it = slot.item;
-            if(!it || it.resolved) return;
-
-            it.resolved = true;
-            const dom = document.getElementById(`dom_${slot.id}`);
-            const emojiEl = document.getElementById(`emoji_${slot.id}`);
-            const btnEl = document.getElementById(`btn_close_${slot.id}`);
-            
-            if(dom) dom.classList.remove('aura-danger', 'aura-safe');
-            if(btnEl) btnEl.style.display = 'none';
-
-            const now = Date.now();
-            const elapsed = now - it.startTime;
-            const progress = Math.min(elapsed / it.durationMs, 1);
-
-            const isWinningNow = side === 'long' ? (state.currentPrice > it.entryPrice) : (state.currentPrice < it.entryPrice);
-            
-            let payout = 0;
-            // V6 版本平仓不再额外扣手续费，给玩家留活路
-            if(isWinningNow) {
-                const maxProfit = (it.amount * it.config.mult) - it.amount;
-                payout = it.amount + (maxProfit * progress);
-                
-                emojiEl.innerText = side === 'long' ? '🧺' : '🎣';
-                emojiEl.style.transform = 'scale(1.2)';
-                
-                const ft = document.createElement('div');
-                ft.className = 'floating-text text-[#0ecb81]';
-                ft.innerText = `极速止盈 +${(payout).toFixed(1)}U`;
-                dom.appendChild(ft);
-            } else {
-                payout = it.amount * (1 - progress);
-                
-                emojiEl.innerText = '✂️';
-                emojiEl.style.filter = 'grayscale(0.5)';
-                
-                const ft = document.createElement('div');
-                ft.className = 'floating-text text-gray-400 text-sm';
-                ft.innerText = `割肉保命 退${payout.toFixed(1)}U`;
-                dom.appendChild(ft);
-            }
-
-            state.balance += payout;
-            state.volume += it.amount; // 计入交易量
-            checkVipUpgrade();
-
-            setTimeout(() => { slot.item = null; renderGrids(); }, 1500);
-        }
-
-        let ws = null;
-        function connectWS() {
-            if(ws) ws.close();
-            ws = new WebSocket('wss://ws.okx.com:8443/ws/v5/public');
-            ws.onopen = () => { 
-                ws.send(JSON.stringify({ op: "subscribe", args: [
-                    { channel: "tickers", instId: state.instId },
-                    { channel: "funding-rate", instId: state.instId }
-                ]})); 
-            };
-            ws.onmessage = (event) => {
-                if(event.data === 'pong') return;
-                const res = JSON.parse(event.data);
-                if (res.data && res.data[0]) {
-                    const ch = res.arg.channel;
-                    if(ch === 'tickers') {
-                        const newPrice = parseFloat(res.data[0].last);
-                        const pEl = document.getElementById('realtimePrice');
-                        pEl.innerText = newPrice.toFixed(2);
-                        pEl.style.color = newPrice >= state.currentPrice ? '#0ecb81' : '#f6465d';
-                        state.currentPrice = newPrice;
-                    }
-                    if(ch === 'funding-rate') {
-                        state.fundingRate = parseFloat(res.data[0].fundingRate);
-                        const wEl = document.getElementById('weatherStatus');
-                        const wBox = document.getElementById('weatherBox');
-                        
-                        if(state.fundingRate > 0) {
-                            wEl.innerText = `☀️ 酷热 (正费率 ${(state.fundingRate*100).toFixed(4)}%)`;
-                            wEl.style.color = '#fcd535'; wBox.style.borderColor = '#fcd535';
-                        } else if (state.fundingRate < 0) {
-                            wEl.innerText = `🌧️ 暴雨 (负费率 ${(state.fundingRate*100).toFixed(4)}%)`;
-                            wEl.style.color = '#3498db'; wBox.style.borderColor = '#3498db';
-                        }
-                    }
-                }
-            };
-            ws.onclose = () => { setTimeout(connectWS, 3000); };
-        }
-
-        function changeSymbol() {
-            state.instId = document.getElementById('instSelect').value;
-            state.currentPrice = 0; document.getElementById('realtimePrice').innerText = 'Loading...';
-            loadTradingView(state.instId); connectWS();
-        }
-
-        function gameLoop() {
-            const now = Date.now();
-            ['long', 'short'].forEach(side => {
-                grids[side].forEach(slot => {
-                    const it = slot.item;
-                    if(!it || it.resolved) return;
-
-                    const dom = document.getElementById(`dom_${slot.id}`);
-                    const progEl = document.getElementById(`prog_${slot.id}`);
-                    const diffEl = document.getElementById(`diff_${slot.id}`);
-                    const emojiEl = document.getElementById(`emoji_${slot.id}`);
-                    const btnEl = document.getElementById(`btn_close_${slot.id}`);
-
-                    const elapsed = now - it.startTime;
-                    const progress = Math.min((elapsed / it.durationMs) * 100, 100);
-                    if(progEl) progEl.style.width = progress + '%';
-
-                    const isWinningNow = side === 'long' ? (state.currentPrice > it.entryPrice) : (state.currentPrice < it.entryPrice);
-                    const diff = Math.abs(state.currentPrice - it.entryPrice).toFixed(1);
-                    
-                    if(diffEl) {
-                        diffEl.innerText = isWinningNow ? `+${diff}` : `-${diff}`;
-                        diffEl.style.color = isWinningNow ? '#0ecb81' : '#f6465d';
-                    }
-
-                    if(dom && btnEl) {
-                        if(isWinningNow) { 
-                            dom.classList.remove('aura-danger'); dom.classList.add('aura-safe');
-                            btnEl.innerText = '💰 止盈'; btnEl.style.color = '#0ecb81'; btnEl.style.borderColor = 'rgba(14,203,129,0.5)';
-                        } else { 
-                            dom.classList.remove('aura-safe'); dom.classList.add('aura-danger');
-                            btnEl.innerText = '✂️ 止损'; btnEl.style.color = '#f6465d'; btnEl.style.borderColor = 'rgba(246,70,93,0.5)';
-                        }
-                    }
-
-                    // 满期结算
-                    if (progress >= 100) {
-                        it.resolved = true;
-                        if(dom) dom.classList.remove('aura-danger', 'aura-safe');
-                        if(btnEl) btnEl.style.display = 'none';
-
-                        if(isWinningNow) {
-                            emojiEl.innerText = side === 'long' ? '🍎' : '💰';
-                            emojiEl.style.transform = 'scale(1.4)';
-                            
-                            const finalPayout = (it.amount * it.config.mult);
-                            state.balance += finalPayout;
-                            
-                            const ft = document.createElement('div');
-                            ft.className = 'floating-text text-[#f1c40f]';
-                            ft.innerText = `满期 +${finalPayout.toFixed(1)} U`;
-                            dom.appendChild(ft);
-                        } else {
-                            emojiEl.innerText = side === 'long' ? '🥀' : '☠️';
-                            emojiEl.style.filter = 'grayscale(1) brightness(0.5)';
-                            
-                            const ft = document.createElement('div');
-                            ft.className = 'floating-text text-gray-500 text-sm';
-                            ft.innerText = `亏损归零`;
-                            dom.appendChild(ft);
-                        }
-
-                        state.volume += it.amount; 
-                        checkVipUpgrade();
-
-                        setTimeout(() => { slot.item = null; renderGrids(); }, 2500);
-                    }
-                });
-            });
-            requestAnimationFrame(gameLoop);
-        }
-
-        // 初始化
-        updateGlobalUI();
-        renderGrids(); 
-        loadTradingView(state.instId); 
-        connectWS();
-        requestAnimationFrame(gameLoop);
-        setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
-
-    </script>
-</body>
-</html>
+            if(state.balance < totalCost) return showToast("❌", "可用资金不足以支付本金
