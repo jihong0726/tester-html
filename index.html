@@ -3,74 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OKX 盘感大亨 | 赛博终端实盘版</title>
+    <title>OKX 盘感大亨 | 经典农场回归版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap');
+        /* 恢复休闲圆润的游戏字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&family=ZCOOL+KuaiLe&display=swap');
 
         body { 
-            background-color: #080a0f; color: #e2e8f0; 
-            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: #1e272e; color: #ffffff; 
+            font-family: 'Nunito', -apple-system, sans-serif;
             margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
             user-select: none; -webkit-user-select: none; touch-action: manipulation;
         }
         
-        .cyber-font { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-        .mono-font { font-family: 'Orbitron', monospace; }
+        .zcool { font-family: 'ZCOOL KuaiLe', cursive; }
 
-        .game-header { background: linear-gradient(90deg, #11151e, #1a202c); border-bottom: 2px solid #2d3748; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 50; flex-shrink: 0; }
-        .asset-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(241, 196, 15, 0.4); border-radius: 8px; padding: 6px 20px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 15px rgba(241, 196, 15, 0.15); }
-        .player-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 16px; display: flex; flex-direction: column; min-width: 240px; cursor: pointer; transition: all 0.2s; }
-        .player-card:hover { background: rgba(255,255,255,0.08); border-color: #0ecb81; transform: translateY(-2px); }
-        .vip-bar-bg { width: 100%; height: 4px; background: #000; border-radius: 2px; margin-top: 6px; overflow: hidden; }
-        .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #e74c3c, #f1c40f, #0ecb81); width: 0%; transition: width 0.5s ease-out; }
-
-        .tv-container { height: 35vh; border-bottom: 4px solid #11151e; background: #080a0f; flex-shrink: 0; }
-        .game-board { flex: 1; display: flex; padding: 20px; gap: 20px; background: radial-gradient(circle at center, #11151e 0%, #080a0f 100%); overflow-y: auto; position: relative; }
-        .zone { flex: 1; background: rgba(17, 21, 30, 0.7); border: 1px solid #2d3748; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0; }
-        .grid-sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; min-height: 200px; }
+        /* 顶部导航 - 保持一定的专业感但圆润 */
+        .game-header { background: #2c3e50; border-bottom: 4px solid #1a252f; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 50; flex-shrink: 0; }
+        .asset-box { background: rgba(0,0,0,0.3); border: 2px solid #f1c40f; border-radius: 16px; padding: 6px 20px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 10px rgba(241, 196, 15, 0.2); }
         
-        .slot { background: #1a202c; border: 2px solid #2d3748; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; transition: all 0.2s ease; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); min-height: 130px; }
-        .slot.empty:hover { border-color: #4a5568; transform: translateY(-2px); box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; }
-        .slot.locked { background: #0f131a; border-color: #1a202c; opacity: 0.7; cursor: not-allowed; }
-        .emoji-art { font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); transition: transform 0.3s; z-index: 10; margin-bottom: 12px; margin-top: 15px;}
+        .player-card { background: #34495e; border: 2px solid #455a64; border-radius: 16px; padding: 8px 16px; display: flex; flex-direction: column; min-width: 240px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 0 #1a252f;}
+        .player-card:active { transform: translateY(4px); box-shadow: 0 0 0 #1a252f; }
+        .vip-bar-bg { width: 100%; height: 8px; background: #111; border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid #555;}
+        .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #f1c40f, #f39c12); width: 0%; transition: width 0.5s ease-out; }
+
+        .tv-container { height: 35vh; border-bottom: 6px solid #1a252f; background: #131722; flex-shrink: 0; }
+        .game-board { flex: 1; display: flex; padding: 20px; gap: 20px; background: #1e272e; overflow-y: auto; position: relative; }
         
-        .btn-early-close { position: absolute; bottom: 10px; background: #0f131a; border: 1px solid #4a5568; color: #fff; font-size: 11px; font-weight: bold; padding: 6px 20px; border-radius: 6px; cursor: pointer; z-index: 30; transition: all 0.1s; text-transform: uppercase; }
-        .btn-early-close:hover { transform: scale(1.05); border-color: #a0aec0; }
-        .btn-early-close:active { transform: scale(0.95); }
-        .aura-safe { box-shadow: inset 0 0 40px rgba(14, 203, 129, 0.15) !important; border-color: #0ecb81 !important; }
-        .aura-danger { box-shadow: inset 0 0 40px rgba(246, 70, 93, 0.15) !important; border-color: #f6465d !important; animation: dangerPulse 0.5s infinite alternate; }
-        .prog-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: #000; border-radius: 0 0 6px 6px; overflow: hidden; }
-        .prog-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #3498db, #9b59b6); transition: width 0.1s linear; }
+        /* 🌻 核心回归：农场与水池的视觉重构 */
+        .zone { flex: 1; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; box-shadow: inset 0 0 30px rgba(0,0,0,0.3), 0 10px 20px rgba(0,0,0,0.4); position: relative; overflow: hidden; }
+        .farm-zone { background: linear-gradient(180deg, #87CEEB 0%, #2ecc71 40%, #27ae60 100%); border: 6px solid #229954; }
+        .pond-zone { background: linear-gradient(180deg, #87CEEB 0%, #3498db 40%, #2980b9 100%); border: 6px solid #1f618d; }
+        
+        .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0; z-index: 10; background: rgba(0,0,0,0.4); padding: 8px 16px; border-radius: 12px; backdrop-filter: blur(4px);}
+        .grid-sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; min-height: 200px; z-index: 10; }
+        
+        /* 🌻 土地与水族箱材质 */
+        .slot { border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; transition: all 0.2s ease; min-height: 130px; }
+        .slot-dirt { background: #8B4513; border: 4px solid #5C4033; box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 8px 0 #3e2723; }
+        .slot-water { background: #1abc9c; border: 4px solid #16a085; box-shadow: inset 0 0 20px rgba(255,255,255,0.3), 0 8px 0 #117a65; }
+        
+        .slot.empty:hover { transform: translateY(-4px); box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 12px 0 rgba(0,0,0,0.4); cursor: pointer; filter: brightness(1.1); }
+        .slot.empty:active { transform: translateY(4px); box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 0 rgba(0,0,0,0.4); }
+        
+        .locked-dirt { background: #5C4033; border-color: #3e2723; opacity: 0.9; cursor: not-allowed; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .locked-water { background: #2c3e50; border-color: #1a252f; opacity: 0.9; cursor: not-allowed; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        
+        .emoji-art { font-size: 42px; filter: drop-shadow(0 6px 4px rgba(0,0,0,0.4)); transition: transform 0.3s; z-index: 10; margin-bottom: 12px; margin-top: 15px;}
+        
+        /* 圆润可爱的操作按钮 */
+        .btn-early-close { position: absolute; bottom: -8px; background: #f39c12; border: 2px solid #e67e22; color: #fff; font-size: 12px; font-weight: 900; padding: 6px 16px; border-radius: 20px; cursor: pointer; z-index: 30; transition: all 0.1s; box-shadow: 0 4px 0 #d35400; text-shadow: 1px 1px 0 rgba(0,0,0,0.3);}
+        .btn-early-close:hover { filter: brightness(1.1); }
+        .btn-early-close:active { transform: translateY(4px); box-shadow: 0 0 0 #d35400; }
 
-        .badge-inst { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
-        .badge-pnl { position: absolute; top: 8px; right: 8px; font-size: 13px; font-weight: bold; }
-        .liq-info { position: absolute; bottom: 38px; font-size: 10px; color: #e74c3c; text-align: center; width: 100%; font-weight: bold; letter-spacing: 0.5px;}
+        .aura-safe { filter: drop-shadow(0 0 15px #0ecb81); border-color: #0ecb81 !important; }
+        .aura-danger { filter: drop-shadow(0 0 15px #f6465d); border-color: #f6465d !important; animation: shake 0.5s infinite alternate; }
 
+        .prog-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 6px; background: rgba(0,0,0,0.5); border-radius: 0 0 12px 12px; overflow: hidden; }
+        .prog-bar-fill { height: 100%; width: 0%; background: #f1c40f; transition: width 0.1s linear; }
+
+        .badge-inst { position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.7); font-size: 10px; padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); font-weight: bold; }
+        .badge-pnl { position: absolute; top: 6px; right: 6px; font-size: 14px; font-weight: 900; text-shadow: 1px 1px 2px #000; }
+        .liq-info { position: absolute; bottom: 34px; font-size: 10px; color: #ffcccc; text-align: center; width: 100%; font-weight: bold; background: rgba(0,0,0,0.4); padding: 2px 0;}
+
+        /* 浮动按钮组 */
         .btn-action-group { position: fixed; right: 24px; bottom: 24px; display: flex; flex-direction: column; gap: 16px; z-index: 80; }
-        .btn-float { width: 56px; height: 56px; border-radius: 28px; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 8px 20px rgba(0,0,0,0.6); background: #1a202c; color: #fff;}
-        .btn-float:hover { transform: translateY(-5px); border-color: #fff; }
-        .btn-leaderboard { background: linear-gradient(135deg, #d4af37, #f39c12); color: #000; border-color: #fff;}
+        .btn-float { width: 64px; height: 64px; border-radius: 32px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; transition: all 0.2s; border: 4px solid #fff; box-shadow: 0 8px 0 rgba(0,0,0,0.3); background: #34495e; color: #fff;}
+        .btn-float:active { transform: translateY(8px); box-shadow: 0 0 0 rgba(0,0,0,0.3); }
+        .btn-leaderboard { background: #f1c40f; border-color: #f39c12;}
 
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 100; }
-        .panel-box { background: #11151e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.9); position: relative; }
-        .game-input { width: 100%; background: #080a0f; border: 1px solid #4a5568; color: #0ecb81; font-size: 16px; border-radius: 6px; padding: 10px 14px; outline: none; transition: 0.2s;}
-        .game-input:focus { border-color: #0ecb81; box-shadow: 0 0 10px rgba(14,203,129,0.2); }
+        /* 模态框通用 */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .panel-box { background: #2c3e50; border: 4px solid #34495e; border-radius: 24px; padding: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
+        .game-input { width: 100%; background: #1a252f; border: 2px solid #455a64; color: #f1c40f; font-size: 18px; border-radius: 12px; padding: 12px; font-weight: bold; outline: none; transition: 0.2s;}
+        .game-input:focus { border-color: #f1c40f; }
 
-        .history-item { background: #1a202c; border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
-        .hist-win { border-left-color: #0ecb81; }
-        .hist-loss { border-left-color: #f6465d; }
+        .history-item { background: #34495e; border-radius: 12px; padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 6px solid transparent; box-shadow: 0 4px 6px rgba(0,0,0,0.2);}
+        .hist-win { border-left-color: #2ecc71; }
+        .hist-loss { border-left-color: #e74c3c; }
 
         .toast-container { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 12px; }
-        .toast { background: rgba(17, 21, 30, 0.95); border: 1px solid #4a5568; border-left: 4px solid #f1c40f; color: #fff; padding: 14px 24px; border-radius: 6px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 10px;}
+        .toast { background: #34495e; border: 3px solid #f1c40f; color: #fff; padding: 14px 24px; border-radius: 30px; font-size: 16px; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.4); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 10px;}
         
         @keyframes slideDown { from { transform: translateY(-40px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-60px) scale(1.5); } }
-        @keyframes dangerPulse { from { box-shadow: inset 0 0 20px rgba(246, 70, 93, 0.1); } to { box-shadow: inset 0 0 50px rgba(246, 70, 93, 0.4); } }
-        @keyframes bounceIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        .floating-text { position: absolute; font-size: 16px; font-weight: 700; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.5s ease-out forwards; pointer-events: none; white-space: nowrap; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-3px) rotate(-2deg); } 75% { transform: translateX(3px) rotate(2deg); } }
+        @keyframes bounceIn { 0% { transform: scale(0); } 80% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        
+        .floating-text { position: absolute; font-size: 22px; font-weight: 900; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.5s ease-out forwards; pointer-events: none; white-space: nowrap; font-family: 'ZCOOL KuaiLe', cursive;}
         .anim-pop { animation: bounceIn 0.4s ease-out; }
     </style>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
@@ -81,10 +102,10 @@
 
     <header class="game-header">
         <div class="flex items-center gap-6">
-            <div class="text-2xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#0ecb81] to-[#3498db] cyber-font">
-                SYS.TERMINAL
+            <div class="text-3xl font-bold tracking-widest text-[#f1c40f] zcool" style="text-shadow: 0 2px 4px #000;">
+                盘感大亨 🚜
             </div>
-            <select id="instSelect" class="bg-[#1a202c] border border-[#4a5568] text-white px-4 py-2 rounded-md font-bold outline-none cursor-pointer text-sm" onchange="changeSymbol()">
+            <select id="instSelect" class="bg-[#1a252f] border-2 border-[#34495e] text-white px-4 py-2 rounded-xl font-bold outline-none cursor-pointer text-sm" onchange="changeSymbol()">
                 <option value="BTC-USDT-SWAP">BTC/USDT</option>
                 <option value="ETH-USDT-SWAP">ETH/USDT</option>
                 <option value="SOL-USDT-SWAP">SOL/USDT</option>
@@ -93,25 +114,25 @@
         </div>
 
         <div class="flex items-center gap-6">
-            <div class="player-card" onclick="openProfileModal()" title="点击配置账号">
+            <div class="player-card" onclick="openProfileModal()" title="点击修改大名">
                 <div class="flex justify-between items-center mb-1">
-                    <span id="playerNameDisplay" class="font-bold text-white text-sm">Loading...</span>
-                    <span id="vipFee" class="text-[#0ecb81] text-xs font-bold bg-[#0ecb81]/10 px-1.5 py-0.5 rounded border border-[#0ecb81]/30 mono-font">FEE: 0.05%</span>
+                    <span id="playerNameDisplay" class="font-bold text-white text-base">加载中... ✏️</span>
+                    <span id="vipFee" class="text-[#2ecc71] text-xs font-bold bg-[#2ecc71]/20 px-2 py-1 rounded-lg">费率 0.05%</span>
                 </div>
-                <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                    <span id="vipName" class="text-gray-300">GUEST (Lv0)</span>
-                    <span class="mono-font">VOL: <span id="volCurrent">0</span>/<span id="volNext">10M</span></span>
+                <div class="flex justify-between text-[11px] text-gray-300 mb-1">
+                    <span id="vipName" class="font-bold">见习农夫 (Lv0)</span>
+                    <span>量: <span id="volCurrent">0</span>/<span id="volNext">10M</span></span>
                 </div>
                 <div class="vip-bar-bg"><div class="vip-bar-fill" id="vipProgress"></div></div>
             </div>
 
-            <div class="text-sm flex items-center gap-3 border-l border-[#2d3748] pl-6">
-                <span class="text-gray-500 text-xs" id="wsStatus">CONNECTING...</span>
-                <span id="realtimePrice" class="text-[28px] font-bold text-[#0ecb81] w-[140px] text-right tracking-tighter cyber-font">--</span>
+            <div class="text-sm flex items-center gap-3 border-l border-[#34495e] pl-6">
+                <span class="text-gray-400 font-bold" id="wsStatus">连接中...</span>
+                <span id="realtimePrice" class="text-[32px] font-bold text-[#2ecc71] w-[150px] text-right font-mono" style="text-shadow: 0 2px 4px #000;">--</span>
             </div>
             <div class="asset-box ml-2">
-                <div class="text-[10px] text-gray-400 flex items-center gap-1 uppercase tracking-widest mb-1">Total Equity (USDT)</div>
-                <div class="text-[#f1c40f] cyber-font font-bold text-[24px]" id="balanceDisplay">100,000.00</div>
+                <div class="text-xs text-gray-300 flex items-center gap-1 font-bold mb-1">🏦 金库可用余额 (USDT)</div>
+                <div class="text-[#f1c40f] font-bold text-[26px] font-mono" style="text-shadow: 0 2px 4px #000;" id="balanceDisplay">100,000.00</div>
             </div>
         </div>
     </header>
@@ -119,57 +140,61 @@
     <div class="tv-container" id="tv_chart_container"></div>
 
     <div class="game-board">
-        <div class="zone relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0ecb81] to-transparent opacity-50"></div>
+        <div class="zone farm-zone">
             <div class="zone-header">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">📈</span>
-                    <div><h2 class="font-bold text-lg text-[#0ecb81] cyber-font">LONG POSITIONS</h2></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl">🌾</span>
+                    <div>
+                        <h2 class="font-bold text-xl text-white zcool" style="text-shadow: 0 2px 4px #000;">阳光多头农场 (买涨)</h2>
+                    </div>
                 </div>
+                <div class="text-xs text-white bg-black/30 px-3 py-1 rounded-full font-bold">做多仓位，价格上涨则丰收</div>
             </div>
             <div class="grid-sys" id="farmGrid"></div>
         </div>
 
-        <div class="zone relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#f6465d] to-transparent opacity-50"></div>
+        <div class="zone pond-zone">
             <div class="zone-header">
-                <div class="flex items-center gap-3">
-                    <span class="text-2xl">📉</span>
-                    <div><h2 class="font-bold text-lg text-[#f6465d] cyber-font">SHORT POSITIONS</h2></div>
+                <div class="flex items-center gap-2">
+                    <span class="text-3xl">🐟</span>
+                    <div>
+                        <h2 class="font-bold text-xl text-white zcool" style="text-shadow: 0 2px 4px #000;">深海空头水族箱 (买跌)</h2>
+                    </div>
                 </div>
+                <div class="text-xs text-white bg-black/30 px-3 py-1 rounded-full font-bold">做空仓位，价格下跌则爆金币</div>
             </div>
             <div class="grid-sys" id="pondGrid"></div>
         </div>
     </div>
 
     <div class="btn-action-group">
-        <div class="btn-float" onclick="openHistoryModal()" title="交易流水与账本">📜</div>
-        <div class="btn-float btn-leaderboard" onclick="openLeaderboard()" title="全球排行榜">🏆</div>
+        <div class="btn-float" onclick="openHistoryModal()" title="交易账本">📜</div>
+        <div class="btn-float btn-leaderboard" onclick="openLeaderboard()" title="财富排行榜">🏆</div>
     </div>
 
     <div class="modal-bg" id="orderModal" onclick="if(event.target===this) closeModal('orderModal')">
-        <div class="panel-box" style="width: 400px;">
+        <div class="panel-box" style="width: 420px;">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-bold text-white cyber-font" id="orderTitle">NEW ORDER</h2>
-                <button onclick="closeModal('orderModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
+                <h2 class="text-2xl font-bold text-white zcool" id="orderTitle">播种配置</h2>
+                <button onclick="closeModal('orderModal')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
             </div>
             
             <div class="space-y-4">
-                <div class="text-xs text-center text-gray-400 bg-[#080a0f] py-3 rounded border border-[#2d3748]">
-                    <div class="text-gray-500 mb-1 uppercase tracking-widest text-[10px]">Symbol / Market Price</div>
-                    <span id="orderInstLabel" class="text-white font-bold mono-font text-sm">BTC-USDT-SWAP</span>
+                <div class="text-sm text-center text-white bg-black/40 py-3 rounded-xl border border-[#34495e] shadow-inner">
+                    <div class="text-gray-400 mb-1 text-xs">正在建仓 / 实时市价</div>
+                    <span id="orderInstLabel" class="font-bold font-mono">BTC-USDT-SWAP</span>
                     <span class="mx-2">|</span>
-                    <span id="orderPriceLabel" class="text-[#f1c40f] mono-font text-lg">--</span>
+                    <span id="orderPriceLabel" class="text-[#f1c40f] font-mono text-xl font-bold">--</span>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-4">
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1 uppercase">Margin (USDT)</div>
-                        <input type="number" id="orderAmount" class="game-input mono-font" value="1000" oninput="calcOrderPreview()">
+                        <div class="text-xs text-gray-400 mb-1 font-bold">投入本金 (U)</div>
+                        <input type="number" id="orderAmount" class="game-input" value="1000" oninput="calcOrderPreview()">
                     </div>
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1 uppercase">Leverage</div>
-                        <select id="orderLev" class="game-input cursor-pointer mono-font" onchange="calcOrderPreview()">
+                        <div class="text-xs text-gray-400 mb-1 font-bold">化肥强度 (杠杆)</div>
+                        <select id="orderLev" class="game-input cursor-pointer" onchange="calcOrderPreview()">
                             <option value="1">1x</option>
                             <option value="10" selected>10x</option>
                             <option value="50">50x</option>
@@ -178,33 +203,33 @@
                     </div>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-4">
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1 uppercase">Take Profit</div>
-                        <input type="number" id="orderTP" class="game-input mono-font" placeholder="Optional">
+                        <div class="text-xs text-gray-400 mb-1 font-bold">止盈价 (选填)</div>
+                        <input type="number" id="orderTP" class="game-input" placeholder="不填则无">
                     </div>
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1 uppercase">Stop Loss</div>
-                        <input type="number" id="orderSL" class="game-input mono-font" placeholder="Optional">
+                        <div class="text-xs text-gray-400 mb-1 font-bold">止损价 (选填)</div>
+                        <input type="number" id="orderSL" class="game-input" placeholder="不填则无">
                     </div>
                 </div>
 
                 <div>
-                    <div class="text-xs text-gray-400 mb-1 uppercase">Auto-Close Timer</div>
-                    <select id="orderDuration" class="game-input cursor-pointer mono-font">
-                        <option value="0">Manual / TP / SL</option>
-                        <option value="60">60 Seconds</option>
-                        <option value="300">5 Minutes</option>
+                    <div class="text-xs text-gray-400 mb-1 font-bold">成熟倒计时 (超时自动收割)</div>
+                    <select id="orderDuration" class="game-input cursor-pointer">
+                        <option value="0">无限期 (需手动收割)</option>
+                        <option value="60">1 分钟</option>
+                        <option value="300">5 分钟</option>
                     </select>
                 </div>
 
-                <div class="text-xs text-gray-400 bg-[#080a0f] p-3 rounded-md border border-[#2d3748]">
-                    <div class="flex justify-between mb-2"><span>Notional Value:</span> <span class="text-white mono-font" id="previewVol">10,000 U</span></div>
-                    <div class="flex justify-between"><span>Est. Fee (<span id="previewFeeRate">0.05%</span>):</span> <span class="text-[#f6465d] mono-font" id="previewFee">-5.00 U</span></div>
+                <div class="text-xs text-gray-300 bg-[#1a252f] p-3 rounded-xl border border-[#34495e]">
+                    <div class="flex justify-between mb-2"><span>刷单交易量:</span> <span class="text-white font-mono font-bold" id="previewVol">10,000 U</span></div>
+                    <div class="flex justify-between"><span>预估手续费 (<span id="previewFeeRate">0.05%</span>):</span> <span class="text-[#e74c3c] font-mono font-bold" id="previewFee">-5.00 U</span></div>
                 </div>
 
-                <button class="w-full mt-4 py-3 rounded-md font-bold text-sm tracking-widest text-white transition-all active:scale-95 cyber-font border border-transparent" id="btnSubmitOrder" onclick="submitOrder()">
-                    EXECUTE ORDER
+                <button class="w-full mt-4 py-4 rounded-2xl font-bold text-xl text-white transition-all active:translate-y-2 zcool shadow-[0_6px_0_rgba(0,0,0,0.4)]" id="btnSubmitOrder" onclick="submitOrder()">
+                    确认支付并建仓
                 </button>
             </div>
         </div>
@@ -212,62 +237,63 @@
 
     <div class="modal-bg" id="historyModal" onclick="if(event.target===this) closeModal('historyModal')">
         <div class="panel-box" style="width: 560px; padding: 0; overflow: hidden;">
-            <div class="bg-gradient-to-r from-[#1a202c] to-[#2d3748] p-5 flex justify-between items-center border-b border-[#4a5568]">
-                <h2 class="text-lg font-bold text-white cyber-font">TRANSACTION LEDGER</h2>
-                <button onclick="closeModal('historyModal')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+            <div class="bg-[#34495e] p-5 flex justify-between items-center border-b border-[#455a64]">
+                <h2 class="text-2xl font-bold text-white zcool">📜 农场交割账本</h2>
+                <button onclick="closeModal('historyModal')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
             </div>
             
-            <div class="grid grid-cols-3 gap-0 bg-[#0f131a] border-b border-[#2d3748]">
+            <div class="grid grid-cols-3 gap-0 bg-[#2c3e50] border-b border-[#455a64]">
                 <div class="text-center py-4">
-                    <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest">Total Trades</div>
-                    <div class="text-xl font-bold mono-font text-white" id="statTotalTrades">0</div>
+                    <div class="text-xs text-gray-400 mb-1 font-bold">总交易笔数</div>
+                    <div class="text-2xl font-bold text-white" id="statTotalTrades">0</div>
                 </div>
-                <div class="text-center py-4 border-l border-r border-[#2d3748]">
-                    <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest">Win Rate</div>
-                    <div class="text-xl font-bold mono-font text-[#0ecb81]" id="statWinRate">0.0%</div>
+                <div class="text-center py-4 border-l border-r border-[#455a64]">
+                    <div class="text-xs text-gray-400 mb-1 font-bold">综合胜率</div>
+                    <div class="text-2xl font-bold text-[#2ecc71]" id="statWinRate">0.0%</div>
                 </div>
                 <div class="text-center py-4">
-                    <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest">Net PnL</div>
-                    <div class="text-xl font-bold mono-font" id="statTotalPnl">0.00</div>
+                    <div class="text-xs text-gray-400 mb-1 font-bold">累计净盈亏 (U)</div>
+                    <div class="text-2xl font-bold font-mono" id="statTotalPnl">0.00</div>
                 </div>
             </div>
 
-            <div id="historyListContainer" class="p-4 max-h-[400px] overflow-y-auto bg-[#11151e] space-y-3"></div>
+            <div id="historyListContainer" class="p-4 max-h-[400px] overflow-y-auto bg-[#1a252f] space-y-3"></div>
         </div>
     </div>
 
     <div class="modal-bg" id="boardModal" onclick="if(event.target===this) closeModal('boardModal')">
         <div class="panel-box" style="width: 480px; padding: 0; overflow: hidden;">
-            <div class="bg-[#1a202c] p-5 flex justify-between items-center border-b border-[#4a5568]">
-                <h2 class="text-lg font-bold text-white cyber-font text-[#f1c40f]">GLOBAL LEADERBOARD</h2>
-                <button onclick="closeModal('boardModal')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
+            <div class="bg-[#34495e] p-5 flex justify-between items-center border-b border-[#455a64]">
+                <h2 class="text-2xl font-bold text-[#f1c40f] zcool">🏆 全网富豪排行榜</h2>
+                <button onclick="closeModal('boardModal')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
             </div>
-            <div class="flex text-[10px] text-gray-500 p-3 border-b border-[#2d3748] bg-[#0f131a] uppercase tracking-widest">
-                <div class="w-[40px] text-center">Rank</div>
-                <div class="flex-1">Alias</div>
-                <div class="w-[110px] text-right">Equity (USDT)</div>
+            <div class="flex text-xs text-gray-400 p-3 border-b border-[#455a64] bg-[#2c3e50] font-bold">
+                <div class="w-[50px] text-center">排名</div>
+                <div class="flex-1">农场主大名</div>
+                <div class="w-[120px] text-right">总资产 (USDT)</div>
             </div>
-            <div id="boardLoading" class="text-center py-10 text-gray-500 text-sm mono-font hidden">
-                <div class="inline-block w-5 h-5 border-2 border-[#0ecb81] border-t-transparent rounded-full animate-spin mb-2"></div>
-                <div>Fetching global data...</div>
+            <div id="boardLoading" class="text-center py-12 text-gray-400 font-bold hidden">
+                <div class="text-4xl animate-bounce mb-4">🚜</div>
+                <div>正在骑三轮车去云端拉取数据...</div>
             </div>
-            <div id="boardListContainer" class="max-h-[400px] overflow-y-auto bg-[#11151e] pb-2"></div>
+            <div id="boardListContainer" class="max-h-[400px] overflow-y-auto bg-[#1a252f] pb-2"></div>
         </div>
     </div>
 
     <div class="modal-bg" id="profileModal" onclick="if(event.target===this) closeModal('profileModal')">
         <div class="panel-box" style="width: 520px;">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-bold text-white cyber-font">USER PROFILE & VIP</h2>
-                <button onclick="closeModal('profileModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
+                <h2 class="text-2xl font-bold text-white zcool">🪪 农场主资料与特权</h2>
+                <button onclick="closeModal('profileModal')" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
             </div>
             <div class="mb-6">
+                <div class="text-sm text-gray-400 font-bold mb-2">修改你的大名：</div>
                 <div class="flex gap-3">
-                    <input type="text" id="playerNameInput" class="game-input flex-1 mono-font text-sm" maxlength="15" placeholder="Enter Alias">
-                    <button class="bg-[#2d3748] hover:bg-[#4a5568] text-white font-bold px-6 rounded-md transition-colors text-sm" onclick="savePlayerName()">UPDATE</button>
+                    <input type="text" id="playerNameInput" class="game-input flex-1" maxlength="15" placeholder="例如：大马赌神">
+                    <button class="bg-[#2ecc71] hover:bg-[#27ae60] text-white font-bold px-6 rounded-xl transition-colors shadow-[0_4px_0_#229954] active:translate-y-1 active:shadow-none" onclick="savePlayerName()">保存</button>
                 </div>
             </div>
-            <div class="text-[10px] text-gray-500 mb-3 uppercase tracking-widest">VIP Fee Tier (Taker)</div>
+            <div class="text-xs text-gray-400 mb-3 font-bold">真实 OKX Taker 阶梯费率表 (刷量降费)：</div>
             <div id="vipListContainer" class="space-y-2 max-h-[300px] overflow-y-auto pr-2"></div>
         </div>
     </div>
@@ -277,7 +303,7 @@
         // 💾 本地 JSON 存档引擎 (Save/Load System)
         // ==========================================
         const DEFAULT_STATE = {
-            playerName: localStorage.getItem('okxFarmPlayerName') || 'AGENT_' + Math.floor(Math.random()*9999),
+            playerName: localStorage.getItem('okxFarmPlayerName') || '农夫_' + Math.floor(Math.random()*9999),
             balance: 100000.00,
             volume: 0,
             currentVip: 0,
@@ -301,7 +327,6 @@
                     state = { ...DEFAULT_STATE, ...parsed.state };
                     state.prices = { "BTC-USDT-SWAP": 0, "ETH-USDT-SWAP": 0, "SOL-USDT-SWAP": 0, "DOGE-USDT-SWAP": 0 };
                     grids = parsed.grids || DEFAULT_GRIDS;
-                    console.log("💾 Game Data Loaded.");
                 } catch (e) {
                     state = JSON.parse(JSON.stringify(DEFAULT_STATE)); grids = JSON.parse(JSON.stringify(DEFAULT_GRIDS));
                 }
@@ -364,16 +389,16 @@
             
             loading.style.display = 'none'; container.style.display = 'block'; container.innerHTML = '';
             rankingData.forEach((user, index) => {
-                const meClass = user.isMe ? 'bg-[#0ecb81]/10 border border-[#0ecb81]/50' : 'border-b border-[#2d3748]';
-                const rankColor = index === 0 ? 'text-[#f1c40f]' : (index === 1 ? 'text-[#bdc3c7]' : (index === 2 ? 'text-[#cd7f32]' : 'text-gray-500'));
+                const meClass = user.isMe ? 'bg-[#2ecc71]/20 border border-[#2ecc71] rounded-lg' : 'border-b border-[#34495e]';
+                const rankColor = index === 0 ? 'text-[#f1c40f] text-2xl' : (index === 1 ? 'text-[#bdc3c7] text-xl' : (index === 2 ? 'text-[#cd7f32] text-xl' : 'text-gray-400 text-lg'));
                 const div = document.createElement('div');
-                div.className = `flex items-center p-3 transition-colors hover:bg-[#1a202c] ${meClass}`;
+                div.className = `flex items-center p-3 transition-colors ${meClass}`;
                 div.innerHTML = `
-                    <div class="w-[40px] text-center font-bold cyber-font text-lg ${rankColor}">${index + 1}</div>
-                    <div class="flex-1 pl-3 font-bold text-sm ${user.isMe ? 'text-[#0ecb81]' : 'text-white'}">
-                        ${user.name} ${user.isMe ? '<span class="bg-[#0ecb81] text-black text-[9px] px-1.5 py-0.5 rounded ml-2">YOU</span>' : ''}
+                    <div class="w-[50px] text-center font-bold zcool ${rankColor}">${index + 1}</div>
+                    <div class="flex-1 pl-3 font-bold text-base ${user.isMe ? 'text-[#2ecc71]' : 'text-white'}">
+                        ${user.name} ${user.isMe ? '<span class="bg-[#2ecc71] text-black text-[10px] px-2 py-0.5 rounded-full ml-2">我</span>' : ''}
                     </div>
-                    <div class="w-[110px] text-right font-bold mono-font ${user.isMe ? 'text-[#0ecb81]' : 'text-white'}">${user.bal.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+                    <div class="w-[120px] text-right font-bold font-mono text-lg ${user.isMe ? 'text-[#2ecc71]' : 'text-white'}">${user.bal.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
                 `;
                 container.appendChild(div);
             });
@@ -384,18 +409,18 @@
         // ==========================================
         const INST_CONFIG = { "BTC-USDT-SWAP": { mmr: 0.004 }, "ETH-USDT-SWAP": { mmr: 0.004 }, "SOL-USDT-SWAP": { mmr: 0.010 }, "DOGE-USDT-SWAP":{ mmr: 0.010 } };
         const VIP_TIERS = [
-            { level: 0, name: 'LV0 GUEST', reqVol: 0, taker: 0.00050 }, { level: 1, name: 'VIP 1', reqVol: 10000000, taker: 0.00040 },
-            { level: 2, name: 'VIP 2', reqVol: 50000000, taker: 0.00035 }, { level: 3, name: 'VIP 3', reqVol: 200000000, taker: 0.00030 },
-            { level: 4, name: 'VIP 4', reqVol: 500000000, taker: 0.00025 }, { level: 5, name: 'VIP 5', reqVol: 1000000000, taker: 0.00020 },
-            { level: 6, name: 'VIP 6', reqVol: 2000000000, taker: 0.00015 }, { level: 7, name: 'VIP 7', reqVol: 5000000000, taker: 0.00012 },
-            { level: 8, name: 'VIP 8', reqVol: 10000000000, taker: 0.00010 }
+            { level: 0, name: '见习农夫 (Lv0)', reqVol: 0, taker: 0.00050 }, { level: 1, name: '初级地主 (VIP 1)', reqVol: 10000000, taker: 0.00040 },
+            { level: 2, name: '小镇首富 (VIP 2)', reqVol: 50000000, taker: 0.00035 }, { level: 3, name: '农场大亨 (VIP 3)', reqVol: 200000000, taker: 0.00030 },
+            { level: 4, name: '农业霸主 (VIP 4)', reqVol: 500000000, taker: 0.00025 }, { level: 5, name: '华尔街之狼 (VIP 5)', reqVol: 1000000000, taker: 0.00020 },
+            { level: 6, name: '金融巨鳄 (VIP 6)', reqVol: 2000000000, taker: 0.00015 }, { level: 7, name: '赛博领主 (VIP 7)', reqVol: 5000000000, taker: 0.00012 },
+            { level: 8, name: '交易神明 (VIP 8)', reqVol: 10000000000, taker: 0.00010 }
         ];
 
         function formatNum(num) { return num.toLocaleString(undefined, {maximumFractionDigits:0}); }
-        function showToast(icon, message, color = '#0ecb81') {
+        function showToast(icon, message, color = '#2ecc71') {
             const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div'); toast.className = 'toast mono-font'; toast.style.borderLeftColor = color;
-            toast.innerHTML = `<span class="text-lg">${icon}</span> <span>${message}</span>`;
+            const toast = document.createElement('div'); toast.className = 'toast'; toast.style.borderColor = color;
+            toast.innerHTML = `<span class="text-2xl">${icon}</span> <span>${message}</span>`;
             container.appendChild(toast); setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 3500);
         }
 
@@ -408,7 +433,7 @@
             const newName = document.getElementById('playerNameInput').value.trim();
             if(newName.length > 0) { 
                 state.playerName = newName; saveGameState(); 
-                initPlayerProfile(); showToast('✅', 'Profile updated.'); 
+                initPlayerProfile(); showToast('✅', '大名修改成功！'); 
                 LeaderboardAPI.submitMyScore(); 
             }
         }
@@ -417,61 +442,48 @@
             document.getElementById('balanceDisplay').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits:2});
             const tier = VIP_TIERS[state.currentVip]; const nextTier = VIP_TIERS[state.currentVip + 1];
             document.getElementById('vipName').innerText = tier.name;
-            document.getElementById('vipFee').innerText = `FEE: ${(tier.taker * 100).toFixed(3)}%`;
+            document.getElementById('vipFee').innerText = `费率 ${(tier.taker * 100).toFixed(3)}%`;
             document.getElementById('volCurrent').innerText = formatNum(state.volume);
             if(nextTier) {
                 document.getElementById('volNext').innerText = formatNum(nextTier.reqVol);
                 document.getElementById('vipProgress').style.width = Math.min((state.volume / nextTier.reqVol) * 100, 100) + '%';
             } else {
-                document.getElementById('volNext').innerText = "MAX"; document.getElementById('vipProgress').style.width = '100%';
+                document.getElementById('volNext').innerText = "满级"; document.getElementById('vipProgress').style.width = '100%';
             }
         }
 
         function checkVipUpgrade() {
             let nextTier = VIP_TIERS[state.currentVip + 1];
             if (nextTier && state.volume >= nextTier.reqVol) {
-                state.currentVip++; showToast("🎖️", `UPGRADED TO 【${nextTier.name}】!`); checkVipUpgrade(); 
+                state.currentVip++; showToast("🎉", `交易量达标，晋升为【${nextTier.name}】！`); checkVipUpgrade(); 
             }
             updateGlobalUI();
         }
 
         // ==========================================
-        // 📡 行情引擎与 TV 渲染 (修复重构版)
+        // 📡 行情引擎与 TV 渲染
         // ==========================================
         function initTV() {
             if (typeof TradingView === 'undefined') {
-                setTimeout(initTV, 500); // 确保外部脚本完全加载
-                return;
+                setTimeout(initTV, 500); return;
             }
             document.getElementById('tv_chart_container').innerHTML = '';
             const coin = state.activeInstId.split('-')[0];
-            
-            // 使用 OKX Spot 行情作为完美平替，保证组件在所有网络100%加载
             new TradingView.widget({
-                "autosize": true,
-                "symbol": "OKX:" + coin + "USDT",
-                "interval": "1",
-                "timezone": "Asia/Shanghai",
-                "theme": "dark",
-                "style": "1",
-                "locale": "en",
-                "enable_publishing": false,
-                "hide_top_toolbar": true,
-                "hide_legend": true,
-                "save_image": false,
-                "container_id": "tv_chart_container",
-                "backgroundColor": "#080a0f",
-                "gridColor": "#11151e"
+                "autosize": true, "symbol": "OKX:" + coin + "USDT",
+                "interval": "1", "timezone": "Asia/Shanghai", "theme": "dark", "style": "1",
+                "locale": "zh_CN", "enable_publishing": false, "hide_top_toolbar": true,
+                "hide_legend": true, "save_image": false, "container_id": "tv_chart_container",
+                "backgroundColor": "#131722", "gridColor": "#1a252f"
             });
         }
 
         let ws = null;
         function connectWS() {
-            if(ws) ws.close(); document.getElementById('wsStatus').innerText = 'CONNECTING...';
-            // 使用 OKX 官方 WSS
+            if(ws) ws.close(); document.getElementById('wsStatus').innerText = '连接中...';
             ws = new WebSocket('wss://ws.okx.com:8443/ws/v5/public');
             ws.onopen = () => { 
-                document.getElementById('wsStatus').innerText = 'DATA LIVE'; document.getElementById('wsStatus').style.color = '#0ecb81';
+                document.getElementById('wsStatus').innerText = '行情连线正常'; document.getElementById('wsStatus').style.color = '#2ecc71';
                 ws.send(JSON.stringify({ op: "subscribe", args: Object.keys(state.prices).map(id => ({ channel: "tickers", instId: id })) })); 
             };
             ws.onmessage = (event) => {
@@ -482,13 +494,13 @@
                     state.prices[id] = price;
                     if (id === state.activeInstId) {
                         const pEl = document.getElementById('realtimePrice');
-                        pEl.innerText = price.toString(); pEl.style.color = price >= (parseFloat(pEl.innerText)||0) ? '#0ecb81' : '#f6465d';
+                        pEl.innerText = price.toString(); pEl.style.color = price >= (parseFloat(pEl.innerText)||0) ? '#2ecc71' : '#e74c3c';
                         const orderP = document.getElementById('orderPriceLabel'); if (orderP) orderP.innerText = price;
                     }
                 }
             };
             ws.onclose = () => { 
-                document.getElementById('wsStatus').innerText = 'RECONNECTING...'; document.getElementById('wsStatus').style.color = '#f6465d';
+                document.getElementById('wsStatus').innerText = '断线重连中...'; document.getElementById('wsStatus').style.color = '#e74c3c';
                 setTimeout(connectWS, 3000); 
             };
             ws.onerror = () => { ws.close(); };
@@ -499,7 +511,6 @@
             document.getElementById('realtimePrice').innerText = '--';
             initTV();
             document.getElementById('orderInstLabel').innerText = state.activeInstId;
-            document.getElementById('orderMmrLabel').innerText = (INST_CONFIG[state.activeInstId].mmr * 100).toFixed(1) + '%';
             saveGameState(); 
         }
 
@@ -514,21 +525,27 @@
         }
 
         function createSlotDOM(slot, side, index) {
-            const div = document.createElement('div'); div.className = 'slot'; div.id = `dom_${slot.id}`;
+            const div = document.createElement('div'); 
+            div.id = `dom_${slot.id}`;
+            const baseClass = 'slot ' + (side === 'long' ? 'slot-dirt' : 'slot-water');
+
             if (!slot.unlocked) {
-                div.classList.add('locked'); div.innerHTML = `<div class="text-3xl mb-1 opacity-40">🔒</div><div class="text-[#f1c40f] text-[10px] font-bold bg-[#000] px-2 py-1 rounded mt-2 border border-[#4a5568]">UNLOCK: ${slot.unlockPrice}U</div>`;
+                div.className = baseClass + (side === 'long' ? ' locked-dirt' : ' locked-water');
+                div.innerHTML = `<div class="text-4xl mb-2 opacity-50">🔒</div><div class="text-[#f1c40f] text-xs font-bold bg-black/60 px-3 py-1 rounded-full border border-black shadow-lg">花费 ${slot.unlockPrice}U 扩建</div>`;
                 div.onclick = () => handleUnlock(side, index); return div;
             }
+
+            div.className = baseClass;
             if (!slot.item) {
-                div.classList.add('empty'); div.innerHTML = `<div class="emoji-art opacity-20" style="margin-bottom:0; font-size: 24px;">➕</div>`; div.onclick = () => openOrderModal(side, index);
+                div.classList.add('empty'); div.innerHTML = `<div class="text-4xl opacity-30 drop-shadow-md">➕</div>`; div.onclick = () => openOrderModal(side, index);
             } else {
                 const it = slot.item; const baseAsset = it.instId.split('-')[0];
                 div.innerHTML = `
                     <div class="badge-inst">${baseAsset} ${it.leverage}x</div>
-                    <div class="badge-pnl ${it.pnl>=0?'text-[#0ecb81]':'text-[#f6465d]'}" id="pnl_${slot.id}">--</div>
+                    <div class="badge-pnl ${it.pnl>=0?'text-[#2ecc71]':'text-[#e74c3c]'}" id="pnl_${slot.id}">--</div>
                     <div class="emoji-art anim-pop" id="emoji_${slot.id}">${side === 'long' ? '🌱' : '🥚'}</div>
-                    <div class="liq-info">LIQ: ${it.liqPrice.toFixed(4)}</div>
-                    <button class="btn-early-close" id="btn_close_${slot.id}" onclick="executeClose('${side}', ${index}, 'manual', event)">MARKET CLOSE</button>
+                    <div class="liq-info">清算价: ${it.liqPrice.toFixed(4)}</div>
+                    <button class="btn-early-close" id="btn_close_${slot.id}" onclick="executeClose('${side}', ${index}, 'manual', event)">收割平仓</button>
                     ${it.durationMs ? `<div class="prog-bar-container"><div class="prog-bar-fill" id="prog_${slot.id}"></div></div>` : ''}
                 `;
             }
@@ -539,19 +556,20 @@
             const slot = grids[side][index];
             if(state.balance >= slot.unlockPrice) { 
                 state.balance -= slot.unlockPrice; slot.unlocked = true; 
-                showToast("🔓", "Slot Unlocked!"); updateGlobalUI(); renderGrids(); saveGameState(); 
-            } else { showToast("❌", "Insufficient Balance", "#f6465d"); }
+                showToast("🔨", "成功扩建了一块新区域！"); updateGlobalUI(); renderGrids(); saveGameState(); 
+            } else { showToast("❌", "金库余额不足！", "#e74c3c"); }
         }
 
         let currentActionTarget = null;
         function openOrderModal(side, index) {
-            const price = state.prices[state.activeInstId]; if(price <= 0) return showToast("⏳", "Waiting for market data...");
+            const price = state.prices[state.activeInstId]; if(price <= 0) return showToast("⏳", "请等待行情数据加载...");
             currentActionTarget = { side, index };
-            document.getElementById('orderTitle').innerHTML = side==='long' ? '<span>📈</span> GO LONG' : '<span>📉</span> GO SHORT';
+            document.getElementById('orderTitle').innerHTML = side==='long' ? '🌱 配置多头农作物' : '🐟 配置空头水产';
             document.getElementById('orderInstLabel').innerText = state.activeInstId;
             document.getElementById('orderPriceLabel').innerText = price;
             const btn = document.getElementById('btnSubmitOrder');
-            btn.className = `w-full mt-4 py-3 rounded-md font-bold text-sm tracking-widest text-white transition-all active:scale-95 cyber-font border ${side==='long' ? 'bg-[#0ecb81]/20 border-[#0ecb81] text-[#0ecb81] hover:bg-[#0ecb81] hover:text-black' : 'bg-[#f6465d]/20 border-[#f6465d] text-[#f6465d] hover:bg-[#f6465d] hover:text-white'}`;
+            btn.className = `w-full mt-4 py-4 rounded-2xl font-bold text-xl text-white transition-all active:translate-y-2 zcool shadow-[0_6px_0_rgba(0,0,0,0.4)] ${side==='long' ? 'bg-[#2ecc71] hover:bg-[#27ae60] shadow-[#229954]' : 'bg-[#e74c3c] hover:bg-[#c0392b] shadow-[#c0392b]'}`;
+            btn.innerText = side==='long' ? '支付本金，种下种子' : '支付本金，投入鱼卵';
             document.getElementById('orderTP').value = ''; document.getElementById('orderSL').value = '';
             calcOrderPreview(); document.getElementById('orderModal').style.display = 'flex';
         }
@@ -573,13 +591,13 @@
             const durSec = parseInt(document.getElementById('orderDuration').value);
             const instId = state.activeInstId; const currentPrice = state.prices[instId]; const { side, index } = currentActionTarget;
 
-            if(isNaN(amount) || amount <= 0) return showToast("❌", "Invalid Margin", "#f6465d");
+            if(isNaN(amount) || amount <= 0) return showToast("❌", "请输入有效金额", "#e74c3c");
             const notionalVol = amount * lev; const takerRate = VIP_TIERS[state.currentVip].taker; const openFee = notionalVol * takerRate;
             const totalCost = amount + openFee;
 
-            if(state.balance < totalCost) return showToast("❌", "Insufficient Balance for Margin + Fee!", "#f6465d");
-            if (side === 'long') { if (tp>0 && tp<=currentPrice) return showToast("❌", "TP must be > Entry Price", "#f6465d"); if (sl>0 && sl>=currentPrice) return showToast("❌", "SL must be < Entry Price", "#f6465d"); } 
-            else { if (tp>0 && tp>=currentPrice) return showToast("❌", "TP must be < Entry Price", "#f6465d"); if (sl>0 && sl<=currentPrice) return showToast("❌", "SL must be > Entry Price", "#f6465d"); }
+            if(state.balance < totalCost) return showToast("❌", "金库余额不足支付本金及手续费！", "#e74c3c");
+            if (side === 'long') { if (tp>0 && tp<=currentPrice) return showToast("❌", "做多止盈价必须大于市价", "#e74c3c"); if (sl>0 && sl>=currentPrice) return showToast("❌", "做多止损价必须小于市价", "#e74c3c"); } 
+            else { if (tp>0 && tp>=currentPrice) return showToast("❌", "做空止盈价必须小于市价", "#e74c3c"); if (sl>0 && sl<=currentPrice) return showToast("❌", "做空止损价必须大于市价", "#e74c3c"); }
 
             const mmr = INST_CONFIG[instId].mmr;
             let liqPrice = side === 'long' ? currentPrice * (1 - (1/lev) + mmr + takerRate) : currentPrice * (1 + (1/lev) - mmr - takerRate);
@@ -591,7 +609,7 @@
                 entryPrice: currentPrice, liqPrice: liqPrice, openFee: openFee, pnl: 0,
                 tp: tp, sl: sl, startTime: Date.now(), durationMs: durSec * 1000, resolved: false
             };
-            showToast("⚡", `Order Filled: ${instId.split('-')[0]} ${lev}x`);
+            showToast("🌱", `建仓成功: ${instId.split('-')[0]} ${lev}x`);
             closeModal('orderModal'); renderGrids(); saveGameState(); 
         }
 
@@ -614,12 +632,12 @@
 
                     if(pnlEl) { 
                         pnlEl.innerText = (it.pnl > 0 ? '+' : '') + it.pnl.toFixed(2); 
-                        pnlEl.className = `badge-pnl ${it.pnl >= 0 ? 'text-[#0ecb81]' : 'text-[#f6465d]'}`;
+                        pnlEl.className = `badge-pnl ${it.pnl >= 0 ? 'text-[#2ecc71]' : 'text-[#e74c3c]'}`;
                     }
                     
                     if(dom && btnEl) { 
-                        if(it.pnl > 0) { dom.classList.remove('aura-danger'); dom.classList.add('aura-safe'); btnEl.innerText = 'TAKE PROFIT'; btnEl.style.color = '#0ecb81'; btnEl.style.borderColor = '#0ecb81'; } 
-                        else if (it.pnl < 0) { dom.classList.remove('aura-safe'); dom.classList.add('aura-danger'); btnEl.innerText = 'CUT LOSS'; btnEl.style.color = '#f6465d'; btnEl.style.borderColor = '#f6465d'; } 
+                        if(it.pnl > 0) { dom.classList.remove('aura-danger'); dom.classList.add('aura-safe'); btnEl.innerText = '💰 丰收止盈'; btnEl.style.background = '#f39c12'; btnEl.style.borderColor = '#e67e22'; btnEl.style.boxShadow = '0 4px 0 #d35400'; } 
+                        else if (it.pnl < 0) { dom.classList.remove('aura-safe'); dom.classList.add('aura-danger'); btnEl.innerText = '✂️ 割肉止损'; btnEl.style.background = '#e74c3c'; btnEl.style.borderColor = '#c0392b'; btnEl.style.boxShadow = '0 4px 0 #922b21'; } 
                     }
 
                     let progress = 0;
@@ -670,7 +688,7 @@
             state.balance += payout; state.volume += it.notional; checkVipUpgrade();
 
             const record = {
-                time: new Date().toLocaleString('en-US', {hour12: false}).split(', ')[1],
+                time: new Date().toLocaleString('zh-CN', {hour12: false}).split(' ')[1],
                 instId: it.instId.split('-')[0], side: side, lev: it.leverage, margin: it.amount,
                 entry: it.entryPrice, exit: currentPrice, reason: reason, totalFee: it.openFee + closeFee, netPnl: realNetPnl
             };
@@ -682,13 +700,13 @@
             if(dom) {
                 dom.classList.remove('aura-danger', 'aura-safe'); document.getElementById(`btn_close_${slot.id}`).style.display = 'none';
                 let txt = ''; let color = '';
-                if (reason === 'tp') { txt = `TP HIT +${realNetPnl.toFixed(1)}`; color = '#0ecb81'; emojiEl.innerText = side==='long'?'🍎':'💰'; emojiEl.style.transform='scale(1.3)'; }
-                else if (reason === 'sl') { txt = `SL HIT ${realNetPnl.toFixed(1)}`; color = '#f6465d'; emojiEl.innerText = '✂️'; emojiEl.style.filter='grayscale(1)'; }
-                else if (reason === 'liq') { txt = `LIQUIDATED`; color = '#f6465d'; emojiEl.innerText = '☠️'; dom.classList.add('aura-danger'); }
-                else if (reason === 'manual') { txt = `CLOSED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#f1c40f':'#bdc3c7'; }
-                else if (reason === 'time') { txt = `EXPIRED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#0ecb81':'#f6465d'; }
+                if (reason === 'tp') { txt = `止盈丰收 +${realNetPnl.toFixed(1)}`; color = '#f1c40f'; emojiEl.innerText = side==='long'?'🍎':'💰'; emojiEl.style.transform='scale(1.4)'; }
+                else if (reason === 'sl') { txt = `触及止损 ${realNetPnl.toFixed(1)}`; color = '#e74c3c'; emojiEl.innerText = '✂️'; emojiEl.style.filter='grayscale(1)'; }
+                else if (reason === 'liq') { txt = `天灾强平 归零`; color = '#e74c3c'; emojiEl.innerText = '☠️'; dom.classList.add('aura-danger'); }
+                else if (reason === 'manual') { txt = `拔苗助长 ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#f1c40f':'#bdc3c7'; }
+                else if (reason === 'time') { txt = `成熟收割 ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#f1c40f':'#e74c3c'; }
 
-                const ft = document.createElement('div'); ft.className = 'floating-text mono-font'; ft.style.color = color; ft.innerText = txt; dom.appendChild(ft);
+                const ft = document.createElement('div'); ft.className = 'floating-text'; ft.style.color = color; ft.innerText = txt; dom.appendChild(ft);
             }
             setTimeout(() => { slot.item = null; renderGrids(); saveGameState(); }, 2500);
         }
@@ -698,30 +716,30 @@
         // ==========================================
         function openHistoryModal() {
             const container = document.getElementById('historyListContainer'); container.innerHTML = '';
-            if (state.tradeHistory.length === 0) { container.innerHTML = `<div class="text-center text-gray-500 py-10 text-sm">NO TRANSACTION RECORD FOUND.</div>`; } 
+            if (state.tradeHistory.length === 0) { container.innerHTML = `<div class="text-center text-gray-400 py-10 font-bold">暂无交易流水，快去种地吧！</div>`; } 
             else {
                 let wins = 0; let totalNetPnl = 0;
                 state.tradeHistory.forEach(r => {
                     if (r.netPnl > 0) wins++; totalNetPnl += r.netPnl;
                     const isWin = r.netPnl > 0;
-                    const reasonTxt = { 'tp':'TAKE PROFIT', 'sl':'STOP LOSS', 'liq':'LIQUIDATION', 'manual':'MARKET CLOSE', 'time':'EXPIRED' }[r.reason];
+                    const reasonTxt = { 'tp':'计划止盈', 'sl':'计划止损', 'liq':'惨遭强平', 'manual':'手动收割', 'time':'到期收割' }[r.reason];
                     const div = document.createElement('div'); div.className = `history-item ${isWin ? 'hist-win' : 'hist-loss'}`;
                     div.innerHTML = `
                         <div class="flex-1">
-                            <div class="font-bold text-sm text-white cyber-font tracking-wide">${r.instId} <span class="${r.side==='long'?'text-[#0ecb81]':'text-[#f6465d]'}">${r.side==='long'?'LONG':'SHORT'}</span> (${r.lev}x) <span class="bg-[#2d3748] text-white text-[9px] px-1.5 py-0.5 rounded ml-2">${reasonTxt}</span></div>
-                            <div class="text-[10px] text-gray-400 mono-font mt-1.5">IN: ${r.entry.toFixed(2)} ➔ OUT: ${r.exit.toFixed(2)}</div>
-                            <div class="text-[10px] text-gray-500 mono-font mt-0.5">${r.time} | MARGIN: ${r.margin.toFixed(0)}</div>
+                            <div class="font-bold text-sm text-white zcool tracking-wide">${r.instId} <span class="${r.side==='long'?'text-[#2ecc71]':'text-[#e74c3c]'}">${r.side==='long'?'做多':'做空'}</span> (${r.lev}x) <span class="bg-[#1a252f] text-gray-300 text-[10px] px-2 py-0.5 rounded-full ml-2 font-sans border border-[#455a64]">${reasonTxt}</span></div>
+                            <div class="text-xs text-gray-300 font-mono mt-2 font-bold">开仓: ${r.entry.toFixed(2)} ➔ 平仓: ${r.exit.toFixed(2)}</div>
+                            <div class="text-[10px] text-gray-500 font-mono mt-0.5">${r.time} | 投入本金: ${r.margin.toFixed(0)} U</div>
                         </div>
                         <div class="text-right flex flex-col justify-between items-end">
-                            <div class="mono-font font-bold text-lg ${isWin ? 'text-[#0ecb81]' : 'text-[#f6465d]'}">${isWin?'+':''}${r.netPnl.toFixed(2)}</div>
-                            <div class="text-[9px] text-gray-500 uppercase">FEE: -${r.totalFee.toFixed(2)}</div>
+                            <div class="font-mono font-bold text-xl ${isWin ? 'text-[#2ecc71]' : 'text-[#e74c3c]'}">${isWin?'+':''}${r.netPnl.toFixed(2)}</div>
+                            <div class="text-[10px] text-gray-400 bg-black/30 px-2 py-1 rounded">扣除手续费: -${r.totalFee.toFixed(2)}</div>
                         </div>
                     `;
                     container.appendChild(div);
                 });
                 document.getElementById('statTotalTrades').innerText = state.tradeHistory.length;
                 document.getElementById('statWinRate').innerText = ((wins / state.tradeHistory.length) * 100).toFixed(1) + '%';
-                const pnlEl = document.getElementById('statTotalPnl'); pnlEl.innerText = (totalNetPnl > 0 ? '+' : '') + totalNetPnl.toFixed(2); pnlEl.style.color = totalNetPnl >= 0 ? '#0ecb81' : '#f6465d';
+                const pnlEl = document.getElementById('statTotalPnl'); pnlEl.innerText = (totalNetPnl > 0 ? '+' : '') + totalNetPnl.toFixed(2); pnlEl.style.color = totalNetPnl >= 0 ? '#2ecc71' : '#e74c3c';
             }
             document.getElementById('historyModal').style.display = 'flex';
         }
@@ -730,9 +748,9 @@
             const container = document.getElementById('vipListContainer'); container.innerHTML = '';
             VIP_TIERS.forEach(tier => {
                 const isActive = state.currentVip === tier.level; const isPassed = state.currentVip > tier.level;
-                let statusHtml = isActive ? `<span class="bg-[#0ecb81] text-black px-2 py-0.5 rounded text-[10px] font-bold">CURRENT</span>` : (isPassed ? `<span class="text-[#0ecb81] text-[10px] font-bold">✔</span>` : `<span class="text-gray-600 text-[10px] mono-font">REQ: ${formatNum(tier.reqVol)}</span>`);
-                const div = document.createElement('div'); div.className = `flex justify-between items-center p-3 rounded-md border ${isActive ? 'border-[#0ecb81] bg-[#0ecb81]/10' : 'border-[#2d3748] bg-[#1a202c]'}`;
-                div.innerHTML = `<div class="flex items-center gap-3"><div class="font-bold text-sm cyber-font ${isActive ? 'text-[#0ecb81]' : (isPassed ? 'text-gray-300' : 'text-gray-500')}">${tier.name}</div>${statusHtml}</div><div class="mono-font font-bold text-sm ${isActive ? 'text-white' : 'text-gray-500'}">${(tier.taker * 100).toFixed(3)}%</div>`;
+                let statusHtml = isActive ? `<span class="bg-[#f1c40f] text-black px-2 py-0.5 rounded text-[10px] font-bold">当前等级</span>` : (isPassed ? `<span class="text-[#2ecc71] text-[10px] font-bold">✔ 已解锁</span>` : `<span class="text-gray-500 text-[10px] font-bold">需量: ${formatNum(tier.reqVol)}</span>`);
+                const div = document.createElement('div'); div.className = `flex justify-between items-center p-3 rounded-xl border-2 ${isActive ? 'border-[#f1c40f] bg-[#f1c40f]/10' : 'border-[#34495e] bg-[#2c3e50]'}`;
+                div.innerHTML = `<div class="flex items-center gap-3"><div class="font-bold text-sm zcool ${isActive ? 'text-[#f1c40f]' : (isPassed ? 'text-white' : 'text-gray-400')}">${tier.name}</div>${statusHtml}</div><div class="font-mono font-bold text-sm ${isActive ? 'text-[#f1c40f]' : 'text-gray-400'}">${(tier.taker * 100).toFixed(3)}%</div>`;
                 container.appendChild(div);
             });
             document.getElementById('profileModal').style.display = 'flex'; 
@@ -742,16 +760,13 @@
         // 🚀 启动序列 (Boot Sequence)
         // ==========================================
         
-        // 1. 加载存档
         loadGameState();
         initPlayerProfile(); 
         updateGlobalUI(); 
         renderGrids(); 
         
-        // 2. 还原上次查看的币种
         document.getElementById('instSelect').value = state.activeInstId;
         
-        // 3. 启动引擎 (等待 DOM 与外部脚本就绪)
         window.onload = () => {
             initTV(); 
             connectWS(); 
