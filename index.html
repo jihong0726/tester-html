@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OKX 盘感大亨 | 赛博终端实盘模拟版</title>
+    <title>OKX 盘感大亨 | 赛博终端实盘版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 引入硬核科技字体 Orbitron 和专业正文字体 Inter */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap');
 
         body { 
@@ -19,7 +18,6 @@
         .cyber-font { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
         .mono-font { font-family: 'Orbitron', monospace; }
 
-        /* 顶部导航与卡片 */
         .game-header { background: linear-gradient(90deg, #11151e, #1a202c); border-bottom: 2px solid #2d3748; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 50; flex-shrink: 0; }
         .asset-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(241, 196, 15, 0.4); border-radius: 8px; padding: 6px 20px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 15px rgba(241, 196, 15, 0.15); }
         .player-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 16px; display: flex; flex-direction: column; min-width: 240px; cursor: pointer; transition: all 0.2s; }
@@ -27,20 +25,17 @@
         .vip-bar-bg { width: 100%; height: 4px; background: #000; border-radius: 2px; margin-top: 6px; overflow: hidden; }
         .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #e74c3c, #f1c40f, #0ecb81); width: 0%; transition: width 0.5s ease-out; }
 
-        /* 布局与网格 */
         .tv-container { height: 35vh; border-bottom: 4px solid #11151e; background: #080a0f; flex-shrink: 0; }
         .game-board { flex: 1; display: flex; padding: 20px; gap: 20px; background: radial-gradient(circle at center, #11151e 0%, #080a0f 100%); overflow-y: auto; position: relative; }
         .zone { flex: 1; background: rgba(17, 21, 30, 0.7); border: 1px solid #2d3748; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0; }
         .grid-sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; min-height: 200px; }
         
-        /* 坑位仓位卡片 */
         .slot { background: #1a202c; border: 2px solid #2d3748; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; transition: all 0.2s ease; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); min-height: 130px; }
         .slot.empty:hover { border-color: #4a5568; transform: translateY(-2px); box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; }
         .slot.locked { background: #0f131a; border-color: #1a202c; opacity: 0.7; cursor: not-allowed; }
         .emoji-art { font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); transition: transform 0.3s; z-index: 10; margin-bottom: 12px; margin-top: 15px;}
         
-        /* 动态平仓按钮与特效 */
         .btn-early-close { position: absolute; bottom: 10px; background: #0f131a; border: 1px solid #4a5568; color: #fff; font-size: 11px; font-weight: bold; padding: 6px 20px; border-radius: 6px; cursor: pointer; z-index: 30; transition: all 0.1s; text-transform: uppercase; }
         .btn-early-close:hover { transform: scale(1.05); border-color: #a0aec0; }
         .btn-early-close:active { transform: scale(0.95); }
@@ -49,18 +44,15 @@
         .prog-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: #000; border-radius: 0 0 6px 6px; overflow: hidden; }
         .prog-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #3498db, #9b59b6); transition: width 0.1s linear; }
 
-        /* 标签信息 */
         .badge-inst { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
         .badge-pnl { position: absolute; top: 8px; right: 8px; font-size: 13px; font-weight: bold; }
         .liq-info { position: absolute; bottom: 38px; font-size: 10px; color: #e74c3c; text-align: center; width: 100%; font-weight: bold; letter-spacing: 0.5px;}
 
-        /* 浮动按钮组 */
         .btn-action-group { position: fixed; right: 24px; bottom: 24px; display: flex; flex-direction: column; gap: 16px; z-index: 80; }
         .btn-float { width: 56px; height: 56px; border-radius: 28px; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 8px 20px rgba(0,0,0,0.6); background: #1a202c; color: #fff;}
         .btn-float:hover { transform: translateY(-5px); border-color: #fff; }
         .btn-leaderboard { background: linear-gradient(135deg, #d4af37, #f39c12); color: #000; border-color: #fff;}
 
-        /* 模态框通用 */
         .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 100; }
         .panel-box { background: #11151e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.9); position: relative; }
         .game-input { width: 100%; background: #080a0f; border: 1px solid #4a5568; color: #0ecb81; font-size: 16px; border-radius: 6px; padding: 10px 14px; outline: none; transition: 0.2s;}
@@ -70,7 +62,6 @@
         .hist-win { border-left-color: #0ecb81; }
         .hist-loss { border-left-color: #f6465d; }
 
-        /* Toast 提示 */
         .toast-container { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 12px; }
         .toast { background: rgba(17, 21, 30, 0.95); border: 1px solid #4a5568; border-left: 4px solid #f1c40f; color: #fff; padding: 14px 24px; border-radius: 6px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 10px;}
         
@@ -82,6 +73,7 @@
         .floating-text { position: absolute; font-size: 16px; font-weight: 700; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.5s ease-out forwards; pointer-events: none; white-space: nowrap; }
         .anim-pop { animation: bounceIn 0.4s ease-out; }
     </style>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body>
 
@@ -101,14 +93,14 @@
         </div>
 
         <div class="flex items-center gap-6">
-            <div class="player-card" onclick="openProfileModal()" title="点击配置账号与VIP">
+            <div class="player-card" onclick="openProfileModal()" title="点击配置账号">
                 <div class="flex justify-between items-center mb-1">
                     <span id="playerNameDisplay" class="font-bold text-white text-sm">Loading...</span>
-                    <span id="vipFee" class="text-[#0ecb81] text-[11px] font-bold bg-[#0ecb81]/10 px-1.5 py-0.5 rounded border border-[#0ecb81]/30 mono-font">FEE: 0.05%</span>
+                    <span id="vipFee" class="text-[#0ecb81] text-xs font-bold bg-[#0ecb81]/10 px-1.5 py-0.5 rounded border border-[#0ecb81]/30 mono-font">FEE: 0.05%</span>
                 </div>
                 <div class="flex justify-between text-[11px] text-gray-400 mb-1">
                     <span id="vipName" class="text-gray-300">GUEST (Lv0)</span>
-                    <span class="mono-font">VOL: <span id="volCurrent">0</span> / <span id="volNext">10M</span></span>
+                    <span class="mono-font">VOL: <span id="volCurrent">0</span>/<span id="volNext">10M</span></span>
                 </div>
                 <div class="vip-bar-bg"><div class="vip-bar-fill" id="vipProgress"></div></div>
             </div>
@@ -247,7 +239,7 @@
     <div class="modal-bg" id="boardModal" onclick="if(event.target===this) closeModal('boardModal')">
         <div class="panel-box" style="width: 480px; padding: 0; overflow: hidden;">
             <div class="bg-[#1a202c] p-5 flex justify-between items-center border-b border-[#4a5568]">
-                <h2 class="text-lg font-bold cyber-font text-[#f1c40f]">GLOBAL LEADERBOARD</h2>
+                <h2 class="text-lg font-bold text-white cyber-font text-[#f1c40f]">GLOBAL LEADERBOARD</h2>
                 <button onclick="closeModal('boardModal')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
             </div>
             <div class="flex text-[10px] text-gray-500 p-3 border-b border-[#2d3748] bg-[#0f131a] uppercase tracking-widest">
@@ -266,7 +258,7 @@
     <div class="modal-bg" id="profileModal" onclick="if(event.target===this) closeModal('profileModal')">
         <div class="panel-box" style="width: 520px;">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-lg font-bold text-white cyber-font">USER PROFILE & VIP TIER</h2>
+                <h2 class="text-lg font-bold text-white cyber-font">USER PROFILE & VIP</h2>
                 <button onclick="closeModal('profileModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
             </div>
             <div class="mb-6">
@@ -275,19 +267,17 @@
                     <button class="bg-[#2d3748] hover:bg-[#4a5568] text-white font-bold px-6 rounded-md transition-colors text-sm" onclick="savePlayerName()">UPDATE</button>
                 </div>
             </div>
-            <div class="text-[10px] text-gray-500 mb-3 uppercase tracking-widest">OKX Taker Fee Structure</div>
+            <div class="text-[10px] text-gray-500 mb-3 uppercase tracking-widest">VIP Fee Tier (Taker)</div>
             <div id="vipListContainer" class="space-y-2 max-h-[300px] overflow-y-auto pr-2"></div>
         </div>
     </div>
-
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <script>
         // ==========================================
         // 💾 本地 JSON 存档引擎 (Save/Load System)
         // ==========================================
         const DEFAULT_STATE = {
-            playerName: 'AGENT_' + Math.floor(Math.random()*9999),
+            playerName: localStorage.getItem('okxFarmPlayerName') || 'AGENT_' + Math.floor(Math.random()*9999),
             balance: 100000.00,
             volume: 0,
             currentVip: 0,
@@ -304,7 +294,7 @@
         let state = {}; let grids = {};
 
         function loadGameState() {
-            const savedJSON = localStorage.getItem('okxFarmGameSaveV2');
+            const savedJSON = localStorage.getItem('okxFarmGameSaveV3');
             if (savedJSON) {
                 try {
                     const parsed = JSON.parse(savedJSON);
@@ -325,7 +315,7 @@
                 state: { playerName: state.playerName, balance: state.balance, volume: state.volume, currentVip: state.currentVip, activeInstId: state.activeInstId, tradeHistory: state.tradeHistory },
                 grids: grids
             };
-            localStorage.setItem('okxFarmGameSaveV2', JSON.stringify(dataToSave));
+            localStorage.setItem('okxFarmGameSaveV3', JSON.stringify(dataToSave));
         }
 
         // ==========================================
@@ -401,6 +391,7 @@
             { level: 8, name: 'VIP 8', reqVol: 10000000000, taker: 0.00010 }
         ];
 
+        function formatNum(num) { return num.toLocaleString(undefined, {maximumFractionDigits:0}); }
         function showToast(icon, message, color = '#0ecb81') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div'); toast.className = 'toast mono-font'; toast.style.borderLeftColor = color;
@@ -445,22 +436,39 @@
         }
 
         // ==========================================
-        // 📡 行情引擎与 TV 渲染
+        // 📡 行情引擎与 TV 渲染 (修复重构版)
         // ==========================================
         function initTV() {
+            if (typeof TradingView === 'undefined') {
+                setTimeout(initTV, 500); // 确保外部脚本完全加载
+                return;
+            }
             document.getElementById('tv_chart_container').innerHTML = '';
-            tvWidget = new TradingView.widget({
-                "autosize": true, "symbol": "OKX:" + state.activeInstId.replace('-SWAP', '.P').replace('-', ''),
-                "interval": "1", "timezone": "Asia/Shanghai", "theme": "dark", "style": "1",
-                "locale": "en", "enable_publishing": false, "hide_top_toolbar": true,
-                "hide_legend": true, "save_image": false, "container_id": "tv_chart_container",
-                "backgroundColor": "#080a0f", "gridColor": "#11151e"
+            const coin = state.activeInstId.split('-')[0];
+            
+            // 使用 OKX Spot 行情作为完美平替，保证组件在所有网络100%加载
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": "OKX:" + coin + "USDT",
+                "interval": "1",
+                "timezone": "Asia/Shanghai",
+                "theme": "dark",
+                "style": "1",
+                "locale": "en",
+                "enable_publishing": false,
+                "hide_top_toolbar": true,
+                "hide_legend": true,
+                "save_image": false,
+                "container_id": "tv_chart_container",
+                "backgroundColor": "#080a0f",
+                "gridColor": "#11151e"
             });
         }
 
         let ws = null;
         function connectWS() {
             if(ws) ws.close(); document.getElementById('wsStatus').innerText = 'CONNECTING...';
+            // 使用 OKX 官方 WSS
             ws = new WebSocket('wss://ws.okx.com:8443/ws/v5/public');
             ws.onopen = () => { 
                 document.getElementById('wsStatus').innerText = 'DATA LIVE'; document.getElementById('wsStatus').style.color = '#0ecb81';
@@ -479,7 +487,11 @@
                     }
                 }
             };
-            ws.onclose = () => { setTimeout(connectWS, 3000); };
+            ws.onclose = () => { 
+                document.getElementById('wsStatus').innerText = 'RECONNECTING...'; document.getElementById('wsStatus').style.color = '#f6465d';
+                setTimeout(connectWS, 3000); 
+            };
+            ws.onerror = () => { ws.close(); };
         }
 
         function changeSymbol() {
@@ -533,7 +545,7 @@
 
         let currentActionTarget = null;
         function openOrderModal(side, index) {
-            const price = state.prices[state.activeInstId]; if(price <= 0) return alert("Waiting for market data...");
+            const price = state.prices[state.activeInstId]; if(price <= 0) return showToast("⏳", "Waiting for market data...");
             currentActionTarget = { side, index };
             document.getElementById('orderTitle').innerHTML = side==='long' ? '<span>📈</span> GO LONG' : '<span>📉</span> GO SHORT';
             document.getElementById('orderInstLabel').innerText = state.activeInstId;
@@ -561,13 +573,13 @@
             const durSec = parseInt(document.getElementById('orderDuration').value);
             const instId = state.activeInstId; const currentPrice = state.prices[instId]; const { side, index } = currentActionTarget;
 
-            if(isNaN(amount) || amount <= 0) return alert("Invalid Margin");
+            if(isNaN(amount) || amount <= 0) return showToast("❌", "Invalid Margin", "#f6465d");
             const notionalVol = amount * lev; const takerRate = VIP_TIERS[state.currentVip].taker; const openFee = notionalVol * takerRate;
             const totalCost = amount + openFee;
 
-            if(state.balance < totalCost) return alert("Insufficient Balance!");
-            if (side === 'long') { if (tp>0 && tp<=currentPrice) return alert("TP must be > Entry Price"); if (sl>0 && sl>=currentPrice) return alert("SL must be < Entry Price"); } 
-            else { if (tp>0 && tp>=currentPrice) return alert("TP must be < Entry Price"); if (sl>0 && sl<=currentPrice) return alert("SL must be > Entry Price"); }
+            if(state.balance < totalCost) return showToast("❌", "Insufficient Balance for Margin + Fee!", "#f6465d");
+            if (side === 'long') { if (tp>0 && tp<=currentPrice) return showToast("❌", "TP must be > Entry Price", "#f6465d"); if (sl>0 && sl>=currentPrice) return showToast("❌", "SL must be < Entry Price", "#f6465d"); } 
+            else { if (tp>0 && tp>=currentPrice) return showToast("❌", "TP must be < Entry Price", "#f6465d"); if (sl>0 && sl<=currentPrice) return showToast("❌", "SL must be > Entry Price", "#f6465d"); }
 
             const mmr = INST_CONFIG[instId].mmr;
             let liqPrice = side === 'long' ? currentPrice * (1 - (1/lev) + mmr + takerRate) : currentPrice * (1 + (1/lev) - mmr - takerRate);
@@ -673,7 +685,7 @@
                 if (reason === 'tp') { txt = `TP HIT +${realNetPnl.toFixed(1)}`; color = '#0ecb81'; emojiEl.innerText = side==='long'?'🍎':'💰'; emojiEl.style.transform='scale(1.3)'; }
                 else if (reason === 'sl') { txt = `SL HIT ${realNetPnl.toFixed(1)}`; color = '#f6465d'; emojiEl.innerText = '✂️'; emojiEl.style.filter='grayscale(1)'; }
                 else if (reason === 'liq') { txt = `LIQUIDATED`; color = '#f6465d'; emojiEl.innerText = '☠️'; dom.classList.add('aura-danger'); }
-                else if (reason === 'manual') { txt = `CLOSED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#0ecb81':'#bdc3c7'; }
+                else if (reason === 'manual') { txt = `CLOSED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#f1c40f':'#bdc3c7'; }
                 else if (reason === 'time') { txt = `EXPIRED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#0ecb81':'#f6465d'; }
 
                 const ft = document.createElement('div'); ft.className = 'floating-text mono-font'; ft.style.color = color; ft.innerText = txt; dom.appendChild(ft);
@@ -729,17 +741,23 @@
         // ==========================================
         // 🚀 启动序列 (Boot Sequence)
         // ==========================================
+        
+        // 1. 加载存档
         loadGameState();
         initPlayerProfile(); 
         updateGlobalUI(); 
         renderGrids(); 
         
+        // 2. 还原上次查看的币种
         document.getElementById('instSelect').value = state.activeInstId;
-        initTV(); 
-        connectWS(); 
         
-        requestAnimationFrame(gameLoop);
-        setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
+        // 3. 启动引擎 (等待 DOM 与外部脚本就绪)
+        window.onload = () => {
+            initTV(); 
+            connectWS(); 
+            requestAnimationFrame(gameLoop);
+            setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
+        };
     </script>
 </body>
 </html>
