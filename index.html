@@ -3,83 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OKX 盘感大亨 V10.0 | 真实交割单与账本版</title>
+    <title>OKX 盘感大亨 | 赛博终端实盘模拟版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=ZCOOL+KuaiLe&display=swap');
+        /* 引入硬核科技字体 Orbitron 和专业正文字体 Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap');
 
         body { 
-            background-color: #0b0e14; color: #ffffff; 
-            font-family: 'Nunito', -apple-system, sans-serif;
+            background-color: #080a0f; color: #e2e8f0; 
+            font-family: 'Inter', -apple-system, sans-serif;
             margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden;
             user-select: none; -webkit-user-select: none; touch-action: manipulation;
         }
         
-        .zcool { font-family: 'ZCOOL KuaiLe', sans-serif; }
+        .cyber-font { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
+        .mono-font { font-family: 'Orbitron', monospace; }
 
-        .game-header { background: linear-gradient(90deg, #161b24, #1e2430); border-bottom: 2px solid #2b3139; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 50; flex-shrink: 0; }
-        .asset-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(241, 196, 15, 0.3); border-radius: 12px; padding: 4px 16px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 10px rgba(241, 196, 15, 0.1); }
-        
-        .player-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 6px 12px; display: flex; flex-direction: column; min-width: 220px; cursor: pointer; transition: all 0.2s; }
-        .player-card:hover { background: rgba(255,255,255,0.1); border-color: #0ecb81; transform: translateY(-2px); }
-        .vip-bar-bg { width: 100%; height: 6px; background: #000; border-radius: 3px; margin-top: 4px; overflow: hidden; }
+        /* 顶部导航与卡片 */
+        .game-header { background: linear-gradient(90deg, #11151e, #1a202c); border-bottom: 2px solid #2d3748; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 50; flex-shrink: 0; }
+        .asset-box { background: rgba(0,0,0,0.5); border: 1px solid rgba(241, 196, 15, 0.4); border-radius: 8px; padding: 6px 20px; display: flex; flex-direction: column; align-items: flex-end; box-shadow: inset 0 0 15px rgba(241, 196, 15, 0.15); }
+        .player-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 8px 16px; display: flex; flex-direction: column; min-width: 240px; cursor: pointer; transition: all 0.2s; }
+        .player-card:hover { background: rgba(255,255,255,0.08); border-color: #0ecb81; transform: translateY(-2px); }
+        .vip-bar-bg { width: 100%; height: 4px; background: #000; border-radius: 2px; margin-top: 6px; overflow: hidden; }
         .vip-bar-fill { height: 100%; background: linear-gradient(90deg, #e74c3c, #f1c40f, #0ecb81); width: 0%; transition: width 0.5s ease-out; }
 
-        .tv-container { height: 35vh; border-bottom: 4px solid #161b24; background: #0b0e14; flex-shrink: 0; }
-        .game-board { flex: 1; display: flex; padding: 16px; gap: 16px; background: radial-gradient(circle at center, #161b24 0%, #0b0e14 100%); overflow-y: auto; position: relative; }
+        /* 布局与网格 */
+        .tv-container { height: 35vh; border-bottom: 4px solid #11151e; background: #080a0f; flex-shrink: 0; }
+        .game-board { flex: 1; display: flex; padding: 20px; gap: 20px; background: radial-gradient(circle at center, #11151e 0%, #080a0f 100%); overflow-y: auto; position: relative; }
+        .zone { flex: 1; background: rgba(17, 21, 30, 0.7); border: 1px solid #2d3748; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0; }
+        .grid-sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; flex: 1; min-height: 200px; }
         
-        .zone { flex: 1; background: rgba(20, 25, 35, 0.6); border: 1px solid #2b3139; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; backdrop-filter: blur(10px); }
-        .zone-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
+        /* 坑位仓位卡片 */
+        .slot { background: #1a202c; border: 2px solid #2d3748; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; transition: all 0.2s ease; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); min-height: 130px; }
+        .slot.empty:hover { border-color: #4a5568; transform: translateY(-2px); box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; }
+        .slot.locked { background: #0f131a; border-color: #1a202c; opacity: 0.7; cursor: not-allowed; }
+        .emoji-art { font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6)); transition: transform 0.3s; z-index: 10; margin-bottom: 12px; margin-top: 15px;}
         
-        .grid-sys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; flex: 1; min-height: 200px; }
-        
-        .slot { background: #1e2430; border: 2px solid #2b3139; border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 4px 0 #12161f; min-height: 120px; }
-        .slot.empty:hover { border-color: #4a5568; transform: translateY(-2px); box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 6px 0 #12161f; cursor: pointer; }
-        .slot.locked { background: #12161f; border-color: #1a1f29; opacity: 0.8; cursor: not-allowed; }
-        
-        .emoji-art { font-size: 32px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5)); transition: transform 0.3s; z-index: 10; margin-bottom: 12px; margin-top: 15px;}
-        
-        .btn-early-close { position: absolute; bottom: 8px; background: #12161f; border: 1px solid #4a5568; color: #fff; font-size: 11px; font-weight: bold; padding: 4px 20px; border-radius: 12px; cursor: pointer; z-index: 30; transition: all 0.1s; }
-        .btn-early-close:hover { transform: scale(1.05); filter: brightness(1.2); }
+        /* 动态平仓按钮与特效 */
+        .btn-early-close { position: absolute; bottom: 10px; background: #0f131a; border: 1px solid #4a5568; color: #fff; font-size: 11px; font-weight: bold; padding: 6px 20px; border-radius: 6px; cursor: pointer; z-index: 30; transition: all 0.1s; text-transform: uppercase; }
+        .btn-early-close:hover { transform: scale(1.05); border-color: #a0aec0; }
         .btn-early-close:active { transform: scale(0.95); }
-
-        .aura-safe { box-shadow: inset 0 0 30px rgba(14, 203, 129, 0.15) !important; border-color: #0ecb81 !important; }
-        .aura-danger { box-shadow: inset 0 0 30px rgba(246, 70, 93, 0.15) !important; border-color: #f6465d !important; animation: dangerShake 0.5s infinite; }
-
-        .prog-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: #000; border-radius: 0 0 10px 10px; overflow: hidden; }
+        .aura-safe { box-shadow: inset 0 0 40px rgba(14, 203, 129, 0.15) !important; border-color: #0ecb81 !important; }
+        .aura-danger { box-shadow: inset 0 0 40px rgba(246, 70, 93, 0.15) !important; border-color: #f6465d !important; animation: dangerPulse 0.5s infinite alternate; }
+        .prog-bar-container { position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: #000; border-radius: 0 0 6px 6px; overflow: hidden; }
         .prog-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #3498db, #9b59b6); transition: width 0.1s linear; }
 
-        .badge-inst { position: absolute; top: 6px; left: 6px; background: rgba(255,255,255,0.1); font-size: 9px; padding: 2px 6px; border-radius: 4px; font-family: monospace; border: 1px solid rgba(255,255,255,0.2); }
-        .badge-pnl { position: absolute; top: 6px; right: 6px; font-size: 12px; font-weight: bold; font-family: monospace; }
-        .liq-info { position: absolute; bottom: 32px; font-size: 9px; color: #e74c3c; font-family: monospace; text-align: center; width: 100%; font-weight: bold;}
+        /* 标签信息 */
+        .badge-inst { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); font-size: 10px; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); }
+        .badge-pnl { position: absolute; top: 8px; right: 8px; font-size: 13px; font-weight: bold; }
+        .liq-info { position: absolute; bottom: 38px; font-size: 10px; color: #e74c3c; text-align: center; width: 100%; font-weight: bold; letter-spacing: 0.5px;}
 
-        /* 浮动按钮组 (排行榜 + 账本) */
-        .btn-action-group { position: fixed; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 80; }
-        .btn-float { width: 60px; height: 60px; border-radius: 30px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; transition: all 0.3s; border: 3px solid #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .btn-float:hover { transform: scale(1.1) rotate(10deg); }
-        .btn-leaderboard { background: linear-gradient(135deg, #f1c40f, #f39c12); color: #000; }
-        .btn-history { background: linear-gradient(135deg, #9b59b6, #8e44ad); color: #fff; }
+        /* 浮动按钮组 */
+        .btn-action-group { position: fixed; right: 24px; bottom: 24px; display: flex; flex-direction: column; gap: 16px; z-index: 80; }
+        .btn-float { width: 56px; height: 56px; border-radius: 28px; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 8px 20px rgba(0,0,0,0.6); background: #1a202c; color: #fff;}
+        .btn-float:hover { transform: translateY(-5px); border-color: #fff; }
+        .btn-leaderboard { background: linear-gradient(135deg, #d4af37, #f39c12); color: #000; border-color: #fff;}
 
         /* 模态框通用 */
-        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; }
-        .panel-box { background: #161b24; border: 2px solid #2b3139; border-radius: 20px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; }
-        .game-input { width: 100%; background: #0b0e14; border: 1px solid #4a5568; color: #f1c40f; font-size: 16px; border-radius: 8px; padding: 8px 12px; font-family: monospace; font-weight: bold; outline: none; transition: 0.2s;}
-        .game-input:focus { border-color: #0ecb81; }
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .panel-box { background: #11151e; border: 1px solid #2d3748; border-radius: 12px; padding: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.9); position: relative; }
+        .game-input { width: 100%; background: #080a0f; border: 1px solid #4a5568; color: #0ecb81; font-size: 16px; border-radius: 6px; padding: 10px 14px; outline: none; transition: 0.2s;}
+        .game-input:focus { border-color: #0ecb81; box-shadow: 0 0 10px rgba(14,203,129,0.2); }
 
-        /* 历史战绩账本特殊样式 */
-        .history-item { background: #1e2430; border-radius: 8px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid transparent; }
+        .history-item { background: #1a202c; border-radius: 6px; padding: 12px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid transparent; }
         .hist-win { border-left-color: #0ecb81; }
         .hist-loss { border-left-color: #f6465d; }
 
-        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: rgba(22, 27, 36, 0.95); border: 2px solid #f1c40f; color: #fff; padding: 12px 24px; border-radius: 50px; font-weight: bold; font-size: 14px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 8px;}
+        /* Toast 提示 */
+        .toast-container { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; pointer-events: none; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: rgba(17, 21, 30, 0.95); border: 1px solid #4a5568; border-left: 4px solid #f1c40f; color: #fff; padding: 14px 24px; border-radius: 6px; font-size: 14px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOut 0.5s ease-out 3s forwards; display: flex; align-items: center; gap: 10px;}
         
         @keyframes slideDown { from { transform: translateY(-40px) scale(0.8); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
         @keyframes fadeOut { to { opacity: 0; transform: translateY(-20px); } }
         @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-60px) scale(1.5); } }
-        @keyframes dangerShake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-2px); } 75% { transform: translateX(2px); } }
+        @keyframes dangerPulse { from { box-shadow: inset 0 0 20px rgba(246, 70, 93, 0.1); } to { box-shadow: inset 0 0 50px rgba(246, 70, 93, 0.4); } }
         @keyframes bounceIn { 0% { transform: scale(0); } 80% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        .floating-text { position: absolute; font-size: 16px; font-weight: 900; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.5s ease-out forwards; pointer-events: none; white-space: nowrap; }
+        .floating-text { position: absolute; font-size: 16px; font-weight: 700; z-index: 50; text-shadow: 0 4px 6px #000; animation: floatUp 1.5s ease-out forwards; pointer-events: none; white-space: nowrap; }
         .anim-pop { animation: bounceIn 0.4s ease-out; }
     </style>
 </head>
@@ -88,11 +88,11 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <header class="game-header">
-        <div class="flex items-center gap-4">
-            <div class="text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#0ecb81] to-[#3498db] zcool">
-                盘感大亨 V10.0
+        <div class="flex items-center gap-6">
+            <div class="text-2xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-[#0ecb81] to-[#3498db] cyber-font">
+                SYS.TERMINAL
             </div>
-            <select id="instSelect" class="bg-[#1e2430] border border-[#2b3139] text-white px-3 py-1.5 rounded-lg font-bold outline-none cursor-pointer" onchange="changeSymbol()">
+            <select id="instSelect" class="bg-[#1a202c] border border-[#4a5568] text-white px-4 py-2 rounded-md font-bold outline-none cursor-pointer text-sm" onchange="changeSymbol()">
                 <option value="BTC-USDT-SWAP">BTC/USDT</option>
                 <option value="ETH-USDT-SWAP">ETH/USDT</option>
                 <option value="SOL-USDT-SWAP">SOL/USDT</option>
@@ -101,25 +101,25 @@
         </div>
 
         <div class="flex items-center gap-6">
-            <div class="player-card" onclick="openProfileModal()" title="点击查看 OKX 真实 VIP 阶梯">
+            <div class="player-card" onclick="openProfileModal()" title="点击配置账号与VIP">
                 <div class="flex justify-between items-center mb-1">
-                    <span id="playerNameDisplay" class="font-bold text-white text-sm">加载中... ✏️</span>
-                    <span id="vipFee" class="text-[#0ecb81] text-xs font-bold bg-[#0ecb81]/20 px-1 rounded border border-[#0ecb81]/30">费率 0.05%</span>
+                    <span id="playerNameDisplay" class="font-bold text-white text-sm">Loading...</span>
+                    <span id="vipFee" class="text-[#0ecb81] text-[11px] font-bold bg-[#0ecb81]/10 px-1.5 py-0.5 rounded border border-[#0ecb81]/30 mono-font">FEE: 0.05%</span>
                 </div>
-                <div class="flex justify-between text-[10px] text-gray-400 mb-1">
-                    <span id="vipName" class="text-gray-300">普通用户 (Lv0)</span>
-                    <span class="font-mono">量: <span id="volCurrent">0</span>/<span id="volNext">10M</span></span>
+                <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                    <span id="vipName" class="text-gray-300">GUEST (Lv0)</span>
+                    <span class="mono-font">VOL: <span id="volCurrent">0</span> / <span id="volNext">10M</span></span>
                 </div>
                 <div class="vip-bar-bg"><div class="vip-bar-fill" id="vipProgress"></div></div>
             </div>
 
-            <div class="text-sm font-mono flex items-center gap-2 border-l border-[#2b3139] pl-4">
-                <span class="text-gray-400" id="wsStatus">连线中...</span>
-                <span id="realtimePrice" class="text-[26px] font-bold text-[#0ecb81] w-[140px] text-right tracking-tighter">--</span>
+            <div class="text-sm flex items-center gap-3 border-l border-[#2d3748] pl-6">
+                <span class="text-gray-500 text-xs" id="wsStatus">CONNECTING...</span>
+                <span id="realtimePrice" class="text-[28px] font-bold text-[#0ecb81] w-[140px] text-right tracking-tighter cyber-font">--</span>
             </div>
             <div class="asset-box ml-2">
-                <div class="text-xs text-gray-400 flex items-center gap-1">🏦 金库可用 (USDT)</div>
-                <div class="text-[#f1c40f] font-mono font-bold text-[22px]" id="balanceDisplay">100,000.00</div>
+                <div class="text-[10px] text-gray-400 flex items-center gap-1 uppercase tracking-widest mb-1">Total Equity (USDT)</div>
+                <div class="text-[#f1c40f] cyber-font font-bold text-[24px]" id="balanceDisplay">100,000.00</div>
             </div>
         </div>
     </header>
@@ -130,9 +130,9 @@
         <div class="zone relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#0ecb81] to-transparent opacity-50"></div>
             <div class="zone-header">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl">🌾</span>
-                    <div><h2 class="font-bold text-lg text-[#0ecb81]">多头农场 (Long)</h2></div>
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📈</span>
+                    <div><h2 class="font-bold text-lg text-[#0ecb81] cyber-font">LONG POSITIONS</h2></div>
                 </div>
             </div>
             <div class="grid-sys" id="farmGrid"></div>
@@ -141,9 +141,9 @@
         <div class="zone relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#f6465d] to-transparent opacity-50"></div>
             <div class="zone-header">
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl">🐟</span>
-                    <div><h2 class="font-bold text-lg text-[#f6465d]">空头水族箱 (Short)</h2></div>
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl">📉</span>
+                    <div><h2 class="font-bold text-lg text-[#f6465d] cyber-font">SHORT POSITIONS</h2></div>
                 </div>
             </div>
             <div class="grid-sys" id="pondGrid"></div>
@@ -151,34 +151,33 @@
     </div>
 
     <div class="btn-action-group">
-        <div class="btn-float btn-history" onclick="openHistoryModal()" title="防作弊交割账本">📜</div>
-        <div class="btn-float btn-leaderboard" onclick="alert('全网排行榜接入中...\n敬请期待 Next.js 后端版本！')" title="全服财富榜">🏆</div>
+        <div class="btn-float" onclick="openHistoryModal()" title="交易流水与账本">📜</div>
+        <div class="btn-float btn-leaderboard" onclick="openLeaderboard()" title="全球排行榜">🏆</div>
     </div>
 
     <div class="modal-bg" id="orderModal" onclick="if(event.target===this) closeModal('orderModal')">
         <div class="panel-box" style="width: 400px;">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2" id="orderTitle">
-                    <span>🌱</span> 下单参数配置
-                </h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-white cyber-font" id="orderTitle">NEW ORDER</h2>
                 <button onclick="closeModal('orderModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
             </div>
             
             <div class="space-y-4">
-                <div class="text-xs text-center text-gray-400 bg-black/30 py-2 rounded border border-[#2b3139]">
-                    标的: <span id="orderInstLabel" class="text-white font-bold font-mono">BTC-USDT-SWAP</span><br>
-                    市价: <span id="orderPriceLabel" class="text-[#f1c40f] font-mono text-lg">--</span><br>
-                    <span class="text-[10px] text-gray-500">维持保证金率 (MMR): <span id="orderMmrLabel">0.4%</span></span>
+                <div class="text-xs text-center text-gray-400 bg-[#080a0f] py-3 rounded border border-[#2d3748]">
+                    <div class="text-gray-500 mb-1 uppercase tracking-widest text-[10px]">Symbol / Market Price</div>
+                    <span id="orderInstLabel" class="text-white font-bold mono-font text-sm">BTC-USDT-SWAP</span>
+                    <span class="mx-2">|</span>
+                    <span id="orderPriceLabel" class="text-[#f1c40f] mono-font text-lg">--</span>
                 </div>
 
-                <div class="flex gap-2">
+                <div class="flex gap-3">
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1">投入保证金 (USDT)</div>
-                        <input type="number" id="orderAmount" class="game-input" value="1000" oninput="calcOrderPreview()">
+                        <div class="text-xs text-gray-400 mb-1 uppercase">Margin (USDT)</div>
+                        <input type="number" id="orderAmount" class="game-input mono-font" value="1000" oninput="calcOrderPreview()">
                     </div>
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1">杠杆倍数</div>
-                        <select id="orderLev" class="game-input cursor-pointer" onchange="calcOrderPreview()">
+                        <div class="text-xs text-gray-400 mb-1 uppercase">Leverage</div>
+                        <select id="orderLev" class="game-input cursor-pointer mono-font" onchange="calcOrderPreview()">
                             <option value="1">1x</option>
                             <option value="10" selected>10x</option>
                             <option value="50">50x</option>
@@ -187,153 +186,247 @@
                     </div>
                 </div>
 
-                <div class="flex gap-2">
+                <div class="flex gap-3">
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1">止盈价 (选填)</div>
-                        <input type="number" id="orderTP" class="game-input" placeholder="留空则无">
+                        <div class="text-xs text-gray-400 mb-1 uppercase">Take Profit</div>
+                        <input type="number" id="orderTP" class="game-input mono-font" placeholder="Optional">
                     </div>
                     <div class="flex-1">
-                        <div class="text-xs text-gray-400 mb-1">止损价 (选填)</div>
-                        <input type="number" id="orderSL" class="game-input" placeholder="留空则无">
+                        <div class="text-xs text-gray-400 mb-1 uppercase">Stop Loss</div>
+                        <input type="number" id="orderSL" class="game-input mono-font" placeholder="Optional">
                     </div>
                 </div>
 
                 <div>
-                    <div class="text-xs text-gray-400 mb-1">平仓倒计时 (超时市价强平)</div>
-                    <select id="orderDuration" class="game-input cursor-pointer">
-                        <option value="0">无限期 (靠手点)</option>
-                        <option value="60">1 分钟</option>
-                        <option value="300">5 分钟</option>
+                    <div class="text-xs text-gray-400 mb-1 uppercase">Auto-Close Timer</div>
+                    <select id="orderDuration" class="game-input cursor-pointer mono-font">
+                        <option value="0">Manual / TP / SL</option>
+                        <option value="60">60 Seconds</option>
+                        <option value="300">5 Minutes</option>
                     </select>
                 </div>
 
-                <div class="text-xs text-gray-400 bg-gray-800/50 p-2 rounded-lg border border-[#2b3139]">
-                    <div class="flex justify-between mb-1"><span>名义价值 (计入账本):</span> <span class="text-white font-mono" id="previewVol">10,000 U</span></div>
-                    <div class="flex justify-between mb-1"><span>开仓扣费 (<span id="previewFeeRate">0.05%</span>):</span> <span class="text-[#f6465d] font-mono" id="previewFee">-5.00 U</span></div>
+                <div class="text-xs text-gray-400 bg-[#080a0f] p-3 rounded-md border border-[#2d3748]">
+                    <div class="flex justify-between mb-2"><span>Notional Value:</span> <span class="text-white mono-font" id="previewVol">10,000 U</span></div>
+                    <div class="flex justify-between"><span>Est. Fee (<span id="previewFeeRate">0.05%</span>):</span> <span class="text-[#f6465d] mono-font" id="previewFee">-5.00 U</span></div>
                 </div>
 
-                <button class="w-full mt-2 py-3 rounded-xl font-bold text-lg text-white shadow-lg transition-transform active:scale-95" id="btnSubmitOrder" onclick="submitOrder()">支付建仓</button>
+                <button class="w-full mt-4 py-3 rounded-md font-bold text-sm tracking-widest text-white transition-all active:scale-95 cyber-font border border-transparent" id="btnSubmitOrder" onclick="submitOrder()">
+                    EXECUTE ORDER
+                </button>
             </div>
         </div>
     </div>
 
     <div class="modal-bg" id="historyModal" onclick="if(event.target===this) closeModal('historyModal')">
-        <div class="panel-box" style="width: 520px; padding: 0; overflow: hidden;">
-            <div class="bg-gradient-to-r from-[#9b59b6] to-[#8e44ad] p-5 flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white zcool">📜 历史交割防作弊账本</h2>
-                <button onclick="closeModal('historyModal')" class="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
+        <div class="panel-box" style="width: 560px; padding: 0; overflow: hidden;">
+            <div class="bg-gradient-to-r from-[#1a202c] to-[#2d3748] p-5 flex justify-between items-center border-b border-[#4a5568]">
+                <h2 class="text-lg font-bold text-white cyber-font">TRANSACTION LEDGER</h2>
+                <button onclick="closeModal('historyModal')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
             </div>
             
-            <div class="grid grid-cols-3 gap-4 p-4 bg-[#12161f] border-b border-[#2b3139]">
-                <div class="text-center">
-                    <div class="text-xs text-gray-400 mb-1">总交易笔数</div>
-                    <div class="text-xl font-bold font-mono text-white" id="statTotalTrades">0</div>
+            <div class="grid grid-cols-3 gap-0 bg-[#0f131a] border-b border-[#2d3748]">
+                <div class="text-center py-4">
+                    <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest">Total Trades</div>
+                    <div class="text-xl font-bold mono-font text-white" id="statTotalTrades">0</div>
                 </div>
-                <div class="text-center border-l border-r border-[#2b3139]">
-                    <div class="text-xs text-gray-400 mb-1">综合胜率</div>
-                    <div class="text-xl font-bold font-mono text-[#f1c40f]" id="statWinRate">0.0%</div>
+                <div class="text-center py-4 border-l border-r border-[#2d3748]">
+                    <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest">Win Rate</div>
+                    <div class="text-xl font-bold mono-font text-[#0ecb81]" id="statWinRate">0.0%</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-xs text-gray-400 mb-1">累计净盈亏 (扣费后)</div>
-                    <div class="text-xl font-bold font-mono" id="statTotalPnl">0.00</div>
+                <div class="text-center py-4">
+                    <div class="text-[10px] text-gray-500 mb-1 uppercase tracking-widest">Net PnL</div>
+                    <div class="text-xl font-bold mono-font" id="statTotalPnl">0.00</div>
                 </div>
             </div>
 
-            <div class="p-2 text-xs text-gray-500 text-center bg-[#161b24]">
-                记录每一笔交易流水。数据结构包含时间戳与价格，可供后端溯源校验。
-            </div>
+            <div id="historyListContainer" class="p-4 max-h-[400px] overflow-y-auto bg-[#11151e] space-y-3"></div>
+        </div>
+    </div>
 
-            <div id="historyListContainer" class="p-4 max-h-[350px] overflow-y-auto bg-[#161b24] space-y-2">
-                <div class="text-center text-gray-500 py-10">暂无交易流水，去农场开垦你的第一笔订单吧！</div>
+    <div class="modal-bg" id="boardModal" onclick="if(event.target===this) closeModal('boardModal')">
+        <div class="panel-box" style="width: 480px; padding: 0; overflow: hidden;">
+            <div class="bg-[#1a202c] p-5 flex justify-between items-center border-b border-[#4a5568]">
+                <h2 class="text-lg font-bold cyber-font text-[#f1c40f]">GLOBAL LEADERBOARD</h2>
+                <button onclick="closeModal('boardModal')" class="text-gray-400 hover:text-white text-2xl leading-none">&times;</button>
             </div>
+            <div class="flex text-[10px] text-gray-500 p-3 border-b border-[#2d3748] bg-[#0f131a] uppercase tracking-widest">
+                <div class="w-[40px] text-center">Rank</div>
+                <div class="flex-1">Alias</div>
+                <div class="w-[110px] text-right">Equity (USDT)</div>
+            </div>
+            <div id="boardLoading" class="text-center py-10 text-gray-500 text-sm mono-font hidden">
+                <div class="inline-block w-5 h-5 border-2 border-[#0ecb81] border-t-transparent rounded-full animate-spin mb-2"></div>
+                <div>Fetching global data...</div>
+            </div>
+            <div id="boardListContainer" class="max-h-[400px] overflow-y-auto bg-[#11151e] pb-2"></div>
         </div>
     </div>
 
     <div class="modal-bg" id="profileModal" onclick="if(event.target===this) closeModal('profileModal')">
         <div class="panel-box" style="width: 520px;">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-white zcool">🪪 OKX 真实 VIP 费率图鉴</h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-white cyber-font">USER PROFILE & VIP TIER</h2>
                 <button onclick="closeModal('profileModal')" class="text-gray-500 hover:text-white text-2xl leading-none">&times;</button>
             </div>
-            <div class="mb-4">
-                <div class="flex gap-2">
-                    <input type="text" id="playerNameInput" class="game-input flex-1 !text-left" maxlength="15" placeholder="例如：爆仓模拟器">
-                    <button class="bg-[#0ecb81] hover:bg-[#0b9e65] text-white font-bold px-4 rounded-lg transition-colors" onclick="savePlayerName()">保存大名</button>
+            <div class="mb-6">
+                <div class="flex gap-3">
+                    <input type="text" id="playerNameInput" class="game-input flex-1 mono-font text-sm" maxlength="15" placeholder="Enter Alias">
+                    <button class="bg-[#2d3748] hover:bg-[#4a5568] text-white font-bold px-6 rounded-md transition-colors text-sm" onclick="savePlayerName()">UPDATE</button>
                 </div>
             </div>
-            <div class="text-xs text-gray-400 mb-2">名义交易量 = 保证金 × 杠杆。<br>以下为 1:1 还原的 OKX 真实费率门槛 (Taker)：</div>
-            <div id="vipListContainer" class="space-y-1.5 max-h-[300px] overflow-y-auto pr-2"></div>
+            <div class="text-[10px] text-gray-500 mb-3 uppercase tracking-widest">OKX Taker Fee Structure</div>
+            <div id="vipListContainer" class="space-y-2 max-h-[300px] overflow-y-auto pr-2"></div>
         </div>
     </div>
 
-    <script type="text/javascript">
-        let tvWidget;
-        function loadTradingView(symbol) {
-            const script = document.createElement('script');
-            script.src = "https://s3.tradingview.com/tv.js";
-            script.onload = () => {
-                document.getElementById('tv_chart_container').innerHTML = '';
-                tvWidget = new TradingView.widget({
-                    "autosize": true, "symbol": "OKX:" + symbol.replace('-SWAP', '.P').replace('-', ''),
-                    "interval": "1", "timezone": "Asia/Shanghai", "theme": "dark", "style": "1",
-                    "locale": "zh_CN", "enable_publishing": false, "hide_top_toolbar": true,
-                    "hide_legend": true, "save_image": false, "container_id": "tv_chart_container",
-                    "backgroundColor": "#0b0e14", "gridColor": "#161b24"
-                });
-            };
-            document.head.appendChild(script);
-        }
-    </script>
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <script>
-        // --- 核心全局状态 (新增 tradeHistory 账本) ---
-        let state = {
-            playerName: localStorage.getItem('okxFarmPlayerName') || '交易员_' + Math.floor(Math.random()*1000),
+        // ==========================================
+        // 💾 本地 JSON 存档引擎 (Save/Load System)
+        // ==========================================
+        const DEFAULT_STATE = {
+            playerName: 'AGENT_' + Math.floor(Math.random()*9999),
             balance: 100000.00,
             volume: 0,
             currentVip: 0,
             activeInstId: "BTC-USDT-SWAP",
             prices: { "BTC-USDT-SWAP": 0, "ETH-USDT-SWAP": 0, "SOL-USDT-SWAP": 0, "DOGE-USDT-SWAP": 0 },
-            tradeHistory: [] // 🔥 防作弊流水账本
+            tradeHistory: []
         };
 
+        const DEFAULT_GRIDS = {
+            long: Array.from({length: 6}, (_, i) => ({ id: `l_${i}`, unlocked: i < 3, unlockPrice: (i*i*500)+100, item: null })),
+            short: Array.from({length: 6}, (_, i) => ({ id: `s_${i}`, unlocked: i < 3, unlockPrice: (i*i*500)+100, item: null }))
+        };
+
+        let state = {}; let grids = {};
+
+        function loadGameState() {
+            const savedJSON = localStorage.getItem('okxFarmGameSaveV2');
+            if (savedJSON) {
+                try {
+                    const parsed = JSON.parse(savedJSON);
+                    state = { ...DEFAULT_STATE, ...parsed.state };
+                    state.prices = { "BTC-USDT-SWAP": 0, "ETH-USDT-SWAP": 0, "SOL-USDT-SWAP": 0, "DOGE-USDT-SWAP": 0 };
+                    grids = parsed.grids || DEFAULT_GRIDS;
+                    console.log("💾 Game Data Loaded.");
+                } catch (e) {
+                    state = JSON.parse(JSON.stringify(DEFAULT_STATE)); grids = JSON.parse(JSON.stringify(DEFAULT_GRIDS));
+                }
+            } else {
+                state = JSON.parse(JSON.stringify(DEFAULT_STATE)); grids = JSON.parse(JSON.stringify(DEFAULT_GRIDS));
+            }
+        }
+
+        function saveGameState() {
+            const dataToSave = {
+                state: { playerName: state.playerName, balance: state.balance, volume: state.volume, currentVip: state.currentVip, activeInstId: state.activeInstId, tradeHistory: state.tradeHistory },
+                grids: grids
+            };
+            localStorage.setItem('okxFarmGameSaveV2', JSON.stringify(dataToSave));
+        }
+
+        // ==========================================
+        // 📊 全球排行榜 API (JSONBin / KVDB)
+        // ==========================================
+        const DB_CONFIG = { url: "https://kvdb.io/W9yS6Yq8Dxxz4k4cZf97Lz/okx_leaderboard" };
+
+        const LeaderboardAPI = {
+            async fetchGlobalRanking() {
+                try {
+                    const res = await fetch(DB_CONFIG.url);
+                    let board = []; if (res.ok) board = await res.json();
+                    if(!Array.isArray(board)) board = [];
+
+                    const myIndex = board.findIndex(u => u.name === state.playerName);
+                    if (myIndex !== -1) { board[myIndex].bal = state.balance; } 
+                    else { board.push({ name: state.playerName, bal: state.balance }); }
+
+                    board.sort((a, b) => b.bal - a.bal);
+                    board = board.slice(0, 50);
+                    return board.map(u => ({ ...u, isMe: u.name === state.playerName }));
+                } catch (err) {
+                    console.error('Fetch failed', err);
+                    return [{ name: state.playerName, bal: state.balance, isMe: true }];
+                }
+            },
+            async submitMyScore() {
+                try {
+                    const currentBoard = await this.fetchGlobalRanking();
+                    const cleanBoard = currentBoard.map(({ isMe, ...rest }) => rest);
+                    await fetch(DB_CONFIG.url, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(cleanBoard)
+                    });
+                } catch (err) {}
+            }
+        };
+
+        async function openLeaderboard() {
+            document.getElementById('boardModal').style.display = 'flex';
+            const container = document.getElementById('boardListContainer');
+            const loading = document.getElementById('boardLoading');
+            container.style.display = 'none'; loading.style.display = 'block';
+
+            const rankingData = await LeaderboardAPI.fetchGlobalRanking();
+            
+            loading.style.display = 'none'; container.style.display = 'block'; container.innerHTML = '';
+            rankingData.forEach((user, index) => {
+                const meClass = user.isMe ? 'bg-[#0ecb81]/10 border border-[#0ecb81]/50' : 'border-b border-[#2d3748]';
+                const rankColor = index === 0 ? 'text-[#f1c40f]' : (index === 1 ? 'text-[#bdc3c7]' : (index === 2 ? 'text-[#cd7f32]' : 'text-gray-500'));
+                const div = document.createElement('div');
+                div.className = `flex items-center p-3 transition-colors hover:bg-[#1a202c] ${meClass}`;
+                div.innerHTML = `
+                    <div class="w-[40px] text-center font-bold cyber-font text-lg ${rankColor}">${index + 1}</div>
+                    <div class="flex-1 pl-3 font-bold text-sm ${user.isMe ? 'text-[#0ecb81]' : 'text-white'}">
+                        ${user.name} ${user.isMe ? '<span class="bg-[#0ecb81] text-black text-[9px] px-1.5 py-0.5 rounded ml-2">YOU</span>' : ''}
+                    </div>
+                    <div class="w-[110px] text-right font-bold mono-font ${user.isMe ? 'text-[#0ecb81]' : 'text-white'}">${user.bal.toLocaleString(undefined, {maximumFractionDigits:0})}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ==========================================
+        // ⚙️ 游戏核心配置与 UI 逻辑
+        // ==========================================
         const INST_CONFIG = { "BTC-USDT-SWAP": { mmr: 0.004 }, "ETH-USDT-SWAP": { mmr: 0.004 }, "SOL-USDT-SWAP": { mmr: 0.010 }, "DOGE-USDT-SWAP":{ mmr: 0.010 } };
         const VIP_TIERS = [
-            { level: 0, name: '普通用户 (Lv0)', reqVol: 0, taker: 0.00050 }, { level: 1, name: 'VIP 1', reqVol: 10000000, taker: 0.00040 },
+            { level: 0, name: 'LV0 GUEST', reqVol: 0, taker: 0.00050 }, { level: 1, name: 'VIP 1', reqVol: 10000000, taker: 0.00040 },
             { level: 2, name: 'VIP 2', reqVol: 50000000, taker: 0.00035 }, { level: 3, name: 'VIP 3', reqVol: 200000000, taker: 0.00030 },
             { level: 4, name: 'VIP 4', reqVol: 500000000, taker: 0.00025 }, { level: 5, name: 'VIP 5', reqVol: 1000000000, taker: 0.00020 },
             { level: 6, name: 'VIP 6', reqVol: 2000000000, taker: 0.00015 }, { level: 7, name: 'VIP 7', reqVol: 5000000000, taker: 0.00012 },
             { level: 8, name: 'VIP 8', reqVol: 10000000000, taker: 0.00010 }
         ];
 
-        const TOTAL_SLOTS = 6;
-        let grids = {
-            long: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `l_${i}`, unlocked: i < 3, unlockPrice: (i*i*500)+100, item: null })),
-            short: Array.from({length: TOTAL_SLOTS}, (_, i) => ({ id: `s_${i}`, unlocked: i < 3, unlockPrice: (i*i*500)+100, item: null }))
-        };
-
-        function formatNum(num) { return num.toLocaleString(undefined, {maximumFractionDigits:0}); }
-        function showToast(icon, message, color = '#f1c40f') {
+        function showToast(icon, message, color = '#0ecb81') {
             const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div'); toast.className = 'toast'; toast.style.borderColor = color;
-            toast.innerHTML = `<span class="text-xl">${icon}</span> <span>${message}</span>`;
+            const toast = document.createElement('div'); toast.className = 'toast mono-font'; toast.style.borderLeftColor = color;
+            toast.innerHTML = `<span class="text-lg">${icon}</span> <span>${message}</span>`;
             container.appendChild(toast); setTimeout(() => { if(toast.parentElement) toast.parentElement.removeChild(toast); }, 3500);
         }
 
-        // --- UI 更新系统 ---
         function initPlayerProfile() {
             document.getElementById('playerNameDisplay').innerText = state.playerName + ' ✏️';
             document.getElementById('playerNameInput').value = state.playerName;
         }
+
         function savePlayerName() {
             const newName = document.getElementById('playerNameInput').value.trim();
-            if(newName.length > 0) { state.playerName = newName; localStorage.setItem('okxFarmPlayerName', newName); initPlayerProfile(); showToast('✅', '大名修改成功！'); }
+            if(newName.length > 0) { 
+                state.playerName = newName; saveGameState(); 
+                initPlayerProfile(); showToast('✅', 'Profile updated.'); 
+                LeaderboardAPI.submitMyScore(); 
+            }
         }
+
         function updateGlobalUI() {
             document.getElementById('balanceDisplay').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits:2});
             const tier = VIP_TIERS[state.currentVip]; const nextTier = VIP_TIERS[state.currentVip + 1];
             document.getElementById('vipName').innerText = tier.name;
-            document.getElementById('vipFee').innerText = `真实 Taker ${(tier.taker * 100).toFixed(3)}%`;
+            document.getElementById('vipFee').innerText = `FEE: ${(tier.taker * 100).toFixed(3)}%`;
             document.getElementById('volCurrent').innerText = formatNum(state.volume);
             if(nextTier) {
                 document.getElementById('volNext').innerText = formatNum(nextTier.reqVol);
@@ -342,21 +435,35 @@
                 document.getElementById('volNext').innerText = "MAX"; document.getElementById('vipProgress').style.width = '100%';
             }
         }
+
         function checkVipUpgrade() {
             let nextTier = VIP_TIERS[state.currentVip + 1];
             if (nextTier && state.volume >= nextTier.reqVol) {
-                state.currentVip++; showToast("🎖️", `狂飙升级！晋升为【${nextTier.name}】！`, "#f1c40f"); checkVipUpgrade(); 
+                state.currentVip++; showToast("🎖️", `UPGRADED TO 【${nextTier.name}】!`); checkVipUpgrade(); 
             }
             updateGlobalUI();
         }
 
-        // --- WebSocket ---
+        // ==========================================
+        // 📡 行情引擎与 TV 渲染
+        // ==========================================
+        function initTV() {
+            document.getElementById('tv_chart_container').innerHTML = '';
+            tvWidget = new TradingView.widget({
+                "autosize": true, "symbol": "OKX:" + state.activeInstId.replace('-SWAP', '.P').replace('-', ''),
+                "interval": "1", "timezone": "Asia/Shanghai", "theme": "dark", "style": "1",
+                "locale": "en", "enable_publishing": false, "hide_top_toolbar": true,
+                "hide_legend": true, "save_image": false, "container_id": "tv_chart_container",
+                "backgroundColor": "#080a0f", "gridColor": "#11151e"
+            });
+        }
+
         let ws = null;
         function connectWS() {
-            if(ws) ws.close(); document.getElementById('wsStatus').innerText = '连线中...';
+            if(ws) ws.close(); document.getElementById('wsStatus').innerText = 'CONNECTING...';
             ws = new WebSocket('wss://ws.okx.com:8443/ws/v5/public');
             ws.onopen = () => { 
-                document.getElementById('wsStatus').innerText = '行情正常'; document.getElementById('wsStatus').style.color = '#0ecb81';
+                document.getElementById('wsStatus').innerText = 'DATA LIVE'; document.getElementById('wsStatus').style.color = '#0ecb81';
                 ws.send(JSON.stringify({ op: "subscribe", args: Object.keys(state.prices).map(id => ({ channel: "tickers", instId: id })) })); 
             };
             ws.onmessage = (event) => {
@@ -378,61 +485,67 @@
         function changeSymbol() {
             state.activeInstId = document.getElementById('instSelect').value;
             document.getElementById('realtimePrice').innerText = '--';
-            loadTradingView(state.activeInstId);
+            initTV();
             document.getElementById('orderInstLabel').innerText = state.activeInstId;
             document.getElementById('orderMmrLabel').innerText = (INST_CONFIG[state.activeInstId].mmr * 100).toFixed(1) + '%';
+            saveGameState(); 
         }
 
-        // --- 渲染场地 ---
+        // ==========================================
+        // 🎮 网格与交易交互
+        // ==========================================
         function renderGrids() {
             const farm = document.getElementById('farmGrid'); const pond = document.getElementById('pondGrid');
             farm.innerHTML = ''; pond.innerHTML = '';
             grids.long.forEach((slot, idx) => farm.appendChild(createSlotDOM(slot, 'long', idx)));
             grids.short.forEach((slot, idx) => pond.appendChild(createSlotDOM(slot, 'short', idx)));
         }
+
         function createSlotDOM(slot, side, index) {
             const div = document.createElement('div'); div.className = 'slot'; div.id = `dom_${slot.id}`;
             if (!slot.unlocked) {
-                div.classList.add('locked'); div.innerHTML = `<div class="text-3xl mb-1 opacity-50">🔒</div><div class="text-[#f1c40f] text-xs font-bold bg-black/60 px-2 py-1 rounded mt-2">扩建: ${slot.unlockPrice}U</div>`;
+                div.classList.add('locked'); div.innerHTML = `<div class="text-3xl mb-1 opacity-40">🔒</div><div class="text-[#f1c40f] text-[10px] font-bold bg-[#000] px-2 py-1 rounded mt-2 border border-[#4a5568]">UNLOCK: ${slot.unlockPrice}U</div>`;
                 div.onclick = () => handleUnlock(side, index); return div;
             }
             if (!slot.item) {
-                div.classList.add('empty'); div.innerHTML = `<div class="emoji-art opacity-10" style="margin-bottom:0">➕</div>`; div.onclick = () => openOrderModal(side, index);
+                div.classList.add('empty'); div.innerHTML = `<div class="emoji-art opacity-20" style="margin-bottom:0; font-size: 24px;">➕</div>`; div.onclick = () => openOrderModal(side, index);
             } else {
                 const it = slot.item; const baseAsset = it.instId.split('-')[0];
                 div.innerHTML = `
                     <div class="badge-inst">${baseAsset} ${it.leverage}x</div>
-                    <div class="badge-pnl" id="pnl_${slot.id}">--</div>
+                    <div class="badge-pnl ${it.pnl>=0?'text-[#0ecb81]':'text-[#f6465d]'}" id="pnl_${slot.id}">--</div>
                     <div class="emoji-art anim-pop" id="emoji_${slot.id}">${side === 'long' ? '🌱' : '🥚'}</div>
-                    <div class="liq-info">Liq: ${it.liqPrice.toFixed(4)}</div>
-                    <button class="btn-early-close" id="btn_close_${slot.id}" onclick="executeClose('${side}', ${index}, 'manual', event)">市价平仓</button>
+                    <div class="liq-info">LIQ: ${it.liqPrice.toFixed(4)}</div>
+                    <button class="btn-early-close" id="btn_close_${slot.id}" onclick="executeClose('${side}', ${index}, 'manual', event)">MARKET CLOSE</button>
                     ${it.durationMs ? `<div class="prog-bar-container"><div class="prog-bar-fill" id="prog_${slot.id}"></div></div>` : ''}
                 `;
             }
             return div;
         }
+
         function handleUnlock(side, index) {
             const slot = grids[side][index];
-            if(state.balance >= slot.unlockPrice) { state.balance -= slot.unlockPrice; slot.unlocked = true; showToast("🔨", "成功扩建！", "#0ecb81"); updateGlobalUI(); renderGrids(); } 
-            else showToast("❌", "余额不足！", "#f6465d");
+            if(state.balance >= slot.unlockPrice) { 
+                state.balance -= slot.unlockPrice; slot.unlocked = true; 
+                showToast("🔓", "Slot Unlocked!"); updateGlobalUI(); renderGrids(); saveGameState(); 
+            } else { showToast("❌", "Insufficient Balance", "#f6465d"); }
         }
 
-        // --- 订单系统 ---
         let currentActionTarget = null;
         function openOrderModal(side, index) {
-            const price = state.prices[state.activeInstId]; if(price <= 0) return alert("正在拉取数据...");
+            const price = state.prices[state.activeInstId]; if(price <= 0) return alert("Waiting for market data...");
             currentActionTarget = { side, index };
-            document.getElementById('orderTitle').innerHTML = side==='long' ? '<span>🌱</span> 配置多头(Long)' : '<span>🐟</span> 配置空头(Short)';
+            document.getElementById('orderTitle').innerHTML = side==='long' ? '<span>📈</span> GO LONG' : '<span>📉</span> GO SHORT';
             document.getElementById('orderInstLabel').innerText = state.activeInstId;
             document.getElementById('orderPriceLabel').innerText = price;
-            document.getElementById('orderMmrLabel').innerText = (INST_CONFIG[state.activeInstId].mmr * 100).toFixed(1) + '%';
             const btn = document.getElementById('btnSubmitOrder');
-            btn.className = `w-full mt-2 py-3 rounded-xl font-bold text-lg text-white shadow-lg transition-transform active:scale-95 ${side==='long' ? 'bg-[#0ecb81] hover:bg-[#0b9e65]' : 'bg-[#f6465d] hover:bg-[#c9384b]'}`;
-            btn.innerText = side==='long' ? '支付建仓 (做多)' : '支付建仓 (做空)';
+            btn.className = `w-full mt-4 py-3 rounded-md font-bold text-sm tracking-widest text-white transition-all active:scale-95 cyber-font border ${side==='long' ? 'bg-[#0ecb81]/20 border-[#0ecb81] text-[#0ecb81] hover:bg-[#0ecb81] hover:text-black' : 'bg-[#f6465d]/20 border-[#f6465d] text-[#f6465d] hover:bg-[#f6465d] hover:text-white'}`;
             document.getElementById('orderTP').value = ''; document.getElementById('orderSL').value = '';
             calcOrderPreview(); document.getElementById('orderModal').style.display = 'flex';
         }
+        
         function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        
         function calcOrderPreview() {
             const amount = parseFloat(document.getElementById('orderAmount').value) || 0;
             const lev = parseInt(document.getElementById('orderLev').value) || 1;
@@ -441,19 +554,20 @@
             document.getElementById('previewFeeRate').innerText = (takerRate * 100).toFixed(3) + '%';
             document.getElementById('previewFee').innerText = `-${fee.toFixed(2)} U`;
         }
+
         function submitOrder() {
             const amount = parseFloat(document.getElementById('orderAmount').value); const lev = parseInt(document.getElementById('orderLev').value);
             const tp = parseFloat(document.getElementById('orderTP').value) || 0; const sl = parseFloat(document.getElementById('orderSL').value) || 0;
             const durSec = parseInt(document.getElementById('orderDuration').value);
             const instId = state.activeInstId; const currentPrice = state.prices[instId]; const { side, index } = currentActionTarget;
 
-            if(isNaN(amount) || amount <= 0) return alert("无效本金");
+            if(isNaN(amount) || amount <= 0) return alert("Invalid Margin");
             const notionalVol = amount * lev; const takerRate = VIP_TIERS[state.currentVip].taker; const openFee = notionalVol * takerRate;
             const totalCost = amount + openFee;
 
-            if(state.balance < totalCost) return alert("余额不足！");
-            if (side === 'long') { if (tp>0 && tp<=currentPrice) return alert("多头止盈需大于市价"); if (sl>0 && sl>=currentPrice) return alert("多头止损需小于市价"); } 
-            else { if (tp>0 && tp>=currentPrice) return alert("空头止盈需小于市价"); if (sl>0 && sl<=currentPrice) return alert("空头止损需大于市价"); }
+            if(state.balance < totalCost) return alert("Insufficient Balance!");
+            if (side === 'long') { if (tp>0 && tp<=currentPrice) return alert("TP must be > Entry Price"); if (sl>0 && sl>=currentPrice) return alert("SL must be < Entry Price"); } 
+            else { if (tp>0 && tp>=currentPrice) return alert("TP must be < Entry Price"); if (sl>0 && sl<=currentPrice) return alert("SL must be > Entry Price"); }
 
             const mmr = INST_CONFIG[instId].mmr;
             let liqPrice = side === 'long' ? currentPrice * (1 - (1/lev) + mmr + takerRate) : currentPrice * (1 + (1/lev) - mmr - takerRate);
@@ -462,14 +576,16 @@
 
             grids[side][index].item = {
                 instId: instId, amount: amount, leverage: lev, notional: notionalVol,
-                entryPrice: currentPrice, liqPrice: liqPrice, openFee: openFee, // 记录开仓费用于账本
+                entryPrice: currentPrice, liqPrice: liqPrice, openFee: openFee, pnl: 0,
                 tp: tp, sl: sl, startTime: Date.now(), durationMs: durSec * 1000, resolved: false
             };
-            showToast(side === 'long' ? "🌱" : "🐟", `成功开仓 ${instId.split('-')[0]} ${lev}x`, side === 'long' ? "#0ecb81" : "#f6465d");
-            closeModal('orderModal'); renderGrids();
+            showToast("⚡", `Order Filled: ${instId.split('-')[0]} ${lev}x`);
+            closeModal('orderModal'); renderGrids(); saveGameState(); 
         }
 
-        // --- 主引擎与结算账本写入 ---
+        // ==========================================
+        // 🔄 主引擎结算系统
+        // ==========================================
         function gameLoop() {
             const now = Date.now();
             ['long', 'short'].forEach(side => {
@@ -479,12 +595,20 @@
 
                     const dom = document.getElementById(`dom_${slot.id}`); const pnlEl = document.getElementById(`pnl_${slot.id}`);
                     const progEl = document.getElementById(`prog_${slot.id}`); const emojiEl = document.getElementById(`emoji_${slot.id}`);
+                    const btnEl = document.getElementById(`btn_close_${slot.id}`);
 
                     const roe = ((currentPrice - it.entryPrice) / it.entryPrice) * it.leverage * (side === 'long' ? 1 : -1);
-                    const pnl = it.amount * roe;
+                    it.pnl = it.amount * roe;
 
-                    if(pnlEl) { pnlEl.innerText = (pnl > 0 ? '+' : '') + pnl.toFixed(2); pnlEl.style.color = pnl > 0 ? '#0ecb81' : (pnl < 0 ? '#f6465d' : '#fff'); }
-                    if(dom) { if(pnl > 0) { dom.classList.remove('aura-danger'); dom.classList.add('aura-safe'); } else if (pnl < 0) { dom.classList.remove('aura-safe'); dom.classList.add('aura-danger'); } }
+                    if(pnlEl) { 
+                        pnlEl.innerText = (it.pnl > 0 ? '+' : '') + it.pnl.toFixed(2); 
+                        pnlEl.className = `badge-pnl ${it.pnl >= 0 ? 'text-[#0ecb81]' : 'text-[#f6465d]'}`;
+                    }
+                    
+                    if(dom && btnEl) { 
+                        if(it.pnl > 0) { dom.classList.remove('aura-danger'); dom.classList.add('aura-safe'); btnEl.innerText = 'TAKE PROFIT'; btnEl.style.color = '#0ecb81'; btnEl.style.borderColor = '#0ecb81'; } 
+                        else if (it.pnl < 0) { dom.classList.remove('aura-safe'); dom.classList.add('aura-danger'); btnEl.innerText = 'CUT LOSS'; btnEl.style.color = '#f6465d'; btnEl.style.borderColor = '#f6465d'; } 
+                    }
 
                     let progress = 0;
                     if (it.durationMs > 0) {
@@ -524,104 +648,98 @@
             const closeFee = it.notional * takerRate;
             
             const roe = ((currentPrice - it.entryPrice) / it.entryPrice) * it.leverage * (side === 'long' ? 1 : -1);
-            let grossPnl = it.amount * roe;
-            let netPnl = grossPnl - closeFee;
+            let grossPnl = it.amount * roe; let netPnl = grossPnl - closeFee;
 
-            if (reason === 'liq' || roe <= -1) { grossPnl = -it.amount; netPnl = -it.amount - closeFee; } // 爆仓没收本金再扣平仓费
+            if (reason === 'liq' || roe <= -1) { grossPnl = -it.amount; netPnl = -it.amount - closeFee; }
 
-            // 更新真实余额与交易量
-            const payout = Math.max(0, it.amount + netPnl); // 保证最多亏光本金(游戏友好设定)
-            const realNetPnl = payout - it.amount; // 实际落袋差异
+            const payout = Math.max(0, it.amount + netPnl); 
+            const realNetPnl = payout - it.amount; 
             
-            state.balance += payout;
-            state.volume += it.notional;
-            checkVipUpgrade();
+            state.balance += payout; state.volume += it.notional; checkVipUpgrade();
 
-            // 🔥 核心：写入防作弊流水账本
             const record = {
-                time: new Date().toLocaleString('zh-CN', {hour12: false}).split(' ')[1],
-                instId: it.instId.split('-')[0],
-                side: side,
-                lev: it.leverage,
-                margin: it.amount,
-                entry: it.entryPrice,
-                exit: currentPrice,
-                reason: reason,
-                totalFee: it.openFee + closeFee,
-                netPnl: realNetPnl
+                time: new Date().toLocaleString('en-US', {hour12: false}).split(', ')[1],
+                instId: it.instId.split('-')[0], side: side, lev: it.leverage, margin: it.amount,
+                entry: it.entryPrice, exit: currentPrice, reason: reason, totalFee: it.openFee + closeFee, netPnl: realNetPnl
             };
-            state.tradeHistory.unshift(record); // 插入到数组开头
+            state.tradeHistory.unshift(record);
+            
+            saveGameState(); LeaderboardAPI.submitMyScore(); 
 
-            // UI 表现
             const dom = document.getElementById(`dom_${slot.id}`); const emojiEl = document.getElementById(`emoji_${slot.id}`);
             if(dom) {
                 dom.classList.remove('aura-danger', 'aura-safe'); document.getElementById(`btn_close_${slot.id}`).style.display = 'none';
                 let txt = ''; let color = '';
-                if (reason === 'tp') { txt = `止盈 +${realNetPnl.toFixed(1)}`; color = '#0ecb81'; emojiEl.innerText = side==='long'?'🍎':'💰'; emojiEl.style.transform='scale(1.3)'; }
-                else if (reason === 'sl') { txt = `止损 ${realNetPnl.toFixed(1)}`; color = '#f6465d'; emojiEl.innerText = '✂️'; emojiEl.style.filter='grayscale(1)'; }
-                else if (reason === 'liq') { txt = `爆仓清算`; color = '#f6465d'; emojiEl.innerText = '☠️'; dom.classList.add('aura-danger'); }
-                else if (reason === 'manual') { txt = `平仓 ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#f1c40f':'#bdc3c7'; }
-                else if (reason === 'time') { txt = `到期 ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#0ecb81':'#f6465d'; }
+                if (reason === 'tp') { txt = `TP HIT +${realNetPnl.toFixed(1)}`; color = '#0ecb81'; emojiEl.innerText = side==='long'?'🍎':'💰'; emojiEl.style.transform='scale(1.3)'; }
+                else if (reason === 'sl') { txt = `SL HIT ${realNetPnl.toFixed(1)}`; color = '#f6465d'; emojiEl.innerText = '✂️'; emojiEl.style.filter='grayscale(1)'; }
+                else if (reason === 'liq') { txt = `LIQUIDATED`; color = '#f6465d'; emojiEl.innerText = '☠️'; dom.classList.add('aura-danger'); }
+                else if (reason === 'manual') { txt = `CLOSED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#0ecb81':'#bdc3c7'; }
+                else if (reason === 'time') { txt = `EXPIRED ${realNetPnl>0?'+':''}${realNetPnl.toFixed(1)}`; color = realNetPnl>=0?'#0ecb81':'#f6465d'; }
 
-                const ft = document.createElement('div'); ft.className = 'floating-text'; ft.style.color = color; ft.innerText = txt; dom.appendChild(ft);
+                const ft = document.createElement('div'); ft.className = 'floating-text mono-font'; ft.style.color = color; ft.innerText = txt; dom.appendChild(ft);
             }
-            setTimeout(() => { slot.item = null; renderGrids(); }, 2500);
+            setTimeout(() => { slot.item = null; renderGrids(); saveGameState(); }, 2500);
         }
 
-        // --- 账本 UI ---
+        // ==========================================
+        // 📚 辅助面板 (账本与VIP图鉴)
+        // ==========================================
         function openHistoryModal() {
-            const container = document.getElementById('historyListContainer');
-            container.innerHTML = '';
-            
-            if (state.tradeHistory.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-500 py-10">暂无交易流水，去开垦你的第一笔订单吧！</div>`;
-            } else {
+            const container = document.getElementById('historyListContainer'); container.innerHTML = '';
+            if (state.tradeHistory.length === 0) { container.innerHTML = `<div class="text-center text-gray-500 py-10 text-sm">NO TRANSACTION RECORD FOUND.</div>`; } 
+            else {
                 let wins = 0; let totalNetPnl = 0;
-                
                 state.tradeHistory.forEach(r => {
-                    if (r.netPnl > 0) wins++;
-                    totalNetPnl += r.netPnl;
-                    
+                    if (r.netPnl > 0) wins++; totalNetPnl += r.netPnl;
                     const isWin = r.netPnl > 0;
-                    const reasonTxt = { 'tp':'止盈', 'sl':'止损', 'liq':'爆仓', 'manual':'手平', 'time':'到期' }[r.reason];
-                    
-                    const div = document.createElement('div');
-                    div.className = `history-item ${isWin ? 'hist-win' : 'hist-loss'}`;
+                    const reasonTxt = { 'tp':'TAKE PROFIT', 'sl':'STOP LOSS', 'liq':'LIQUIDATION', 'manual':'MARKET CLOSE', 'time':'EXPIRED' }[r.reason];
+                    const div = document.createElement('div'); div.className = `history-item ${isWin ? 'hist-win' : 'hist-loss'}`;
                     div.innerHTML = `
                         <div class="flex-1">
-                            <div class="font-bold text-sm text-white">
-                                ${r.instId} <span class="${r.side==='long'?'text-[#0ecb81]':'text-[#f6465d]'}">${r.side==='long'?'多':'空'}</span> (${r.lev}x) 
-                                <span class="bg-gray-700 text-gray-300 text-[10px] px-1 rounded ml-1">${reasonTxt}</span>
-                            </div>
-                            <div class="text-[10px] text-gray-400 font-mono mt-1">开: ${r.entry.toFixed(2)} ➔ 平: ${r.exit.toFixed(2)}</div>
-                            <div class="text-[10px] text-gray-500 font-mono mt-0.5">${r.time} | 保证金: ${r.margin.toFixed(0)}U</div>
+                            <div class="font-bold text-sm text-white cyber-font tracking-wide">${r.instId} <span class="${r.side==='long'?'text-[#0ecb81]':'text-[#f6465d]'}">${r.side==='long'?'LONG':'SHORT'}</span> (${r.lev}x) <span class="bg-[#2d3748] text-white text-[9px] px-1.5 py-0.5 rounded ml-2">${reasonTxt}</span></div>
+                            <div class="text-[10px] text-gray-400 mono-font mt-1.5">IN: ${r.entry.toFixed(2)} ➔ OUT: ${r.exit.toFixed(2)}</div>
+                            <div class="text-[10px] text-gray-500 mono-font mt-0.5">${r.time} | MARGIN: ${r.margin.toFixed(0)}</div>
                         </div>
-                        <div class="text-right">
-                            <div class="font-mono font-bold text-lg ${isWin ? 'text-[#0ecb81]' : 'text-[#f6465d]'}">${isWin?'+':''}${r.netPnl.toFixed(2)} U</div>
-                            <div class="text-[10px] text-gray-500">累计扣费: -${r.totalFee.toFixed(2)}U</div>
+                        <div class="text-right flex flex-col justify-between items-end">
+                            <div class="mono-font font-bold text-lg ${isWin ? 'text-[#0ecb81]' : 'text-[#f6465d]'}">${isWin?'+':''}${r.netPnl.toFixed(2)}</div>
+                            <div class="text-[9px] text-gray-500 uppercase">FEE: -${r.totalFee.toFixed(2)}</div>
                         </div>
                     `;
                     container.appendChild(div);
                 });
-
-                // 更新顶部统计面板
                 document.getElementById('statTotalTrades').innerText = state.tradeHistory.length;
                 document.getElementById('statWinRate').innerText = ((wins / state.tradeHistory.length) * 100).toFixed(1) + '%';
-                
-                const pnlEl = document.getElementById('statTotalPnl');
-                pnlEl.innerText = (totalNetPnl > 0 ? '+' : '') + totalNetPnl.toFixed(2);
-                pnlEl.style.color = totalNetPnl >= 0 ? '#0ecb81' : '#f6465d';
+                const pnlEl = document.getElementById('statTotalPnl'); pnlEl.innerText = (totalNetPnl > 0 ? '+' : '') + totalNetPnl.toFixed(2); pnlEl.style.color = totalNetPnl >= 0 ? '#0ecb81' : '#f6465d';
             }
-            
             document.getElementById('historyModal').style.display = 'flex';
         }
 
-        // --- 初始化区 ---
-        initPlayerProfile(); updateGlobalUI(); renderGrids(); 
-        loadTradingView(state.activeInstId); connectWS(); requestAnimationFrame(gameLoop);
-        setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
+        function openProfileModal() { 
+            const container = document.getElementById('vipListContainer'); container.innerHTML = '';
+            VIP_TIERS.forEach(tier => {
+                const isActive = state.currentVip === tier.level; const isPassed = state.currentVip > tier.level;
+                let statusHtml = isActive ? `<span class="bg-[#0ecb81] text-black px-2 py-0.5 rounded text-[10px] font-bold">CURRENT</span>` : (isPassed ? `<span class="text-[#0ecb81] text-[10px] font-bold">✔</span>` : `<span class="text-gray-600 text-[10px] mono-font">REQ: ${formatNum(tier.reqVol)}</span>`);
+                const div = document.createElement('div'); div.className = `flex justify-between items-center p-3 rounded-md border ${isActive ? 'border-[#0ecb81] bg-[#0ecb81]/10' : 'border-[#2d3748] bg-[#1a202c]'}`;
+                div.innerHTML = `<div class="flex items-center gap-3"><div class="font-bold text-sm cyber-font ${isActive ? 'text-[#0ecb81]' : (isPassed ? 'text-gray-300' : 'text-gray-500')}">${tier.name}</div>${statusHtml}</div><div class="mono-font font-bold text-sm ${isActive ? 'text-white' : 'text-gray-500'}">${(tier.taker * 100).toFixed(3)}%</div>`;
+                container.appendChild(div);
+            });
+            document.getElementById('profileModal').style.display = 'flex'; 
+        }
+
+        // ==========================================
+        // 🚀 启动序列 (Boot Sequence)
+        // ==========================================
+        loadGameState();
+        initPlayerProfile(); 
+        updateGlobalUI(); 
+        renderGrids(); 
         
-        function openProfileModal() { document.getElementById('profileModal').style.display = 'flex'; }
+        document.getElementById('instSelect').value = state.activeInstId;
+        initTV(); 
+        connectWS(); 
+        
+        requestAnimationFrame(gameLoop);
+        setInterval(() => { if (ws && ws.readyState === WebSocket.OPEN) ws.send('ping'); }, 20000);
     </script>
 </body>
 </html>
